@@ -3,6 +3,8 @@ import cities.zoetermeer as zoetermeer
 import cities.arnhem as arnhem
 import cities.den_haag as den_haag
 import cities.amsterdam as amsterdam
+import cities.eindhoven as eindhoven
+
 import database as database
 import asyncio
 
@@ -11,11 +13,21 @@ if __name__ == '__main__':
     """ Zoetermeer """
     # zoetermeer.download()
     # zoetermeer.upload()
-    # zoetermeer.truncate()
 
+    """ Arnhem """
     # arnhem.download()
+    # arnhem.upload()
+
     """ Amsterdam """
     # amsterdam.upload()
 
     """ Den Haag """
     # den_haag.upload()
+
+    """ Eindhoven """
+    # data_set = asyncio.run(eindhoven.async_get_locations(200, "Parkeerplaats Gehandicapten"))
+    # print(data_set)
+    # eindhoven.upload(data_set)
+
+    # Database
+    # database.truncate("Eindhoven")
