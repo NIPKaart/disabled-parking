@@ -20,6 +20,16 @@
 
 This project makes it possible to download and upload parking data from municipalities to NIPkaart.
 
+## Supported cities
+
+These are the cities currently supported:
+
+- Amsterdam
+- Arnhem
+- Den Haag
+- Eindhoven
+- Zoetermeer
+
 ## Contributing
 
 Would you like to contribute to the development of this project? Then read the prepared [contribution guidelines](CONTRIBUTING.md) and go ahead!
