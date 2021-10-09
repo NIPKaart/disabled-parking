@@ -18,3 +18,18 @@ DB_PASSWORD = os.getenv("DB_PASSWORD")
 # Connect to MySQL
 connection = pymysql.connect(host=DB_SERVER, port=DB_PORT, user=DB_USERNAME, password=DB_PASSWORD, database=DATABASE)
 cursor = connection.cursor()
+
+def truncate(city):
+    """Remove all data from a city.
+    
+    Args:
+        city: The name of the city, it's case sensitive!
+    """
+    try:
+        sql = "DELETE FROM `parking_cities` WHERE `city`=%s"
+        cursor.execute(sql, city)
+        connection.commit()
+    except Exception as e:
+        print(f'MySQL error: {e}')
+    finally:
+        print(f'{city} - verwijderen van de data')
