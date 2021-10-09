@@ -12,13 +12,17 @@ env_path = Path('.')/'.env'
 load_dotenv(dotenv_path=env_path)
 
 def download():
+    """Download the data as JSON file."""
+
     # Create a variable and pass the url of file to be downloaded
-    url = f'{os.getenv("SOURCE")}/77cd514505dd40589f52f99d0e5edd6a_0.geojson'
+    url = f'{os.getenv("SOURCE")}/308bb3581ba646afad6f776a8f7e4e67_0.geojson'
     # Copy a network object to a local file
-    urllib.request.urlretrieve(url, r'data/parking-zoetermeer.json')
+    urllib.request.urlretrieve(url, 'data/parking-zoetermeer.json')
     print(f'{city} - KLAAR met downloaden')
 
 def upload():
+    """Upload the data from the JSON file to the database."""
+
     zoetermeer_file = "data/parking-zoetermeer.json"
     zoetermeer_data = open(zoetermeer_file).read()
     zoetermeer_obj = json.loads(zoetermeer_data)
@@ -35,16 +39,6 @@ def upload():
         print(f'MySQL error: {e}')
     finally:
         print(f'{city} - KLAAR met updaten van database')
-
-def truncate():
-    try:
-        sql = "DELETE FROM `parking_cities` WHERE `city`=%s"
-        cursor.execute(sql, city)
-        connection.commit()
-    except Exception as e:
-        print(f'MySQL error: {e}')
-    finally:
-        print(f'{city} - verwijderen van de data')
 
 def update():
     return
