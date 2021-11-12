@@ -8,7 +8,7 @@ idna==3.3
 multidict==5.2.0
 parking-eindhoven==1.0.0
 PyMySQL==1.0.2
-python-dotenv==0.19.1
+python-dotenv==0.19.2
 typing-extensions==3.10.0.2
 urllib3==1.26.7
 yarl==1.7.2
