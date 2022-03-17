@@ -10,5 +10,5 @@ parking-eindhoven==1.0.0
 PyMySQL==1.0.2
 python-dotenv==0.19.2
 typing-extensions==4.0.1
-urllib3==1.26.8
+urllib3==1.26.9
 yarl==1.7.2
