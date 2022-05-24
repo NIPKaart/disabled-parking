@@ -24,7 +24,7 @@ This project makes it possible to download and upload parking data from municipa
 
 These are the cities currently supported:
 
-- Amsterdam
+- Amsterdam (updates every first day of the month at 03:00)
 - Arnhem
 - Den Haag
 - Eindhoven
@@ -32,11 +32,15 @@ These are the cities currently supported:
 
 ## Build image
 
+```bash
 docker build -t parking-[CITY] .
+```
 
 ## Run the image
 
+```bash
 docker run parking-[CITY] -d --restart on-failure --name nipkaart-parking-[CITY]
+```
 
 ## Contributing
 
