@@ -2,15 +2,11 @@
 FROM python:3.10-slim-buster
 LABEL Maintainer="Klaas Schoute"
 
-ENV TZ=Europe/Amsterdam
-
 COPY . /app
 WORKDIR /app
 
 # Install requirements
-RUN apt-get update && apt-get -y install cron tzdata
-# Set the timezone
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apt-get update && apt-get -y install cron
 RUN pip install -r requirements.txt
 
 COPY crontab /etc/cron.d/crontab

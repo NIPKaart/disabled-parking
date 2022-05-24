@@ -59,6 +59,7 @@ docker build -t parking-[CITY] .
 
 ```bash
 docker run parking-[CITY] -d --restart on-failure --name nipkaart-parking-[CITY]
+docker stack deploy -c cities/[CITY].yml parking
 ```
 </details>
 
