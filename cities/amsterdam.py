@@ -1,6 +1,4 @@
 import json, datetime, uuid, aiohttp
-
-from shapely.geometry import Polygon
 from database import connection, cursor
 
 city = "Amsterdam"
@@ -19,6 +17,24 @@ def correct_orientation(type) -> str:
     return str(type)
 
 
+def centroid(vertexes):
+    """Calculate the centroid of a polygon.
+
+    Args:
+        vertexes (list): A list of points.
+
+    Returns:
+        Point: The centroid of the polygon.
+    """
+    _x_list = [vertex [0] for vertex in vertexes[0]]
+    _y_list = [vertex [1] for vertex in vertexes[0]]
+
+    _len = len(vertexes[0])
+    _x = sum(_x_list) / _len
+    _y = sum(_y_list) / _len
+    return(_y, _x)
+
+
 def upload(data_set):
     """Upload the data from the JSON file to the database."""
     amsterdam_obj = json.loads(data_set)
@@ -28,16 +44,14 @@ def upload(data_set):
             count = index
 
             # Get the coordinates of the parking lot with centroid
-            P = Polygon(item["geometry"]["coordinates"][0])
-            location_cords = P.centroid
-
+            latitude, longitude = centroid(item["geometry"]["coordinates"])
             # Define unique id
             location_id = uuid.uuid4().hex[:8]
             item = item["properties"]
-
+            # Make the sql query
             sql = """INSERT INTO `parking_cities` (`id`, `city`, `street`, `orientation`, `number`, `longitude`, `latitude`, `visibility`, `created_at`, `updated_at`)
                      VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-            val = (location_id, str(city), str(item["straatnaam"]), correct_orientation(item["type"]), int(item["aantal"]), float(location_cords.x), float(location_cords.y), bool(True), (datetime.datetime.now()), (datetime.datetime.now()))
+            val = (location_id, str(city), str(item["straatnaam"]), correct_orientation(item["type"]), int(item["aantal"]), float(longitude), float(latitude), bool(True), (datetime.datetime.now()), (datetime.datetime.now()))
             cursor.execute(sql, val)
         connection.commit()
     except Exception as e:
