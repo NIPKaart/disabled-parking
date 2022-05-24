@@ -19,7 +19,11 @@ if __name__ == '__main__':
     # arnhem.upload()
 
     """ Amsterdam """
-    # amsterdam.upload()
+    data_set = asyncio.run(amsterdam.async_get_locations())
+    if (bool(data_set)):
+        print("Data is opgehaald")
+        database.truncate("Amsterdam")
+        amsterdam.upload(data_set)
 
     """ Den Haag """
     # den_haag.upload()
