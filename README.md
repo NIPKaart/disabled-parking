@@ -30,6 +30,14 @@ These are the cities currently supported:
 - Eindhoven
 - Zoetermeer
 
+## Build image
+
+docker build -t parking-[CITY] .
+
+## Run the image
+
+docker run parking-[CITY] -d --restart on-failure --name nipkaart-parking-[CITY]
+
 ## Contributing
 
 Would you like to contribute to the development of this project? Then read the prepared [contribution guidelines](CONTRIBUTING.md) and go ahead!
