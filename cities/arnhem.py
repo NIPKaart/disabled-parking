@@ -5,7 +5,7 @@ from database import connection, cursor
 from dotenv import load_dotenv
 from pathlib import Path
 
-city = "Arnhem"
+municipality = "Arnhem"
 
 load_dotenv()
 env_path = Path('.')/'.env'
@@ -18,7 +18,7 @@ def download():
     url = f'{os.getenv("SOURCE")}/6f301547133a4acda9074ec3ca9b075b_0.geojson'
     # Copy a network object to a local file
     urllib.request.urlretrieve(url, 'data/parking-arnhem.json')
-    print(f'{city} - KLAAR met downloaden')
+    print(f'{municipality} - KLAAR met downloaden')
 
 def upload():
     """Upload the data from the JSON file to the database."""
@@ -28,15 +28,15 @@ def upload():
     arnhem_obj = json.loads(arnhem_data)
     try:
         for item in arnhem_obj["features"]:
-            id = uuid.uuid4().hex[:8]
+            location_id = uuid.uuid4().hex[:8]
             item = item["properties"]
 
-            sql= """INSERT INTO `parking_cities` (`id`, `city`, `street`, `orientation`, `number`, `longitude`, `latitude`, `visibility`, `created_at`, `updated_at`)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-            val = (id, str(city), str(item["LOCATIE"]), str(item["TYPE_VAK"]), int(item["AANTAL"]), float(item["LON"]), float(item["LAT"]), bool(True), (datetime.datetime.now()), (datetime.datetime.now()))
+            sql= """INSERT INTO `parking_cities` (`id`, `country_id`, `province_id`, `municipality`, `street`, `orientation`, `number`, `longitude`, `latitude`, `visibility`, `created_at`, `updated_at`)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+            val = (location_id, int(157), int(6), str(municipality), str(item["LOCATIE"]), str(item["TYPE_VAK"]), int(item["AANTAL"]), float(item["LON"]), float(item["LAT"]), bool(True), (datetime.datetime.now()), (datetime.datetime.now()))
             cursor.execute(sql, val)
         connection.commit()
     except Exception as e:
         print(f'MySQL error: {e}')
     finally:
-        print(f'{city} - KLAAR met updaten van database')
+        print(f'{municipality} - KLAAR met updaten van database')

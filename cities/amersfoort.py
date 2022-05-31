@@ -61,7 +61,7 @@ def upload(data_set):
             item = item["properties"]
             # Make the sql query
             sql = """INSERT INTO `parking_cities` (`id`, `country_id`, `province_id`, `municipality`, `street`, `orientation`, `number`, `longitude`, `latitude`, `visibility`, `created_at`, `updated_at`)
-                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
             val = (location_id, int(157), int(7), str(municipality), str(item["STRAATNAAM"]), None, int(item["AANTAL_PLAATSEN"]), float(longitude), float(latitude), bool(True), (datetime.datetime.now()), (datetime.datetime.now()))
             cursor.execute(sql, val)
         connection.commit()

@@ -1,7 +1,7 @@
 import json, datetime, uuid, aiohttp
 from database import connection, cursor
 
-city = "Amsterdam"
+municipality = "Amsterdam"
 
 async def async_get_locations():
     """Get the data from the GeoJSON API endpoint."""
@@ -49,13 +49,13 @@ def upload(data_set):
             location_id = uuid.uuid4().hex[:8]
             item = item["properties"]
             # Make the sql query
-            sql = """INSERT INTO `parking_cities` (`id`, `city`, `street`, `orientation`, `number`, `longitude`, `latitude`, `visibility`, `created_at`, `updated_at`)
-                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-            val = (location_id, str(city), str(item["straatnaam"]), correct_orientation(item["type"]), int(item["aantal"]), float(longitude), float(latitude), bool(True), (datetime.datetime.now()), (datetime.datetime.now()))
+            sql = """INSERT INTO `parking_cities` (`id`, `country_id`, `province_id`, `municipality`, `street`, `orientation`, `number`, `longitude`, `latitude`, `visibility`, `created_at`, `updated_at`)
+                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+            val = (location_id, int(157), int(8), str(municipality), str(item["straatnaam"]), correct_orientation(item["type"]), int(item["aantal"]), float(longitude), float(latitude), bool(True), (datetime.datetime.now()), (datetime.datetime.now()))
             cursor.execute(sql, val)
         connection.commit()
     except Exception as e:
         print(f'MySQL error: {e}')
     finally:
         print(f"{count} - Parkeerplaatsen gevonden")
-        print(f'{city} - KLAAR met updaten van database')
+        print(f'{municipality} - KLAAR met updaten van database')
