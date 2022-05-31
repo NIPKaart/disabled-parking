@@ -24,6 +24,12 @@ if __name__ == '__main__':
         import cities.arnhem as arnhem
         arnhem.download()
         # arnhem.upload()
+    elif city.lower() == "amersfoort":
+        import cities.amersfoort as amersfoort
+        data_set = asyncio.run(amersfoort.async_get_locations())
+        if (bool(data_set)):
+            print(f"Data opgehaald van: {city}")
+            amersfoort.upload(data_set)
     elif city.lower() == "eindhoven":
         import cities.eindhoven as eindhoven
         # Eindhoven
