@@ -5,7 +5,7 @@ from database import connection, cursor
 from dotenv import load_dotenv
 from pathlib import Path
 
-city = "Amersfoort"
+municipality = "Amersfoort"
 
 load_dotenv()
 env_path = Path('.')/'.env'
@@ -43,7 +43,7 @@ def download():
     url = f'{os.getenv("CKAN_SOURCE")}/download/amersfoort-gehandicaptenparkeerplaatsen.json'
     # Copy a network object to a local file
     urllib.request.urlretrieve(url, 'data/parking-amersfoort.json')
-    print(f'{city} - KLAAR met downloaden')
+    print(f'{municipality} - KLAAR met downloaden')
 
 
 def upload(data_set):
@@ -60,13 +60,13 @@ def upload(data_set):
             location_id = uuid.uuid4().hex[:8]
             item = item["properties"]
             # Make the sql query
-            sql = """INSERT INTO `parking_cities` (`id`, `city`, `street`, `orientation`, `number`, `longitude`, `latitude`, `visibility`, `created_at`, `updated_at`)
+            sql = """INSERT INTO `parking_cities` (`id`, `country_id`, `province_id`, `municipality`, `street`, `orientation`, `number`, `longitude`, `latitude`, `visibility`, `created_at`, `updated_at`)
                      VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-            val = (location_id, str(city), str(item["STRAATNAAM"]), None, int(item["AANTAL_PLAATSEN"]), float(longitude), float(latitude), bool(True), (datetime.datetime.now()), (datetime.datetime.now()))
+            val = (location_id, int(157), int(7), str(municipality), str(item["STRAATNAAM"]), None, int(item["AANTAL_PLAATSEN"]), float(longitude), float(latitude), bool(True), (datetime.datetime.now()), (datetime.datetime.now()))
             cursor.execute(sql, val)
         connection.commit()
     except Exception as e:
         print(f'MySQL error: {e}')
     finally:
         print(f"{count} - Parkeerplaatsen gevonden")
-        print(f'{city} - KLAAR met updaten van database')
+        print(f'{municipality} - KLAAR met updaten van database')
