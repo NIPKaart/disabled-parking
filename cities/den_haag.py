@@ -23,8 +23,8 @@ def upload():
             location_id = uuid.uuid4().hex[:8]
             item = item["properties"]
 
-            sql = """INSERT INTO `parking_cities` (`id`, `country_id`, `province_id`, `municipality`, `street`, `orientation`, `number`, `longitude`, `latitude`, `visibility`, `created_at`, `updated_at`)
-                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+            sql = """INSERT INTO `parking_cities` (`id`, `country_id`, `province_id`, `municipality`, `orientation`, `number`, `longitude`, `latitude`, `visibility`, `created_at`, `updated_at`)
+                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
             val = (location_id, int(157), int(9), str(municipality), str(item["ORIENTATIE"]), number(item["CAPACITEIT"]), float(longitude), float(latitude), bool(True), (datetime.datetime.now()), (datetime.datetime.now()))
             cursor.execute(sql, val)
         connection.commit()

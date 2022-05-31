@@ -30,8 +30,8 @@ def upload():
         for item in zoetermeer_obj["features"]:
             location_id = uuid.uuid4().hex[:8]
 
-            sql = """INSERT INTO `parking_cities` (`id`, `country_id`, `province_id`, `municipality`, `street`, `orientation`, `number`, `longitude`, `latitude`, `visibility`, `created_at`, `updated_at`)
-                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+            sql = """INSERT INTO `parking_cities` (`id`, `country_id`, `province_id`, `municipality`, `number`, `longitude`, `latitude`, `visibility`, `created_at`, `updated_at`)
+                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
             val = (location_id, int(157), int(9), str(municipality), int(item["properties"]["plaatsen"]), float(item["properties"]["lon"]), float(item["properties"]["lat"]), bool(True), (datetime.datetime.now()), (datetime.datetime.now()))
             cursor.execute(sql, val)
         connection.commit()
