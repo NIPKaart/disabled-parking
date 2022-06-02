@@ -1,0 +1,19 @@
+# Docker compose STACK file
+version: "3"
+
+services:
+  # Scrape Amersfoort Service
+  nipkaart_amersfoort:
+    image: parking-amersfoort:latest
+    environment:
+      - TZ=Europe/Amsterdam
+    networks:
+      - backend
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+# Networks
+networks:
+  backend:
+    driver: overlay
