@@ -26,7 +26,7 @@ def truncate(city):
         city: The name of the city, it's case sensitive!
     """
     try:
-        sql = "DELETE FROM `parking_cities` WHERE `city`=%s"
+        sql = "DELETE FROM `parking_cities` WHERE `municipality`=%s"
         cursor.execute(sql, city)
         connection.commit()
     except Exception as e:
