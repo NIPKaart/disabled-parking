@@ -18,7 +18,7 @@ if __name__ == '__main__':
         data_set = asyncio.run(amsterdam.async_get_locations())
         if (bool(data_set)):
             print(f"Data opgehaald van: {city}")
-            database.truncate("Amsterdam")
+            # database.truncate("Amsterdam")
             amsterdam.upload(data_set)
     elif city.lower() == "arnhem":
         import cities.arnhem as arnhem
@@ -29,6 +29,7 @@ if __name__ == '__main__':
         data_set = asyncio.run(amersfoort.async_get_locations())
         if (bool(data_set)):
             print(f"Data opgehaald van: {city}")
+            # database.truncate("Amersfoort")
             amersfoort.upload(data_set)
     elif city.lower() == "eindhoven":
         import cities.eindhoven as eindhoven
@@ -36,7 +37,7 @@ if __name__ == '__main__':
         data_set = asyncio.run(eindhoven.async_get_locations(200))
         if (bool(data_set)):
             print(f"Data opgehaald van: {city}")
-            database.truncate("Eindhoven")
+            # database.truncate("Eindhoven")
             eindhoven.upload(data_set)
     elif city.lower() == "denhaag":
         import cities.den_haag as den_haag

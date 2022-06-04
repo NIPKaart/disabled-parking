@@ -1,8 +1,9 @@
-import uuid, datetime
+import datetime
 from parking_eindhoven import ParkingEindhoven
 from database import connection, cursor
 
 municipality = "Eindhoven"
+cbs_code = "0772"
 
 async def async_get_locations(number):
     """Get parking data from API.
@@ -25,10 +26,19 @@ def upload(data_set):
         for index, item in enumerate(data_set, 1):
             count = index
             # Define unique id
-            location_id = uuid.uuid4().hex[:8]
-
+            location_id = f"{cbs_code}-{item.spot_id}"
             sql = """INSERT INTO `parking_cities` (`id`, `country_id`, `province_id`, `municipality`, `street`, `orientation`, `number`, `longitude`, `latitude`, `visibility`, `created_at`, `updated_at`)
-                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
+                     UPDATE id=values(id),
+                            country_id=values(country_id),
+                            province_id=values(province_id),
+                            municipality=values(municipality),
+                            street=values(street),
+                            orientation=values(orientation),
+                            number=values(number),
+                            longitude=values(longitude),
+                            latitude=values(latitude),
+                            updated_at=values(updated_at)"""
             val = (location_id, int(157), int(11), str(municipality), str(item.street), None, item.number, float(item.longitude), float(item.latitude), bool(True), (datetime.datetime.now()), (datetime.datetime.now()))
             cursor.execute(sql, val)
         connection.commit()

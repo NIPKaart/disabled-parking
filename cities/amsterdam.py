@@ -1,7 +1,8 @@
-import json, datetime, uuid, aiohttp
+import json, datetime, aiohttp
 from database import connection, cursor
 
 municipality = "Amsterdam"
+cbs_code = "0363"
 
 async def async_get_locations():
     """Get the data from the GeoJSON API endpoint."""
@@ -46,11 +47,22 @@ def upload(data_set):
             # Get the coordinates of the parking lot with centroid
             latitude, longitude = centroid(item["geometry"]["coordinates"])
             # Define unique id
-            location_id = uuid.uuid4().hex[:8]
+            location_id = f"{cbs_code}-{item['id'].split('.')[1]}"
+
             item = item["properties"]
             # Make the sql query
             sql = """INSERT INTO `parking_cities` (`id`, `country_id`, `province_id`, `municipality`, `street`, `orientation`, `number`, `longitude`, `latitude`, `visibility`, `created_at`, `updated_at`)
-                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
+                     UPDATE id=values(id),
+                            country_id=values(country_id),
+                            province_id=values(province_id),
+                            municipality=values(municipality),
+                            street=values(street),
+                            orientation=values(orientation),
+                            number=values(number),
+                            longitude=values(longitude),
+                            latitude=values(latitude),
+                            updated_at=values(updated_at)"""
             val = (location_id, int(157), int(8), str(municipality), str(item["straatnaam"]), correct_orientation(item["type"]), int(item["aantal"]), float(longitude), float(latitude), bool(True), (datetime.datetime.now()), (datetime.datetime.now()))
             cursor.execute(sql, val)
         connection.commit()
