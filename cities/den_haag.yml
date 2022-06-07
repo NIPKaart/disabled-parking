@@ -1,0 +1,17 @@
+# Docker compose STACK file
+version: "3"
+
+services:
+  # Scrape Den Haag Service
+  nipkaart_den_haag:
+    image: parking-denhaag:latest
+    networks:
+      - backend
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+# Networks
+networks:
+  backend:
+    driver: overlay

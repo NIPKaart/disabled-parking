@@ -42,7 +42,11 @@ if __name__ == '__main__':
     elif city.lower() == "denhaag":
         import cities.den_haag as den_haag
         # Den Haag
-        den_haag.upload()
+        data_set = asyncio.run(den_haag.async_get_locations(limit=300))
+        if (bool(data_set)):
+            print(f"Data opgehaald van: {city}")
+            # database.truncate("Den Haag")
+            den_haag.upload(data_set)
     elif city.lower() == "zoetermeer":
         import cities.zoetermeer as zoetermeer
         zoetermeer.download()
