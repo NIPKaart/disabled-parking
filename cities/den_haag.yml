@@ -2,9 +2,9 @@
 version: "3"
 
 services:
-  # Scrape Amersfoort Service
-  nipkaart_amersfoort:
-    image: parking-amersfoort:latest
+  # Scrape Den Haag Service
+  nipkaart_den_haag:
+    image: parking-denhaag:latest
     networks:
       - backend
     deploy:

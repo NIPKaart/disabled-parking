@@ -1,4 +1,4 @@
-import json, datetime, uuid, os, aiohttp
+import json, datetime, os, aiohttp, pytz
 import urllib.request
 
 from database import connection, cursor
@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 
 municipality = "Amersfoort"
+cbs_code = "0307"
 
 load_dotenv()
 env_path = Path('.')/'.env'
@@ -30,9 +31,9 @@ def centroid(vertexes):
 
 
 async def async_get_locations():
-    """Get the data from the GeoJSON API endpoint."""
+    """Get the data from the CKAN API endpoint."""
     async with aiohttp.ClientSession() as client:
-        async with client.get(f'{os.getenv("CKAN_SOURCE")}/download/amersfoort-gehandicaptenparkeerplaatsen.json') as resp:
+        async with client.get(f'{os.getenv("CKAN_SOURCE")}/dataset/280abd40-bd4a-4d76-9537-2c2bae526296/resource/417f3e35-4a5b-47c6-a23f-cbf92938c9e5/download/amersfoort-gehandicaptenparkeerplaatsen.json') as resp:
             return await resp.text()
 
 
@@ -53,16 +54,29 @@ def upload(data_set):
     try:
         for index, item in enumerate(amersfoort_obj["features"], 1):
             count = index
-            
+
             # Get the coordinates of the parking lot with centroid
             latitude, longitude = centroid(item["geometry"]["coordinates"])
             # Define unique id
-            location_id = uuid.uuid4().hex[:8]
+            location_id = f"{cbs_code}-{item['id'].split('.')[1]}"
+
             item = item["properties"]
             # Make the sql query
             sql = """INSERT INTO `parking_cities` (`id`, `country_id`, `province_id`, `municipality`, `street`, `orientation`, `number`, `longitude`, `latitude`, `visibility`, `created_at`, `updated_at`)
-                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-            val = (location_id, int(157), int(7), str(municipality), str(item["STRAATNAAM"]), None, int(item["AANTAL_PLAATSEN"]), float(longitude), float(latitude), bool(True), (datetime.datetime.now()), (datetime.datetime.now()))
+                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
+                     UPDATE id=values(id),
+                            country_id=values(country_id),
+                            province_id=values(province_id),
+                            municipality=values(municipality),
+                            street=values(street),
+                            orientation=values(orientation),
+                            number=values(number),
+                            longitude=values(longitude),
+                            latitude=values(latitude),
+                            updated_at=values(updated_at)"""
+            val = (location_id, int(157), int(7), str(municipality), str(item["STRAATNAAM"]), None, int(item["AANTAL_PLAATSEN"]),
+                   float(longitude), float(latitude), bool(True), (datetime.datetime.now(tz=pytz.timezone('Europe/Amsterdam'))),
+                   (datetime.datetime.now(tz=pytz.timezone('Europe/Amsterdam'))))
             cursor.execute(sql, val)
         connection.commit()
     except Exception as e:

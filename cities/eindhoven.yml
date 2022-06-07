@@ -5,8 +5,6 @@ services:
   # Scrape Eindhoven Service
   nipkaart_eindhoven:
     image: parking-eindhoven:latest
-    environment:
-      - TZ=Europe/Amsterdam
     networks:
       - backend
     deploy:

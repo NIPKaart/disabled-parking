@@ -27,7 +27,7 @@ These are the cities currently supported:
 - Amersfoort (updates every monday at 03:00)
 - Amsterdam (updates every second day of the month at 03:00)
 - Arnhem
-- Den Haag
+- Den Haag (updates every second day of the month at 02:30)
 - Eindhoven (updates every thuesday at 03:00)
 - Zoetermeer
 
@@ -69,7 +69,9 @@ Certain datasets are regularly updated, so that we can update them automatically
 
 `0 3 1 * *` = Run every first day of the month at 03:00<br>
 `0 3 * * 1` = Run every monday at 03:00<br>
+`30 2 * * 1` = Run every monday at 02:30<br>
 `0 3 * * 2` = Run every thuesday at 03:00<br>
+`*/2 * * * *` = Run every 2 minutes<br>
 
 Crontab generator: https://crontab.guru
 
