@@ -23,7 +23,8 @@ if __name__ == '__main__':
     elif city.lower() == "arnhem":
         import cities.arnhem as arnhem
         arnhem.download()
-        # arnhem.upload()
+        # database.truncate("Arnhem")
+        arnhem.upload()
     elif city.lower() == "amersfoort":
         import cities.amersfoort as amersfoort
         data_set = asyncio.run(amersfoort.async_get_locations())
