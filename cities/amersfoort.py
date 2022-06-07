@@ -1,4 +1,4 @@
-import json, datetime, os, aiohttp
+import json, datetime, os, aiohttp, pytz
 import urllib.request
 
 from database import connection, cursor
@@ -31,9 +31,9 @@ def centroid(vertexes):
 
 
 async def async_get_locations():
-    """Get the data from the GeoJSON API endpoint."""
+    """Get the data from the CKAN API endpoint."""
     async with aiohttp.ClientSession() as client:
-        async with client.get(f'{os.getenv("CKAN_SOURCE")}/download/amersfoort-gehandicaptenparkeerplaatsen.json') as resp:
+        async with client.get(f'{os.getenv("CKAN_SOURCE")}/dataset/280abd40-bd4a-4d76-9537-2c2bae526296/resource/417f3e35-4a5b-47c6-a23f-cbf92938c9e5/download/amersfoort-gehandicaptenparkeerplaatsen.json') as resp:
             return await resp.text()
 
 
@@ -74,7 +74,9 @@ def upload(data_set):
                             longitude=values(longitude),
                             latitude=values(latitude),
                             updated_at=values(updated_at)"""
-            val = (location_id, int(157), int(7), str(municipality), str(item["STRAATNAAM"]), None, int(item["AANTAL_PLAATSEN"]), float(longitude), float(latitude), bool(True), (datetime.datetime.now()), (datetime.datetime.now()))
+            val = (location_id, int(157), int(7), str(municipality), str(item["STRAATNAAM"]), None, int(item["AANTAL_PLAATSEN"]),
+                   float(longitude), float(latitude), bool(True), (datetime.datetime.now(tz=pytz.timezone('Europe/Amsterdam'))),
+                   (datetime.datetime.now(tz=pytz.timezone('Europe/Amsterdam'))))
             cursor.execute(sql, val)
         connection.commit()
     except Exception as e:

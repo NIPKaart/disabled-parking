@@ -1,4 +1,4 @@
-import datetime
+import datetime, pytz
 from parking_eindhoven import ParkingEindhoven
 from database import connection, cursor
 
@@ -39,7 +39,9 @@ def upload(data_set):
                             longitude=values(longitude),
                             latitude=values(latitude),
                             updated_at=values(updated_at)"""
-            val = (location_id, int(157), int(11), str(municipality), str(item.street), None, item.number, float(item.longitude), float(item.latitude), bool(True), (datetime.datetime.now()), (datetime.datetime.now()))
+            val = (location_id, int(157), int(11), str(municipality), str(item.street), None, item.number, float(item.longitude),
+                   float(item.latitude), bool(True), (datetime.datetime.now(tz=pytz.timezone('Europe/Amsterdam'))),
+                   (datetime.datetime.now(tz=pytz.timezone('Europe/Amsterdam'))))
             cursor.execute(sql, val)
         connection.commit()
     except Exception as e:

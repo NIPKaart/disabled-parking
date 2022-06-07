@@ -1,4 +1,4 @@
-import json, datetime, aiohttp
+import json, datetime, aiohttp, pytz
 from database import connection, cursor
 
 municipality = "Amsterdam"
@@ -63,7 +63,9 @@ def upload(data_set):
                             longitude=values(longitude),
                             latitude=values(latitude),
                             updated_at=values(updated_at)"""
-            val = (location_id, int(157), int(8), str(municipality), str(item["straatnaam"]), correct_orientation(item["type"]), int(item["aantal"]), float(longitude), float(latitude), bool(True), (datetime.datetime.now()), (datetime.datetime.now()))
+            val = (location_id, int(157), int(8), str(municipality), str(item["straatnaam"]), correct_orientation(item["type"]),
+                   int(item["aantal"]), float(longitude), float(latitude), bool(True), (datetime.datetime.now(tz=pytz.timezone('Europe/Amsterdam'))),
+                   (datetime.datetime.now(tz=pytz.timezone('Europe/Amsterdam'))))
             cursor.execute(sql, val)
         connection.commit()
     except Exception as e:

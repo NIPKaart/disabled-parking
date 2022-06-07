@@ -5,8 +5,6 @@ services:
   # Scrape Amersfoort Service
   nipkaart_amersfoort:
     image: parking-amersfoort:latest
-    environment:
-      - TZ=Europe/Amsterdam
     networks:
       - backend
     deploy:
