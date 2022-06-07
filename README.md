@@ -29,6 +29,7 @@ These are the cities currently supported:
 - Arnhem
 - Den Haag (updates every second day of the month at 02:30)
 - Eindhoven (updates every thuesday at 03:00)
+- Groningen
 - Zoetermeer
 
 ## Development
