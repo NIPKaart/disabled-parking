@@ -51,4 +51,5 @@ if __name__ == '__main__':
     elif city.lower() == "zoetermeer":
         import cities.zoetermeer as zoetermeer
         zoetermeer.download()
-        # zoetermeer.upload()
+        # database.truncate("Zoetermeer")
+        zoetermeer.upload()
