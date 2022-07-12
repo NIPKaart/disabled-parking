@@ -48,6 +48,13 @@ if __name__ == '__main__':
             print(f"Data opgehaald van: {city}")
             # database.truncate("Den Haag")
             den_haag.upload(data_set)
+    elif city.lower() == "hamburg":
+        import cities.germany.hamburg as hamburg
+        data_set = asyncio.run(hamburg.async_get_locations())
+        if (bool(data_set)):
+            print(f"Data opgehaald van: {city}")
+            # database.truncate("Hamburg")
+            hamburg.upload(data_set)
     elif city.lower() == "groningen":
         import cities.groningen as groningen
         groningen.download()

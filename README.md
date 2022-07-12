@@ -24,13 +24,17 @@ This project makes it possible to download and upload parking data from municipa
 
 These are the cities currently supported:
 
-- Amersfoort (updates every monday at 03:00)
-- Amsterdam (updates every second day of the month at 03:00)
-- Arnhem
-- Den Haag (updates every second day of the month at 02:30)
-- Eindhoven (updates every thuesday at 03:00)
-- Groningen
-- Zoetermeer
+| Country | City | Last update |
+|:--------|:-----|:------------|
+| Netherlands | Amersfoort | updates every monday at 03:00 |
+| Netherlands | Amsterdam | updates every second day of the month at 03:00 |
+| Netherlands | Arnhem |  |
+| Netherlands | Den Haag | updates every second day of the month at 02:30 |
+| Netherlands | Eindhoven | updates every thuesday at 03:00 |
+| Netherlands | Groningen |  |
+| Netherlands | Zoetermeer |  |
+| Germany | Hamburg |  |
+
 
 ## Development
 <details>
