@@ -1,9 +1,11 @@
 """Scrape and upload parking data to NIPKaart system"""
-import database as database
-import asyncio, os
+import asyncio
+import os
+from pathlib import Path
 
 from dotenv import load_dotenv
-from pathlib import Path
+
+import database as database
 
 if __name__ == "__main__":
     load_dotenv()

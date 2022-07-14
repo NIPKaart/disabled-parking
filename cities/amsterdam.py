@@ -1,4 +1,9 @@
-import json, datetime, aiohttp, pytz
+import datetime
+import json
+
+import aiohttp
+import pytz
+
 from database import connection, cursor
 
 municipality = "Amsterdam"

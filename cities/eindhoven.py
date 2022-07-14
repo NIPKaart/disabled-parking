@@ -1,5 +1,8 @@
-import datetime, pytz
+import datetime
+
+import pytz
 from parking_eindhoven import ParkingEindhoven
+
 from database import connection, cursor
 
 municipality = "Eindhoven"

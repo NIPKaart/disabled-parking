@@ -1,9 +1,14 @@
-import json, datetime, os, aiohttp, pytz
+import datetime
+import json
+import os
 import urllib.request
+from pathlib import Path
+
+import aiohttp
+import pytz
+from dotenv import load_dotenv
 
 from database import connection, cursor
-from dotenv import load_dotenv
-from pathlib import Path
 
 municipality = "Amersfoort"
 cbs_code = "0307"

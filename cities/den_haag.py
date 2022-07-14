@@ -1,4 +1,9 @@
-import json, datetime, aiohttp, os, pytz
+import datetime
+import json
+import os
+
+import aiohttp
+import pytz
 
 from database import connection, cursor
 

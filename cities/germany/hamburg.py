@@ -1,5 +1,8 @@
-import datetime, pytz
+import datetime
+
+import pytz
 from hamburg import UDPHamburg
+
 from database import connection, cursor
 
 municipality = "Hamburg"
