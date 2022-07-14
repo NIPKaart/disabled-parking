@@ -1,3 +1,4 @@
+"""Manage the location data of Zoetermeer."""
 import datetime
 import json
 import os
@@ -7,10 +8,10 @@ from pathlib import Path
 import pytz
 from dotenv import load_dotenv
 
-from database import connection, cursor
+from app.database import connection, cursor
 
-municipality = "Arnhem"
-cbs_code = "0202"
+MUNICIPALITY = "Zoetermeer"
+CBS_CODE = "0637"
 
 load_dotenv()
 env_path = Path(".") / ".env"
@@ -21,28 +22,28 @@ def download():
     """Download the data as JSON file."""
 
     # Create a variable and pass the url of file to be downloaded
-    url = f'{os.getenv("ARCGIS_SOURCE")}/6f301547133a4acda9074ec3ca9b075b_0.geojson'
+    url = f'{os.getenv("ARCGIS_SOURCE")}/308bb3581ba646afad6f776a8f7e4e67_0.geojson'
     # Copy a network object to a local file
-    urllib.request.urlretrieve(url, "data/parking-arnhem.json")
-    print(f"{municipality} - KLAAR met downloaden")
+    urllib.request.urlretrieve(url, "app/data/parking-zoetermeer.json")
+    print(f"{MUNICIPALITY} - KLAAR met downloaden")
 
 
 def upload():
     """Upload the data from the JSON file to the database."""
-    arnhem_file = "data/parking-arnhem.json"
-    arnhem_data = open(arnhem_file).read()
-    arnhem_obj = json.loads(arnhem_data)
-    count: int
 
+    zoetermeer_file = "app/data/parking-zoetermeer.json"
+    with open(zoetermeer_file, "r", encoding="UTF-8") as zoetermeer_data:
+        zoetermeer_obj = json.load(zoetermeer_data)
+
+    index: int
     try:
-        for index, item in enumerate(arnhem_obj["features"], 1):
-            count = index
-
+        for index, item in enumerate(zoetermeer_obj["features"], 1):
             item = item["properties"]
-            location_id = f"{cbs_code}-{item['OBJECTID']}"
+            # Define unique id
+            location_id = f"{CBS_CODE}-{item['OBJECTID_1']}"
 
-            sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, street, orientation, number, longitude, latitude, visibility, created_at, updated_at)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
+            sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, number, longitude, latitude, visibility, created_at, updated_at)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
                     UPDATE id=values(id),
                             country_id=values(country_id),
                             province_id=values(province_id),
@@ -56,13 +57,11 @@ def upload():
             val = (
                 location_id,
                 int(157),
-                int(6),
-                str(municipality),
-                str(item["LOCATIE"]),
-                str(item["TYPE_VAK"]),
-                int(item["AANTAL"]),
-                float(item["LON"]),
-                float(item["LAT"]),
+                int(9),
+                str(MUNICIPALITY),
+                int(item["plaatsen"]),
+                float(item["lon"]),
+                float(item["lat"]),
                 bool(True),
                 (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
                 (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
@@ -72,5 +71,5 @@ def upload():
     except Exception as error:
         print(f"MySQL error: {error}")
     finally:
-        print(f"{count} - Parkeerplaatsen gevonden")
-        print(f"{municipality} - KLAAR met updaten van database")
+        print(f"{index} - Parkeerplaatsen gevonden")
+        print(f"{MUNICIPALITY} - KLAAR met updaten van database")

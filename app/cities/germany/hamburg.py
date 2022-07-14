@@ -1,22 +1,18 @@
+"""Manage the location data of Hamburg."""
 import datetime
 
 import pytz
-from parking_eindhoven import ParkingEindhoven
+from hamburg import UDPHamburg
 
-from database import connection, cursor
+from app.database import connection, cursor
 
-municipality = "Eindhoven"
-cbs_code = "0772"
+MUNICIPALITY = "Hamburg"
 
 
-async def async_get_locations(number):
-    """Get parking data from API.
-
-    Args:
-        number: The number of parking lots to get.
-    """
-    async with ParkingEindhoven(parking_type=3) as client:
-        locations = await client.locations(rows=number)
+async def async_get_locations():
+    """Get parking data from API."""
+    async with UDPHamburg() as client:
+        locations = await client.disabled_parkings(bulk="true")
         return locations
 
 
@@ -26,31 +22,26 @@ def upload(data_set):
     Args:
         data_set: The data_set to upload.
     """
-    count: int
+    index: int
     try:
         for index, item in enumerate(data_set, 1):
-            count = index
-            # Define unique id
-            location_id = f"{cbs_code}-{item.spot_id}"
-            sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, street, orientation, number, longitude, latitude, visibility, created_at, updated_at)
-                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
+            sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, street, number, longitude, latitude, visibility, created_at, updated_at)
+                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
                      UPDATE id=values(id),
                             country_id=values(country_id),
                             province_id=values(province_id),
                             municipality=values(municipality),
                             street=values(street),
-                            orientation=values(orientation),
                             number=values(number),
                             longitude=values(longitude),
                             latitude=values(latitude),
                             updated_at=values(updated_at)"""
             val = (
-                location_id,
-                int(157),
-                int(11),
-                str(municipality),
+                item.spot_id,
+                int(83),
+                int(14),
+                str(MUNICIPALITY),
                 str(item.street),
-                None,
                 item.number,
                 float(item.longitude),
                 float(item.latitude),
@@ -63,5 +54,5 @@ def upload(data_set):
     except Exception as error:
         print(f"MySQL error: {error}")
     finally:
-        print(f"Aantal parkeerplaatsen gevonden: {count}")
-        print(f"{municipality} - KLAAR met updaten van database")
+        print(f"Aantal parkeerplaatsen gevonden: {index}")
+        print(f"{MUNICIPALITY} - KLAAR met updaten van database")

@@ -1,72 +1,66 @@
+"""Manage the location data of Amersfoort."""
 import datetime
 import json
+import os
+import urllib.request
+from pathlib import Path
 
 import aiohttp
 import pytz
+from dotenv import load_dotenv
 
-from database import connection, cursor
+from app.database import connection, cursor
+from app.helper import centroid, get_unique_number
 
-municipality = "Amsterdam"
-cbs_code = "0363"
+MUNICIPALITY = "Amersfoort"
+CBS_CODE = "0307"
+
+load_dotenv()
+env_path = Path(".") / ".env"
+load_dotenv(dotenv_path=env_path)
 
 
 async def async_get_locations():
-    """Get the data from the GeoJSON API endpoint."""
+    """Get the data from the CKAN API endpoint."""
     async with aiohttp.ClientSession() as client:
         async with client.get(
-            "https://api.data.amsterdam.nl/v1/parkeervakken/parkeervakken?eType=E6a&_format=geojson"
+            f'{os.getenv("CKAN_SOURCE")}/dataset/280abd40-bd4a-4d76-9537-2c2bae526296/resource/417f3e35-4a5b-47c6-a23f-cbf92938c9e5/download/amersfoort-gehandicaptenparkeerplaatsen.json'
         ) as resp:
             return await resp.text()
 
 
-def correct_orientation(type) -> str:
-    """Correct the orientation of the parking lot."""
-    if type == "Vissengraat":
-        return str("Visgraat")
-    return str(type)
+def download():
+    """Download the data as JSON file."""
 
-
-def centroid(vertexes):
-    """Calculate the centroid of a polygon.
-
-    Args:
-        vertexes (list): A list of points.
-
-    Returns:
-        Point: The centroid of the polygon.
-    """
-    _x_list = [vertex[0] for vertex in vertexes[0]]
-    _y_list = [vertex[1] for vertex in vertexes[0]]
-
-    _len = len(vertexes[0])
-    _x = sum(_x_list) / _len
-    _y = sum(_y_list) / _len
-    return (_y, _x)
+    # Create a variable and pass the url of file to be downloaded
+    url = f'{os.getenv("CKAN_SOURCE")}/download/amersfoort-gehandicaptenparkeerplaatsen.json'
+    # Copy a network object to a local file
+    urllib.request.urlretrieve(url, "data/parking-amersfoort.json")
+    print(f"{MUNICIPALITY} - KLAAR met downloaden")
 
 
 def upload(data_set):
     """Upload the data from the JSON file to the database."""
-    amsterdam_obj = json.loads(data_set)
+    amersfoort_obj = json.loads(data_set)
     count: int
     try:
-        for index, item in enumerate(amsterdam_obj["features"], 1):
+        for index, item in enumerate(amersfoort_obj["features"], 1):
             count = index
 
             # Get the coordinates of the parking lot with centroid
             latitude, longitude = centroid(item["geometry"]["coordinates"])
             # Define unique id
-            location_id = f"{cbs_code}-{item['id'].split('.')[1]}"
+            location_id = f"{CBS_CODE}-{get_unique_number(latitude, longitude)}"
 
             item = item["properties"]
             # Make the sql query
-            sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, street, orientation, number, longitude, latitude, visibility, created_at, updated_at)
-                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
+            sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, street, number, longitude, latitude, visibility, created_at, updated_at)
+                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
                      UPDATE id=values(id),
                             country_id=values(country_id),
                             province_id=values(province_id),
                             municipality=values(municipality),
                             street=values(street),
-                            orientation=values(orientation),
                             number=values(number),
                             longitude=values(longitude),
                             latitude=values(latitude),
@@ -74,11 +68,10 @@ def upload(data_set):
             val = (
                 location_id,
                 int(157),
-                int(8),
-                str(municipality),
-                str(item["straatnaam"]),
-                correct_orientation(item["type"]),
-                int(item["aantal"]),
+                int(7),
+                str(MUNICIPALITY),
+                str(item["STRAATNAAM"]),
+                int(item["AANTAL_PLAATSEN"]),
                 float(longitude),
                 float(latitude),
                 bool(True),
@@ -91,4 +84,4 @@ def upload(data_set):
         print(f"MySQL error: {error}")
     finally:
         print(f"{count} - Parkeerplaatsen gevonden")
-        print(f"{municipality} - KLAAR met updaten van database")
+        print(f"{MUNICIPALITY} - KLAAR met updaten van database")

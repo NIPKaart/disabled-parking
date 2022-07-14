@@ -1,3 +1,4 @@
+"""Manage the location data of Groningen."""
 import datetime
 import json
 import os
@@ -7,11 +8,11 @@ from pathlib import Path
 import pytz
 from dotenv import load_dotenv
 
-from database import connection, cursor
+from app.database import connection, cursor
+from app.helper import centroid
 
-municipality = "Groningen"
-cbs_code = "0014"
-count = 0
+MUNICIPALITY = "Groningen"
+CBS_CODE = "0014"
 
 load_dotenv()
 env_path = Path(".") / ".env"
@@ -24,42 +25,23 @@ def download():
     # Create a variable and pass the url of file to be downloaded
     url = f'{os.getenv("CKAN_SOURCE")}/dataset/7ff17203-0dba-40f8-9abf-1b770baa6be6/resource/822d72b7-7b83-43f6-8bd7-2c8c657693f5/download/gemeentegroningen_parkeervakken.geojson'
     # Copy a network object to a local file
-    urllib.request.urlretrieve(url, "data/parking-groningen.json")
-    print(f"{municipality} - KLAAR met downloaden")
-
-
-def centroid(vertexes):
-    """Calculate the centroid of a polygon.
-
-    Args:
-        vertexes (list): A list of points.
-
-    Returns:
-        Point: The centroid of the polygon.
-    """
-    _x_list = [vertex[0] for vertex in vertexes[0]]
-    _y_list = [vertex[1] for vertex in vertexes[0]]
-
-    _len = len(vertexes[0])
-    _x = sum(_x_list) / _len
-    _y = sum(_y_list) / _len
-    return (_y, _x)
+    urllib.request.urlretrieve(url, "app/data/parking-groningen.json")
+    print(f"{MUNICIPALITY} - KLAAR met downloaden")
 
 
 def upload():
     """Upload the data from the JSON file to the database."""
-    global count
+    groningen_file = "app/data/parking-groningen.json"
+    with open(groningen_file, "r", encoding="UTF-8") as groningen_data:
+        groningen_obj = json.load(groningen_data)
 
-    groningen_file = "data/parking-groningen.json"
-    groningen_data = open(groningen_file).read()
-    groningen_obj = json.loads(groningen_data)
-
+    count: int = 0
     try:
         for item in groningen_obj["features"]:
             if item["properties"]["Vakfunctie"] == "Invaliden_alg":
                 count += 1
                 # Define unique id
-                location_id = f"{cbs_code}-{item['properties']['VakID']}"
+                location_id = f"{CBS_CODE}-{item['properties']['VakID']}"
                 # Get the coordinates of the parking lot with centroid
                 latitude, longitude = centroid(item["geometry"]["coordinates"])
                 item = item["properties"]
@@ -79,7 +61,7 @@ def upload():
                     location_id,
                     int(157),
                     int(1),
-                    str(municipality),
+                    str(MUNICIPALITY),
                     str(item["Straatnaam"]),
                     int(1),
                     float(latitude),
@@ -94,4 +76,4 @@ def upload():
         print(f"MySQL error: {error}")
     finally:
         print(f"{count} - Parkeerplaatsen gevonden")
-        print(f"{municipality} - KLAAR met updaten van database")
+        print(f"{MUNICIPALITY} - KLAAR met updaten van database")
