@@ -29,7 +29,7 @@ These are the cities currently supported:
 | Netherlands | Amersfoort | 149 | updates every monday at 03:00 |
 | Netherlands | Amsterdam | 1243 | updates every second day of the month at 03:00 |
 | Netherlands | Arnhem | 121 |  |
-| Netherlands | Den Haag | 241 | updates every second day of the month at 02:30 |
+| Netherlands | Den Haag | 234 (says 241) | updates every second day of the month at 02:30 |
 | Netherlands | Eindhoven | 180 | updates every thuesday at 03:00 |
 | Netherlands | Groningen | 187 |  |
 | Netherlands | Zoetermeer | 388 |  |
@@ -94,6 +94,7 @@ pre-commit run --all-files
 Certain datasets are regularly updated, so that we can update them automatically in the NIPKaart database.
 
 `0 3 1 * *` = Run every first day of the month at 03:00<br>
+`30 2 2 * *` = Run every second day of the month at 02:30<br>
 `0 3 * * 1` = Run every monday at 03:00<br>
 `30 2 * * 1` = Run every monday at 02:30<br>
 `0 3 * * 2` = Run every thuesday at 03:00<br>

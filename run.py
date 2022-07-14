@@ -16,6 +16,8 @@ from app.cities.netherlands import (
     zoetermeer,
 )
 
+# import app.database as database
+
 if __name__ == "__main__":
     load_dotenv()
     env_path = Path(".") / ".env"
