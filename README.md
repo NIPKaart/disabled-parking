@@ -27,12 +27,12 @@ These are the cities currently supported:
 | Country | City | Locations | Last update |
 |:--------|:-----|:----------|:------------|
 | Netherlands | Amersfoort | 149 | updates every monday at 03:00 |
-| Netherlands | Amsterdam | ? | updates every second day of the month at 03:00 |
+| Netherlands | Amsterdam | 1243 | updates every second day of the month at 03:00 |
 | Netherlands | Arnhem | 121 |  |
-| Netherlands | Den Haag | ? | updates every second day of the month at 02:30 |
-| Netherlands | Eindhoven | ? | updates every thuesday at 03:00 |
+| Netherlands | Den Haag | 241 | updates every second day of the month at 02:30 |
+| Netherlands | Eindhoven | 180 | updates every thuesday at 03:00 |
 | Netherlands | Groningen | 187 |  |
-| Netherlands | Zoetermeer | ? |  |
+| Netherlands | Zoetermeer | 388 |  |
 | Germany | Hamburg | 665 |  |
 
 
@@ -67,10 +67,26 @@ docker build -t parking-[CITY] .
 docker run parking-[CITY] -d --restart on-failure --name nipkaart-parking-[CITY]
 ```
 
-or 
+or
 
 ```bash
 docker stack deploy -c deploy/[CITY].yml parking
+```
+
+### Use of pre-commit
+
+This project provides the option to use pre-commit, so that each commit is checked for code review before being pushed through.
+
+Within your virtual environment you can use this command to install it:
+
+```bash
+pre-commit install
+```
+
+If you want to perform a full check in the meantime:
+
+```bash
+pre-commit run --all-files
 ```
 
 ### Crontab
