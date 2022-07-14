@@ -145,5 +145,5 @@ SOFTWARE.
 [issues-url]: https://github.com/klaasnicolaas/nipkaart_parking/issues
 [license-shield]: https://img.shields.io/github/license/klaasnicolaas/nipkaart_parking.svg?style=for-the-badge
 [commits-shield]: https://img.shields.io/github/commit-activity/y/klaasnicolaas/nipkaart_parking.svg?style=for-the-badge
-[commits]: https://github.com/klaasnicolaas/nipkaart_parking/commits/master
+[commits]: https://github.com/klaasnicolaas/nipkaart_parking/commits/main
 [last-commit-shield]: https://img.shields.io/github/last-commit/klaasnicolaas/nipkaart_parking.svg?style=for-the-badge
