@@ -4,10 +4,13 @@ from database import connection, cursor
 municipality = "Amsterdam"
 cbs_code = "0363"
 
+
 async def async_get_locations():
     """Get the data from the GeoJSON API endpoint."""
     async with aiohttp.ClientSession() as client:
-        async with client.get('https://api.data.amsterdam.nl/v1/parkeervakken/parkeervakken?eType=E6a&_format=geojson') as resp:
+        async with client.get(
+            "https://api.data.amsterdam.nl/v1/parkeervakken/parkeervakken?eType=E6a&_format=geojson"
+        ) as resp:
             return await resp.text()
 
 
@@ -27,13 +30,13 @@ def centroid(vertexes):
     Returns:
         Point: The centroid of the polygon.
     """
-    _x_list = [vertex [0] for vertex in vertexes[0]]
-    _y_list = [vertex [1] for vertex in vertexes[0]]
+    _x_list = [vertex[0] for vertex in vertexes[0]]
+    _y_list = [vertex[1] for vertex in vertexes[0]]
 
     _len = len(vertexes[0])
     _x = sum(_x_list) / _len
     _y = sum(_y_list) / _len
-    return(_y, _x)
+    return (_y, _x)
 
 
 def upload(data_set):
@@ -51,7 +54,7 @@ def upload(data_set):
 
             item = item["properties"]
             # Make the sql query
-            sql = """INSERT INTO `parking_cities` (`id`, `country_id`, `province_id`, `municipality`, `street`, `orientation`, `number`, `longitude`, `latitude`, `visibility`, `created_at`, `updated_at`)
+            sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, street, orientation, number, longitude, latitude, visibility, created_at, updated_at)
                      VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
                      UPDATE id=values(id),
                             country_id=values(country_id),
@@ -63,13 +66,24 @@ def upload(data_set):
                             longitude=values(longitude),
                             latitude=values(latitude),
                             updated_at=values(updated_at)"""
-            val = (location_id, int(157), int(8), str(municipality), str(item["straatnaam"]), correct_orientation(item["type"]),
-                   int(item["aantal"]), float(longitude), float(latitude), bool(True), (datetime.datetime.now(tz=pytz.timezone('Europe/Amsterdam'))),
-                   (datetime.datetime.now(tz=pytz.timezone('Europe/Amsterdam'))))
+            val = (
+                location_id,
+                int(157),
+                int(8),
+                str(municipality),
+                str(item["straatnaam"]),
+                correct_orientation(item["type"]),
+                int(item["aantal"]),
+                float(longitude),
+                float(latitude),
+                bool(True),
+                (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
+                (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
+            )
             cursor.execute(sql, val)
         connection.commit()
-    except Exception as e:
-        print(f'MySQL error: {e}')
+    except Exception as error:
+        print(f"MySQL error: {error}")
     finally:
         print(f"{count} - Parkeerplaatsen gevonden")
-        print(f'{municipality} - KLAAR met updaten van database')
+        print(f"{municipality} - KLAAR met updaten van database")

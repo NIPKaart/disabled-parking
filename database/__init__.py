@@ -5,23 +5,30 @@ from dotenv import load_dotenv
 from pathlib import Path
 
 load_dotenv()
-env_path = Path('.')/'.env'
+env_path = Path(".") / ".env"
 load_dotenv(dotenv_path=env_path)
 
 # MYSQL credentials
-DB_SERVER   = os.getenv("DB_SERVER")
-DB_PORT     = int(os.getenv("DB_PORT"))
-DATABASE    = os.getenv("DATABASE")
+DB_SERVER = os.getenv("DB_SERVER")
+DB_PORT = int(os.getenv("DB_PORT"))
+DATABASE = os.getenv("DATABASE")
 DB_USERNAME = os.getenv("DB_USERNAME")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 
 # Connect to MySQL
-connection = pymysql.connect(host=DB_SERVER, port=DB_PORT, user=DB_USERNAME, password=DB_PASSWORD, database=DATABASE)
+connection = pymysql.connect(
+    host=DB_SERVER,
+    port=DB_PORT,
+    user=DB_USERNAME,
+    password=DB_PASSWORD,
+    database=DATABASE,
+)
 cursor = connection.cursor()
+
 
 def truncate(city):
     """Remove all data from a city.
-    
+
     Args:
         city: The name of the city, it's case sensitive!
     """
@@ -29,7 +36,7 @@ def truncate(city):
         sql = "DELETE FROM `parking_cities` WHERE `municipality`=%s"
         cursor.execute(sql, city)
         connection.commit()
-    except Exception as e:
-        print(f'MySQL error: {e}')
+    except Exception as error:
+        print(f"MySQL error: {error}")
     finally:
-        print(f'{city} - verwijderen van de data')
+        print(f"{city} - verwijderen van de data")

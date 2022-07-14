@@ -5,6 +5,7 @@ from database import connection, cursor
 municipality = "Eindhoven"
 cbs_code = "0772"
 
+
 async def async_get_locations(number):
     """Get parking data from API.
 
@@ -14,6 +15,7 @@ async def async_get_locations(number):
     async with ParkingEindhoven(parking_type=3) as client:
         locations = await client.locations(rows=number)
         return locations
+
 
 def upload(data_set):
     """Upload the data_set to the database.
@@ -27,7 +29,7 @@ def upload(data_set):
             count = index
             # Define unique id
             location_id = f"{cbs_code}-{item.spot_id}"
-            sql = """INSERT INTO `parking_cities` (`id`, `country_id`, `province_id`, `municipality`, `street`, `orientation`, `number`, `longitude`, `latitude`, `visibility`, `created_at`, `updated_at`)
+            sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, street, orientation, number, longitude, latitude, visibility, created_at, updated_at)
                      VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
                      UPDATE id=values(id),
                             country_id=values(country_id),
@@ -39,13 +41,24 @@ def upload(data_set):
                             longitude=values(longitude),
                             latitude=values(latitude),
                             updated_at=values(updated_at)"""
-            val = (location_id, int(157), int(11), str(municipality), str(item.street), None, item.number, float(item.longitude),
-                   float(item.latitude), bool(True), (datetime.datetime.now(tz=pytz.timezone('Europe/Amsterdam'))),
-                   (datetime.datetime.now(tz=pytz.timezone('Europe/Amsterdam'))))
+            val = (
+                location_id,
+                int(157),
+                int(11),
+                str(municipality),
+                str(item.street),
+                None,
+                item.number,
+                float(item.longitude),
+                float(item.latitude),
+                bool(True),
+                (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
+                (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
+            )
             cursor.execute(sql, val)
         connection.commit()
-    except Exception as e:
-        print(f'MySQL error: {e}')
+    except Exception as error:
+        print(f"MySQL error: {error}")
     finally:
         print(f"Aantal parkeerplaatsen gevonden: {count}")
-        print(f'{municipality} - KLAAR met updaten van database')
+        print(f"{municipality} - KLAAR met updaten van database")

@@ -10,8 +10,9 @@ cbs_code = "0014"
 count = 0
 
 load_dotenv()
-env_path = Path('.')/'.env'
+env_path = Path(".") / ".env"
 load_dotenv(dotenv_path=env_path)
+
 
 def download():
     """Download the data as JSON file."""
@@ -19,8 +20,8 @@ def download():
     # Create a variable and pass the url of file to be downloaded
     url = f'{os.getenv("CKAN_SOURCE")}/dataset/7ff17203-0dba-40f8-9abf-1b770baa6be6/resource/822d72b7-7b83-43f6-8bd7-2c8c657693f5/download/gemeentegroningen_parkeervakken.geojson'
     # Copy a network object to a local file
-    urllib.request.urlretrieve(url, 'data/parking-groningen.json')
-    print(f'{municipality} - KLAAR met downloaden')
+    urllib.request.urlretrieve(url, "data/parking-groningen.json")
+    print(f"{municipality} - KLAAR met downloaden")
 
 
 def centroid(vertexes):
@@ -32,13 +33,13 @@ def centroid(vertexes):
     Returns:
         Point: The centroid of the polygon.
     """
-    _x_list = [vertex [0] for vertex in vertexes[0]]
-    _y_list = [vertex [1] for vertex in vertexes[0]]
+    _x_list = [vertex[0] for vertex in vertexes[0]]
+    _y_list = [vertex[1] for vertex in vertexes[0]]
 
     _len = len(vertexes[0])
     _x = sum(_x_list) / _len
     _y = sum(_y_list) / _len
-    return(_y, _x)
+    return (_y, _x)
 
 
 def upload():
@@ -59,7 +60,7 @@ def upload():
                 latitude, longitude = centroid(item["geometry"]["coordinates"])
                 item = item["properties"]
                 # Make the sql query
-                sql= """INSERT INTO `parking_cities` (`id`, `country_id`, `province_id`, `municipality`, `street`, `number`, `latitude`, `longitude`, `visibility`, `created_at`, `updated_at`)
+                sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, street, number, latitude, longitude, visibility, created_at, updated_at)
                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
                     UPDATE id=values(id),
                             country_id=values(country_id),
@@ -70,13 +71,23 @@ def upload():
                             latitude=values(latitude),
                             longitude=values(longitude),
                             updated_at=values(updated_at)"""
-                val = (location_id, int(157), int(1), str(municipality), str(item["Straatnaam"]), int(1),
-                       float(latitude), float(longitude), bool(True), (datetime.datetime.now(tz=pytz.timezone('Europe/Amsterdam'))),
-                       (datetime.datetime.now(tz=pytz.timezone('Europe/Amsterdam'))))
+                val = (
+                    location_id,
+                    int(157),
+                    int(1),
+                    str(municipality),
+                    str(item["Straatnaam"]),
+                    int(1),
+                    float(latitude),
+                    float(longitude),
+                    bool(True),
+                    (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
+                    (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
+                )
                 cursor.execute(sql, val)
         connection.commit()
-    except Exception as e:
-        print(f'MySQL error: {e}')
+    except Exception as error:
+        print(f"MySQL error: {error}")
     finally:
         print(f"{count} - Parkeerplaatsen gevonden")
-        print(f'{municipality} - KLAAR met updaten van database')
+        print(f"{municipality} - KLAAR met updaten van database")

@@ -9,8 +9,9 @@ municipality = "Amersfoort"
 cbs_code = "0307"
 
 load_dotenv()
-env_path = Path('.')/'.env'
+env_path = Path(".") / ".env"
 load_dotenv(dotenv_path=env_path)
+
 
 def centroid(vertexes):
     """Calculate the centroid of a polygon.
@@ -21,17 +22,18 @@ def centroid(vertexes):
     Returns:
         Point: The centroid of the polygon.
     """
-    _x_list = [vertex [0] for vertex in vertexes[0]]
-    _y_list = [vertex [1] for vertex in vertexes[0]]
+    _x_list = [vertex[0] for vertex in vertexes[0]]
+    _y_list = [vertex[1] for vertex in vertexes[0]]
 
     _len = len(vertexes[0])
     _x = sum(_x_list) / _len
     _y = sum(_y_list) / _len
-    return(_y, _x)
+    return (_y, _x)
+
 
 def get_unique_number(lat, lon):
     """Generate a unique number for the location.
-    
+
     Args:
         lat (float): The latitude of the location.
         lon (float): The longitude of the location.
@@ -53,18 +55,22 @@ def get_unique_number(lat, lon):
 
         lat_int = int((lat_double * 1e7))
         lon_int = int((lon_double * 1e7))
-        val = abs((lat_int << 16 & 0xffff0000) | (lon_int & 0x0000ffff))
+        val = abs((lat_int << 16 & 0xFFFF0000) | (lon_int & 0x0000FFFF))
         val = val % 2147483647
         return val
     except Exception as e:
-        print("marking OD_LOC_ID as -1 getting exception inside get_unique_number function")
+        print(
+            "marking OD_LOC_ID as -1 getting exception inside get_unique_number function"
+        )
         print("Exception while generating od loc id")
 
 
 async def async_get_locations():
     """Get the data from the CKAN API endpoint."""
     async with aiohttp.ClientSession() as client:
-        async with client.get(f'{os.getenv("CKAN_SOURCE")}/dataset/280abd40-bd4a-4d76-9537-2c2bae526296/resource/417f3e35-4a5b-47c6-a23f-cbf92938c9e5/download/amersfoort-gehandicaptenparkeerplaatsen.json') as resp:
+        async with client.get(
+            f'{os.getenv("CKAN_SOURCE")}/dataset/280abd40-bd4a-4d76-9537-2c2bae526296/resource/417f3e35-4a5b-47c6-a23f-cbf92938c9e5/download/amersfoort-gehandicaptenparkeerplaatsen.json'
+        ) as resp:
             return await resp.text()
 
 
@@ -74,8 +80,8 @@ def download():
     # Create a variable and pass the url of file to be downloaded
     url = f'{os.getenv("CKAN_SOURCE")}/download/amersfoort-gehandicaptenparkeerplaatsen.json'
     # Copy a network object to a local file
-    urllib.request.urlretrieve(url, 'data/parking-amersfoort.json')
-    print(f'{municipality} - KLAAR met downloaden')
+    urllib.request.urlretrieve(url, "data/parking-amersfoort.json")
+    print(f"{municipality} - KLAAR met downloaden")
 
 
 def upload(data_set):
@@ -104,13 +110,23 @@ def upload(data_set):
                             longitude=values(longitude),
                             latitude=values(latitude),
                             updated_at=values(updated_at)"""
-            val = (location_id, int(157), int(7), str(municipality), str(item["STRAATNAAM"]), int(item["AANTAL_PLAATSEN"]),
-                   float(longitude), float(latitude), bool(True), (datetime.datetime.now(tz=pytz.timezone('Europe/Amsterdam'))),
-                   (datetime.datetime.now(tz=pytz.timezone('Europe/Amsterdam'))))
+            val = (
+                location_id,
+                int(157),
+                int(7),
+                str(municipality),
+                str(item["STRAATNAAM"]),
+                int(item["AANTAL_PLAATSEN"]),
+                float(longitude),
+                float(latitude),
+                bool(True),
+                (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
+                (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
+            )
             cursor.execute(sql, val)
         connection.commit()
-    except Exception as e:
-        print(f'MySQL error: {e}')
+    except Exception as error:
+        print(f"MySQL error: {error}")
     finally:
         print(f"{count} - Parkeerplaatsen gevonden")
-        print(f'{municipality} - KLAAR met updaten van database')
+        print(f"{municipality} - KLAAR met updaten van database")
