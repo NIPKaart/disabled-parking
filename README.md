@@ -24,16 +24,16 @@ This project makes it possible to download and upload parking data from municipa
 
 These are the cities currently supported:
 
-| Country | City | Last update |
-|:--------|:-----|:------------|
-| Netherlands | Amersfoort | updates every monday at 03:00 |
-| Netherlands | Amsterdam | updates every second day of the month at 03:00 |
-| Netherlands | Arnhem |  |
-| Netherlands | Den Haag | updates every second day of the month at 02:30 |
-| Netherlands | Eindhoven | updates every thuesday at 03:00 |
-| Netherlands | Groningen |  |
-| Netherlands | Zoetermeer |  |
-| Germany | Hamburg |  |
+| Country | City | Locations | Last update |
+|:--------|:-----|:----------|:------------|
+| Netherlands | Amersfoort | 149 | updates every monday at 03:00 |
+| Netherlands | Amsterdam | ? | updates every second day of the month at 03:00 |
+| Netherlands | Arnhem | 121 |  |
+| Netherlands | Den Haag | ? | updates every second day of the month at 02:30 |
+| Netherlands | Eindhoven | ? | updates every thuesday at 03:00 |
+| Netherlands | Groningen | 187 |  |
+| Netherlands | Zoetermeer | ? |  |
+| Germany | Hamburg | 665 |  |
 
 
 ## Development
@@ -65,7 +65,12 @@ docker build -t parking-[CITY] .
 
 ```bash
 docker run parking-[CITY] -d --restart on-failure --name nipkaart-parking-[CITY]
-docker stack deploy -c cities/[CITY].yml parking
+```
+
+or 
+
+```bash
+docker stack deploy -c deploy/[CITY].yml parking
 ```
 
 ### Crontab
