@@ -37,7 +37,7 @@ def upload(data_set):
                             latitude=values(latitude),
                             updated_at=values(updated_at)"""
             val = (
-                item.spot_id,
+                item.spot_id.replace(".", "-"),
                 int(83),
                 int(14),
                 str(MUNICIPALITY),

@@ -33,7 +33,7 @@ These are the cities currently supported:
 | Netherlands | Eindhoven | 180 | updates every thuesday at 03:00 |
 | Netherlands | Groningen | 187 |  |
 | Netherlands | Zoetermeer | 388 |  |
-| Germany | Hamburg | 665 |  |
+| Germany | Hamburg | 671 |  |
 
 
 ## Development
