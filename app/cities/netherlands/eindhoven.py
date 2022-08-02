@@ -7,6 +7,7 @@ from parking_eindhoven import ParkingEindhoven
 from app.database import connection, cursor
 
 MUNICIPALITY = "Eindhoven"
+GEOCODE = "NL-NB"
 CBS_CODE = "0772"
 
 
@@ -31,7 +32,7 @@ def upload(data_set):
     try:
         for index, item in enumerate(data_set, 1):
             # Define unique id
-            location_id = f"{CBS_CODE}-{item.spot_id}"
+            location_id = f"{GEOCODE}-{CBS_CODE}-{item.spot_id}"
             sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, street, number, longitude, latitude, visibility, created_at, updated_at)
                      VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
                      UPDATE id=values(id),

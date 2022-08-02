@@ -13,6 +13,7 @@ from app.database import connection, cursor
 from app.helper import centroid, get_unique_number
 
 MUNICIPALITY = "Amersfoort"
+GEOCODE = "NL-UT"
 CBS_CODE = "0307"
 
 load_dotenv()
@@ -50,7 +51,9 @@ def upload(data_set):
             # Get the coordinates of the parking lot with centroid
             latitude, longitude = centroid(item["geometry"]["coordinates"])
             # Define unique id
-            location_id = f"{CBS_CODE}-{get_unique_number(latitude, longitude)}"
+            location_id = (
+                f"{GEOCODE}-{CBS_CODE}-{get_unique_number(latitude, longitude)}"
+            )
 
             item = item["properties"]
             # Make the sql query

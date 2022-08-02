@@ -9,6 +9,7 @@ import pytz
 from app.database import connection, cursor
 
 MUNICIPALITY = "Den Haag"
+GEOCODE = "NL-ZH"
 CBS_CODE = "0518"
 
 
@@ -46,7 +47,7 @@ def upload(data_set):
     try:
         for index, item in enumerate(den_haag_obj["result"]["records"], 1):
             # Define unique id
-            location_id = f"{CBS_CODE}-{item['GUID'].split('{')[1]}"
+            location_id = f"{GEOCODE}-{CBS_CODE}-{item['GUID'].split('{')[1]}"
             sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, orientation, number, longitude, latitude, visibility, created_at, updated_at)
                      VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
                      UPDATE id=values(id),

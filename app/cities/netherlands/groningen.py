@@ -12,6 +12,7 @@ from app.database import connection, cursor
 from app.helper import centroid
 
 MUNICIPALITY = "Groningen"
+GEOCODE = "NL-GR"
 CBS_CODE = "0014"
 
 load_dotenv()
@@ -41,7 +42,7 @@ def upload():
             if item["properties"]["Vakfunctie"] == "Invaliden_alg":
                 count += 1
                 # Define unique id
-                location_id = f"{CBS_CODE}-{item['properties']['VakID']}"
+                location_id = f"{GEOCODE}-{CBS_CODE}-{item['properties']['VakID']}"
                 # Get the coordinates of the parking lot with centroid
                 latitude, longitude = centroid(item["geometry"]["coordinates"])
                 item = item["properties"]

@@ -9,6 +9,7 @@ from app.database import connection, cursor
 from app.helper import centroid
 
 MUNICIPALITY = "Amsterdam"
+GEOCODE = "NL-NH"
 CBS_CODE = "0363"
 
 
@@ -44,7 +45,7 @@ def upload(data_set):
             # Get the coordinates of the parking lot with centroid
             latitude, longitude = centroid(item["geometry"]["coordinates"])
             # Define unique id
-            location_id = f"{CBS_CODE}-{item['id'].split('.')[1]}"
+            location_id = f"{GEOCODE}-{CBS_CODE}-{item['id'].split('.')[1]}"
 
             item = item["properties"]
             # Make the sql query
