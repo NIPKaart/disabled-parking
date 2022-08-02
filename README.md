@@ -27,7 +27,7 @@ These are the cities currently supported:
 | Country | City | Locations | Last update |
 |:--------|:-----|:----------|:------------|
 | Netherlands | Amersfoort | 149 | updates every monday at 03:00 |
-| Netherlands | Amsterdam | 1243 | updates every second day of the month at 03:00 |
+| Netherlands | Amsterdam | 1251 | updates every second day of the month at 03:00 |
 | Netherlands | Arnhem | 121 |  |
 | Netherlands | Den Haag | 234 (says 241) | updates every second day of the month at 02:30 |
 | Netherlands | Eindhoven | 180 | updates every thuesday at 03:00 |

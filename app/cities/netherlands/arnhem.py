@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 from app.database import connection, cursor
 
 MUNICIPALITY = "Arnhem"
+GEOCODE = "NL-GE"
 CBS_CODE = "0202"
 
 load_dotenv()
@@ -40,7 +41,7 @@ def upload():
         for index, item in enumerate(arnhem_obj["features"], 1):
             item = item["properties"]
             # Generate unique id
-            location_id = f"{CBS_CODE}-{item['OBJECTID']}"
+            location_id = f"{GEOCODE}-{CBS_CODE}-{item['OBJECTID']}"
 
             sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, street, orientation, number, longitude, latitude, visibility, created_at, updated_at)
                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
