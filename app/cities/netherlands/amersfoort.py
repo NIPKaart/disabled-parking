@@ -86,5 +86,6 @@ def upload(data_set):
     except Exception as error:
         print(f"MySQL error: {error}")
     finally:
-        print(f"{count} - Parkeerplaatsen gevonden")
-        print(f"{MUNICIPALITY} - KLAAR met updaten van database")
+        print(f"{count} - Parking spaces found")
+        print("---")
+        print(f"{MUNICIPALITY} - DONE with database update")
