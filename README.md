@@ -24,8 +24,10 @@ This project makes it possible to download and upload parking data from municipa
 
 These are the cities currently supported:
 
-| Country | City | Locations | Last update |
-|:--------|:-----|:----------|:------------|
+| Country | City | Locations | Update frequency |
+|:--------|:-----|:----------|:-----------------|
+| Germany | Dusseldorf | 315 |  |
+| Germany | Hamburg | 671 |  |
 | Netherlands | Amersfoort | 149 | updates every monday at 03:00 |
 | Netherlands | Amsterdam | 1251 | updates every second day of the month at 03:00 |
 | Netherlands | Arnhem | 121 |  |
@@ -33,7 +35,6 @@ These are the cities currently supported:
 | Netherlands | Eindhoven | 180 | updates every thuesday at 03:00 |
 | Netherlands | Groningen | 187 |  |
 | Netherlands | Zoetermeer | 388 |  |
-| Germany | Hamburg | 671 |  |
 
 
 ## Development
