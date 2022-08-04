@@ -11,10 +11,14 @@ GEOCODE = "DE-NW"
 PHONE_CODE = "0211"
 
 
-async def async_get_locations():
-    """Get parking data from API."""
+async def async_get_locations(limit):
+    """Get parking data from API.
+
+    Args:
+        limit (int): The number of parking lots to get.
+    """
     async with ODPDusseldorf() as client:
-        locations = await client.disabled_parkings(limit=350)
+        locations = await client.disabled_parkings(limit=limit)
         return locations
 
 

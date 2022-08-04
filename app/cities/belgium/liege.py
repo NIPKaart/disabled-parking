@@ -1,14 +1,15 @@
-"""Manage the location data of Eindhoven."""
+"""Manage the location data of Liege."""
 import datetime
 
 import pytz
-from parking_eindhoven import ParkingEindhoven
+from liege import ODPLiege
 
 from app.database import connection, cursor
+from app.helper import get_unique_number
 
-MUNICIPALITY = "Eindhoven"
-GEOCODE = "NL-NB"
-CBS_CODE = "0772"
+MUNICIPALITY = "Liege"
+GEOCODE = "BE-WLG"
+PHONE_CODE = "042"
 
 
 async def async_get_locations(limit):
@@ -17,8 +18,8 @@ async def async_get_locations(limit):
     Args:
         limit (int): The number of parking lots to get.
     """
-    async with ParkingEindhoven(parking_type=3) as client:
-        locations = await client.locations(rows=limit)
+    async with ODPLiege() as client:
+        locations = await client.disabled_parkings(limit=limit)
         return locations
 
 
@@ -32,7 +33,8 @@ def upload(data_set):
     try:
         for index, item in enumerate(data_set, 1):
             # Define unique id
-            location_id = f"{GEOCODE}-{CBS_CODE}-{item.spot_id}"
+            location_id = f"{GEOCODE}-{PHONE_CODE}-{get_unique_number(item.latitude, item.longitude)}"
+            # Make the sql query
             sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, street, number, longitude, latitude, visibility, created_at, updated_at)
                      VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
                      UPDATE id=values(id),
@@ -46,16 +48,22 @@ def upload(data_set):
                             updated_at=values(updated_at)"""
             val = (
                 location_id,
-                int(157),
-                int(11),
+                int(22),
+                int(17),
                 str(MUNICIPALITY),
-                str(item.street),
-                item.number,
+                str(item.address),
+                item.number or 1,
                 float(item.longitude),
                 float(item.latitude),
                 bool(True),
-                (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
-                (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
+                (
+                    item.created_at
+                    or datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))
+                ),
+                (
+                    item.updated_at
+                    or datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))
+                ),
             )
             cursor.execute(sql, val)
         connection.commit()
