@@ -40,4 +40,4 @@ def truncate(city):
     except Exception as error:
         print(f"MySQL error: {error}")
     finally:
-        print(f"{city} - verwijderen van de data")
+        print(f"{city} - data has been deleted")

@@ -11,14 +11,14 @@ GEOCODE = "NL-NB"
 CBS_CODE = "0772"
 
 
-async def async_get_locations(number):
+async def async_get_locations(limit):
     """Get parking data from API.
 
     Args:
-        number (int): The number of parking lots to get.
+        limit (int): The number of parking lots to get.
     """
     async with ParkingEindhoven(parking_type=3) as client:
-        locations = await client.locations(rows=number)
+        locations = await client.locations(rows=limit)
         return locations
 
 
