@@ -98,3 +98,5 @@ if __name__ == "__main__":
         zoetermeer.download()
         # database.truncate("Zoetermeer")
         zoetermeer.upload()
+    else:
+        print(f"{city} is currently not supported")

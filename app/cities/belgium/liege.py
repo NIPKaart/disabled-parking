@@ -9,7 +9,7 @@ from app.helper import get_unique_number
 
 MUNICIPALITY = "Liege"
 GEOCODE = "BE-WLG"
-PHONE_CODE = "042"
+PHONE_CODE = "0324"
 
 
 async def async_get_locations(limit):
