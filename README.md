@@ -26,6 +26,7 @@ These are the cities currently supported:
 
 | Country | City | Locations | Update frequency |
 |:--------|:-----|:----------|:-----------------|
+| Belgium | Brussel | 877 |  |
 | Belgium | Liege | 952 |  |
 | Germany | Dusseldorf | 315 |  |
 | Germany | Hamburg | 671 |  |
