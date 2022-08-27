@@ -5,8 +5,11 @@ import pytz
 from hamburg import UDPHamburg
 
 from app.database import connection, cursor
+from app.helper import get_unique_number
 
 MUNICIPALITY = "Hamburg"
+GEOCODE = "DE-HH"
+PHONE_CODE = "040"
 
 
 async def async_get_locations():
@@ -25,6 +28,7 @@ def upload(data_set):
     index: int
     try:
         for index, item in enumerate(data_set, 1):
+            location_id = f"{GEOCODE}-{PHONE_CODE}-{get_unique_number(item.latitude, item.longitude)}"
             sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, street, number, longitude, latitude, visibility, created_at, updated_at)
                      VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
                      UPDATE id=values(id),
@@ -37,7 +41,7 @@ def upload(data_set):
                             latitude=values(latitude),
                             updated_at=values(updated_at)"""
             val = (
-                item.spot_id.replace(".", "-"),
+                location_id,
                 int(83),
                 int(14),
                 str(MUNICIPALITY),
