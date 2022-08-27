@@ -7,10 +7,11 @@
 <!-- PROJECT SHIELDS -->
 ![Project Maintenance][maintenance-shield]
 [![License][license-shield]](LICENSE.md)
+[![Contributors][contributors-shield]][contributors-url]
 
 [![GitHub Activity][commits-shield]][commits]
 [![GitHub Last Commit][last-commit-shield]][commits]
-[![Contributors][contributors-shield]][contributors-url]
+[![Linting][linting-shield]][linting-url]
 
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -141,15 +142,17 @@ SOFTWARE.
 
 <!-- MARKDOWN LINKS & IMAGES -->
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2022.svg
-[contributors-shield]: https://img.shields.io/github/contributors/nipkaart/disabled_parking.svg
-[contributors-url]: https://github.com/nipkaart/disabled_parking/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/nipkaart/disabled_parking.svg
-[forks-url]: https://github.com/nipkaart/disabled_parking/network/members
-[stars-shield]: https://img.shields.io/github/stars/nipkaart/disabled_parking.svg
-[stars-url]: https://github.com/nipkaart/disabled_parking/stargazers
-[issues-shield]: https://img.shields.io/github/issues/nipkaart/disabled_parking.svg
-[issues-url]: https://github.com/nipkaart/disabled_parking/issues
-[license-shield]: https://img.shields.io/github/license/nipkaart/disabled_parking.svg
-[commits-shield]: https://img.shields.io/github/commit-activity/y/nipkaart/disabled_parking.svg
-[commits]: https://github.com/nipkaart/disabled_parking/commits/main
-[last-commit-shield]: https://img.shields.io/github/last-commit/nipkaart/disabled_parking.svg
+[contributors-shield]: https://img.shields.io/github/contributors/nipkaart/disabled-parking.svg
+[contributors-url]: https://github.com/nipkaart/disabled-parking/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/nipkaart/disabled-parking.svg
+[forks-url]: https://github.com/nipkaart/disabled-parking/network/members
+[stars-shield]: https://img.shields.io/github/stars/nipkaart/disabled-parking.svg
+[stars-url]: https://github.com/nipkaart/disabled-parking/stargazers
+[issues-shield]: https://img.shields.io/github/issues/nipkaart/disabled-parking.svg
+[issues-url]: https://github.com/nipkaart/disabled-parking/issues
+[license-shield]: https://img.shields.io/github/license/nipkaart/disabled-parking.svg
+[commits-shield]: https://img.shields.io/github/commit-activity/y/nipkaart/disabled-parking.svg
+[commits]: https://github.com/nipkaart/disabled-parking/commits/main
+[last-commit-shield]: https://img.shields.io/github/last-commit/nipkaart/disabled-parking.svg
+[linting-shield]: https://github.com/nipkaart/disabled-parking/actions/workflows/linting.yml/badge.svg
+[linting-url]: https://github.com/nipkaart/disabled-parking/actions/workflows/linting.yml
