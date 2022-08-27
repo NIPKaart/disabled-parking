@@ -5,7 +5,6 @@ import pytz
 from hamburg import UDPHamburg
 
 from app.database import connection, cursor
-from app.helper import get_unique_number
 
 MUNICIPALITY = "Hamburg"
 GEOCODE = "DE-HH"
@@ -28,7 +27,7 @@ def upload(data_set):
     index: int
     try:
         for index, item in enumerate(data_set, 1):
-            location_id = f"{GEOCODE}-{PHONE_CODE}-{get_unique_number(item.latitude, item.longitude)}"
+            location_id = f"{GEOCODE}-{PHONE_CODE}-{item.spot_id[-4:]}"
             sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, street, number, longitude, latitude, visibility, created_at, updated_at)
                      VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
                      UPDATE id=values(id),
