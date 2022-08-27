@@ -1,4 +1,4 @@
-"""Scrape and upload parking data to NIPKaart system"""
+"""Download and upload disabled parking data to NIPKaart platform."""
 import asyncio
 import os
 from pathlib import Path

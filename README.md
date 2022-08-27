@@ -3,7 +3,7 @@
 *** github_username, repo_name
 -->
 
-# ⬆️ NIPKaart Parking - Upload tool
+# ⬆️ Disabled Parking - Upload tool
 <!-- PROJECT SHIELDS -->
 ![Project Maintenance][maintenance-shield]
 [![License][license-shield]](LICENSE.md)
@@ -18,7 +18,7 @@
 
 ## About
 
-This project makes it possible to download and upload parking data from municipalities to NIPkaart.
+This project makes it possible to download and upload parking data from municipalities to the [NIPkaart][nipkaart] platform.
 
 ## Supported cities
 
@@ -137,17 +137,19 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+[nipkaart]: https://nipkaart.nl
+
 <!-- MARKDOWN LINKS & IMAGES -->
-[maintenance-shield]: https://img.shields.io/maintenance/yes/2022.svg?style=for-the-badge
-[contributors-shield]: https://img.shields.io/github/contributors/klaasnicolaas/nipkaart_parking.svg?style=for-the-badge
-[contributors-url]: https://github.com/klaasnicolaas/nipkaart_parking/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/klaasnicolaas/nipkaart_parking.svg?style=for-the-badge
-[forks-url]: https://github.com/klaasnicolaas/nipkaart_parking/network/members
-[stars-shield]: https://img.shields.io/github/stars/klaasnicolaas/nipkaart_parking.svg?style=for-the-badge
-[stars-url]: https://github.com/klaasnicolaas/nipkaart_parking/stargazers
-[issues-shield]: https://img.shields.io/github/issues/klaasnicolaas/nipkaart_parking.svg?style=for-the-badge
-[issues-url]: https://github.com/klaasnicolaas/nipkaart_parking/issues
-[license-shield]: https://img.shields.io/github/license/klaasnicolaas/nipkaart_parking.svg?style=for-the-badge
-[commits-shield]: https://img.shields.io/github/commit-activity/y/klaasnicolaas/nipkaart_parking.svg?style=for-the-badge
-[commits]: https://github.com/klaasnicolaas/nipkaart_parking/commits/main
-[last-commit-shield]: https://img.shields.io/github/last-commit/klaasnicolaas/nipkaart_parking.svg?style=for-the-badge
+[maintenance-shield]: https://img.shields.io/maintenance/yes/2022.svg
+[contributors-shield]: https://img.shields.io/github/contributors/nipkaart/disabled_parking.svg
+[contributors-url]: https://github.com/nipkaart/disabled_parking/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/nipkaart/disabled_parking.svg
+[forks-url]: https://github.com/nipkaart/disabled_parking/network/members
+[stars-shield]: https://img.shields.io/github/stars/nipkaart/disabled_parking.svg
+[stars-url]: https://github.com/nipkaart/disabled_parking/stargazers
+[issues-shield]: https://img.shields.io/github/issues/nipkaart/disabled_parking.svg
+[issues-url]: https://github.com/nipkaart/disabled_parking/issues
+[license-shield]: https://img.shields.io/github/license/nipkaart/disabled_parking.svg
+[commits-shield]: https://img.shields.io/github/commit-activity/y/nipkaart/disabled_parking.svg
+[commits]: https://github.com/nipkaart/disabled_parking/commits/main
+[last-commit-shield]: https://img.shields.io/github/last-commit/nipkaart/disabled_parking.svg
