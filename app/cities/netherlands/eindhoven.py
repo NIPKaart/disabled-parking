@@ -2,7 +2,7 @@
 import datetime
 
 import pytz
-from parking_eindhoven import ParkingEindhoven
+from eindhoven import ODPEindhoven
 
 from app.database import connection, cursor
 
@@ -17,8 +17,8 @@ async def async_get_locations(limit):
     Args:
         limit (int): The number of parking lots to get.
     """
-    async with ParkingEindhoven(parking_type=3) as client:
-        locations = await client.locations(rows=limit)
+    async with ODPEindhoven() as client:
+        locations = await client.locations(limit=limit, parking_type=3)
         return locations
 
 
@@ -55,7 +55,7 @@ def upload(data_set):
                 float(item.latitude),
                 bool(True),
                 (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
-                (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
+                item.updated_at,
             )
             cursor.execute(sql, val)
         connection.commit()
