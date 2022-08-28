@@ -25,17 +25,17 @@ This project makes it possible to download and upload parking data from municipa
 
 These are the cities currently supported:
 
-| Country | City | Locations | Update frequency |
-|:--------|:-----|:----------|:-----------------|
+| Country | City | Locations | Update frequency | Crontab |
+|:--------|:-----|:----------|:-----------------| :-------|
 | Belgium | Brussel | 877 |  |
 | Belgium | Liege | 952 |  |
 | Germany | Dusseldorf | 315 |  |
 | Germany | Hamburg | 671 |  |
-| Netherlands | Amersfoort | 149 | updates every monday at 03:00 |
-| Netherlands | Amsterdam | 1251 | updates every second day of the month at 03:00 |
+| Netherlands | Amersfoort | 149 | every monday at 03:00 | `0 3 * * 1` |
+| Netherlands | Amsterdam | 1251 | every second day of the month at 03:00 | `0 3 2 * *` |
 | Netherlands | Arnhem | 121 |  |
-| Netherlands | Den Haag | 234 (says 241) | updates every second day of the month at 02:30 |
-| Netherlands | Eindhoven | 180 | updates every thuesday at 03:00 |
+| Netherlands | Den Haag | 234 (says 241) | every second day of the month at 02:30 | `30 2 2 * *` |
+| Netherlands | Eindhoven | 180 | every second day of the month at 03:00 | `0 3 2 * *` |
 | Netherlands | Groningen | 187 |  |
 | Netherlands | Zoetermeer | 388 |  |
 
@@ -99,6 +99,7 @@ Certain datasets are regularly updated, so that we can update them automatically
 
 `0 3 1 * *` = Run every first day of the month at 03:00<br>
 `30 2 2 * *` = Run every second day of the month at 02:30<br>
+`0 3 2 * *` = Run every second day of the month at 03:00<br>
 `0 3 * * 1` = Run every monday at 03:00<br>
 `30 2 * * 1` = Run every monday at 02:30<br>
 `0 3 * * 2` = Run every thuesday at 03:00<br>
