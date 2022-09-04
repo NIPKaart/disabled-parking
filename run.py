@@ -30,7 +30,7 @@ if __name__ == "__main__":
     if city == "amsterdam":
         # Amsterdam - NL
         data_set = asyncio.run(amsterdam.async_get_locations())
-        if bool(data_set):
+        if data_set:
             print(f"Data retrieved from: {city}")
             # database.truncate("Amsterdam")
             amsterdam.upload(data_set)
@@ -42,49 +42,49 @@ if __name__ == "__main__":
     elif city == "amersfoort":
         # Amersfoort -NL
         data_set = asyncio.run(amersfoort.async_get_locations())
-        if bool(data_set):
+        if data_set:
             print(f"Data retrieved from: {city}")
             # database.truncate("Amersfoort")
             amersfoort.upload(data_set)
     elif city == "brussel":
         # Brussels - BE
         data_set = asyncio.run(brussel.async_get_locations(limit=1000))
-        if bool(data_set):
+        if data_set:
             print(f"Data retrieved from: {city}")
             # database.truncate("Brussel")
             brussel.upload(data_set)
     elif city == "denhaag":
         # Den Haag - NL
         data_set = asyncio.run(den_haag.async_get_locations(limit=300))
-        if bool(data_set):
+        if data_set:
             print(f"Data retrieved from: {city}")
             # database.truncate("Den Haag")
             den_haag.upload(data_set)
     elif city == "dusseldorf":
         # Dusseldorf - DE
         data_set = asyncio.run(dusseldorf.async_get_locations(limit=350))
-        if bool(data_set):
+        if data_set:
             print(f"Data retrieved from: {city}")
             # database.truncate("Dusseldorf")
             dusseldorf.upload(data_set)
     elif city == "eindhoven":
         # Eindhoven - NL
         data_set = asyncio.run(eindhoven.async_get_locations(limit=200))
-        if bool(data_set):
+        if data_set:
             print(f"Data retrieved from: {city}")
             # database.truncate("Eindhoven")
             eindhoven.upload(data_set)
     elif city == "hamburg":
         # Hamburg - DE
         data_set = asyncio.run(hamburg.async_get_locations())
-        if bool(data_set):
+        if data_set:
             print(f"Data retrieved from: {city}")
             # database.truncate("Hamburg")
             hamburg.upload(data_set)
     elif city == "liege":
         # Liege - BE
         data_set = asyncio.run(liege.async_get_locations(limit=1000))
-        if bool(data_set):
+        if data_set:
             print(f"Data retrieved from: {city}")
             # database.truncate("Liege")
             liege.upload(data_set)
