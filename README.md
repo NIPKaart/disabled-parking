@@ -29,6 +29,7 @@ These are the cities currently supported:
 |:--------|:-----|:----------|:-----------------| :-------|
 | Belgium | Brussel | 877 |  |
 | Belgium | Liege | 952 |  |
+| Belgium | Namur | 305 |  |
 | Germany | Dusseldorf | 315 |  |
 | Germany | Hamburg | 671 |  |
 | Netherlands | Amersfoort | 149 | every monday at 03:00 | `0 3 * * 1` |
