@@ -11,7 +11,7 @@ cfgv==3.3.1
 chardet==5.0.0
 charset-normalizer==2.1.1
 click==8.1.3
-cryptography==38.0.0
+cryptography==38.0.1
 dill==0.3.5.1
 distlib==0.3.6
 dusseldorf==0.1.0
