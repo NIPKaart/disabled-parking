@@ -57,6 +57,7 @@ def upload(data_set):
                 (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
                 item.updated_at,
             )
+            # print(val)
             cursor.execute(sql, val)
         connection.commit()
     except Exception as error:
