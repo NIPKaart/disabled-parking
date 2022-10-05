@@ -6,7 +6,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from app.cities.belgium import brussel, liege, namur
-from app.cities.germany import dusseldorf, hamburg
+from app.cities.germany import dresden, dusseldorf, hamburg
 from app.cities.netherlands import (
     amersfoort,
     amsterdam,
@@ -67,6 +67,13 @@ if __name__ == "__main__":
             print(f"Data retrieved from: {city}")
             # database.truncate("Dusseldorf")
             dusseldorf.upload(data_set)
+    elif city == "dresden":
+        # Dresden - DE
+        data_set = asyncio.run(dresden.async_get_locations(limit=500))
+        if data_set:
+            print(f"Data retrieved from: {city}")
+            # database.truncate("Dresden")
+            dresden.upload(data_set)
     elif city == "eindhoven":
         # Eindhoven - NL
         data_set = asyncio.run(eindhoven.async_get_locations(limit=200))
