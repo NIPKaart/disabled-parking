@@ -3,15 +3,17 @@
 *** github_username, repo_name
 -->
 
-# ⬆️ Disabled Parking - Upload tool
-<!-- PROJECT SHIELDS -->
-![Project Maintenance][maintenance-shield]
-[![License][license-shield]](LICENSE.md)
-[![Contributors][contributors-shield]][contributors-url]
+<!-- Banner -->
+![alt Banner of the disabled parking project](assets/banner_disabled_parking.png)
 
+<!-- PROJECT SHIELDS -->
 [![GitHub Activity][commits-shield]][commits]
 [![GitHub Last Commit][last-commit-shield]][commits]
 [![Linting][linting-shield]][linting-url]
+
+![Project Maintenance][maintenance-shield]
+[![License][license-shield]](LICENSE.md)
+[![Contributors][contributors-shield]][contributors-url]
 
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -19,7 +21,7 @@
 
 ## About
 
-This project makes it possible to download and upload parking data from municipalities to the [NIPkaart][nipkaart] platform.
+This project makes it possible to download and upload parking data from municipalities to the [NIPkaart][nipkaart] platform. If the data is regularly updated, it is possible to automate this with a docker container.
 
 ## Supported cities
 
