@@ -1,9 +1,8 @@
 """Manage the location data of Amsterdam."""
 import datetime
-import json
 
-import aiohttp
 import pytz
+from odp_amsterdam import ODPAmsterdam
 
 from app.database import connection, cursor
 from app.helper import centroid
@@ -13,13 +12,15 @@ GEOCODE = "NL-NH"
 CBS_CODE = "0363"
 
 
-async def async_get_locations():
-    """Get the data from the GeoJSON API endpoint."""
-    async with aiohttp.ClientSession() as client:
-        async with client.get(
-            "https://api.data.amsterdam.nl/v1/parkeervakken/parkeervakken?eType=E6a&_format=geojson"
-        ) as resp:
-            return await resp.text()
+async def async_get_locations(limit):
+    """Get parking data from API.
+
+    Args:
+        limit (int): The number of parking lots to get.
+    """
+    async with ODPAmsterdam() as client:
+        locations = await client.locations(limit=limit, parking_type="E6a")
+        return locations
 
 
 def correct_orientation(orientation_type) -> str:
@@ -37,17 +38,19 @@ def correct_orientation(orientation_type) -> str:
 
 
 def upload(data_set):
-    """Upload the data from the JSON file to the database."""
-    amsterdam_obj = json.loads(data_set)
+    """Upload the data from the JSON file to the database.
+
+    Args:
+        data_set: The data_set to upload.
+    """
     index: int
     try:
-        for index, item in enumerate(amsterdam_obj["features"], 1):
+        for index, item in enumerate(data_set, 1):
             # Get the coordinates of the parking lot with centroid
-            latitude, longitude = centroid(item["geometry"]["coordinates"])
+            latitude, longitude = centroid(item.coordinates)
             # Define unique id
-            location_id = f"{GEOCODE}-{CBS_CODE}-{item['id'].split('.')[1]}"
+            location_id = f"{GEOCODE}-{CBS_CODE}-{item.spot_id}"
 
-            item = item["properties"]
             # Make the sql query
             sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, street, orientation, number, longitude, latitude, visibility, created_at, updated_at)
                      VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
@@ -66,15 +69,16 @@ def upload(data_set):
                 int(157),
                 int(8),
                 str(MUNICIPALITY),
-                str(item["straatnaam"]),
-                correct_orientation(item["type"]),
-                int(item["aantal"]),
+                str(item.street),
+                correct_orientation(item.orientation),
+                int(item.number),
                 float(longitude),
                 float(latitude),
                 bool(True),
                 (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
                 (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
             )
+            # print(val)
             cursor.execute(sql, val)
         connection.commit()
     except Exception as error:
