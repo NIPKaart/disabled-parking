@@ -57,4 +57,4 @@ typing_extensions==4.4.0
 urllib3==1.26.13
 virtualenv==20.17.0
 wrapt==1.14.1
-yarl==1.8.1
+yarl==1.8.2
