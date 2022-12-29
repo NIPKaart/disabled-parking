@@ -34,7 +34,7 @@ namur==0.1.1
 nodeenv==1.7.0
 odp-amsterdam==5.0.0
 pathspec==0.10.3
-platformdirs==2.6.0
+platformdirs==2.6.2
 pre-commit==2.21.0
 pre-commit-hooks==4.4.0
 pycodestyle==2.10.0
