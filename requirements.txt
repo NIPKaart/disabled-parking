@@ -43,7 +43,7 @@ pyflakes==3.0.1
 pylint==2.16.1
 PyMySQL==1.0.2
 pyproj==3.4.1
-python-dotenv==0.21.1
+python-dotenv==1.0.0
 pytz==2022.7.1
 PyYAML==6.0
 requests==2.28.2
