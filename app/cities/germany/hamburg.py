@@ -52,7 +52,9 @@ def upload(data_set):
                 (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
                 (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
             )
-            cursor.execute(sql, val)
+            # print(val)
+            if item.number is not None:
+                cursor.execute(sql, val)
         connection.commit()
     except Exception as error:
         print(f"MySQL error: {error}")
