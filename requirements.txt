@@ -35,7 +35,7 @@ nodeenv==1.7.0
 odp-amsterdam==5.1.0
 pathspec==0.11.1
 platformdirs==3.1.1
-pre-commit==3.1.1
+pre-commit==3.2.0
 pre-commit-hooks==4.4.0
 pycodestyle==2.10.0
 pycparser==2.21
