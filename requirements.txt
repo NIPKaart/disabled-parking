@@ -30,7 +30,7 @@ liege==0.1.3
 mccabe==0.7.0
 multidict==6.0.4
 mypy-extensions==1.0.0
-namur==0.2.0
+namur==0.2.1
 nodeenv==1.7.0
 odp-amsterdam==5.1.0
 pathspec==0.11.1
