@@ -46,7 +46,7 @@ pyproj==3.5.0
 python-dotenv==1.0.0
 pytz==2023.3
 PyYAML==6.0
-requests==2.29.0
+requests==2.30.0
 ruamel.yaml==0.17.21
 ruamel.yaml.clib==0.2.7
 six==1.16.0
