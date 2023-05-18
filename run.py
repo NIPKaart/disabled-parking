@@ -6,7 +6,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from app import database
-from app.cities.netherlands import amersfoort, amsterdam
+from app.cities.netherlands import amersfoort, amsterdam, arnhem
 
 
 class CityProvider:
@@ -22,6 +22,8 @@ class CityProvider:
             return amersfoort.Municipality()
         if city == "amsterdam":
             return amsterdam.Municipality()
+        if city == "arnhem":
+            return arnhem.Municipality()
         raise ValueError(f"{city} is not a valid city.")
 
 
@@ -40,6 +42,8 @@ if __name__ == "__main__":
 
     # Get the data from the API
     data_set = asyncio.run(provided_city.async_get_locations())
+
+    # Upload the data to the database
     if data_set:
         # Truncate and upload new data to the database
         database.truncate(provided_city.name)
