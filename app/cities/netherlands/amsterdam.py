@@ -18,7 +18,8 @@ class Amsterdam(City):
 
     def __init__(self):
         """Initialize the class."""
-        super().__init__(MUNICIPALITY, "Netherlands", GEOCODE, CBS_CODE, 1500)
+        super().__init__(MUNICIPALITY, "Netherlands", GEOCODE, CBS_CODE)
+        self.limit = 1500
 
     async def async_get_locations(self):
         """Get parking data from API.
@@ -28,6 +29,7 @@ class Amsterdam(City):
         """
         async with ODPAmsterdam() as client:
             locations = await client.locations(limit=self.limit, parking_type="E6a")
+            print(f"Data retrieved from: {self.name}")
             return locations
 
     def correct_orientation(self, orientation_type) -> str:

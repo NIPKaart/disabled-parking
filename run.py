@@ -20,7 +20,7 @@ class CityProvider:
         """
         if city == "amsterdam":
             return amsterdam.Amsterdam()
-        raise ValueError("City not found")
+        raise ValueError(f"{city} is not a valid city.")
 
 
 if __name__ == "__main__":
@@ -30,6 +30,7 @@ if __name__ == "__main__":
     load_dotenv(dotenv_path=env_path)
 
     cp = CityProvider()
+    print("--- Start program ---")
 
     # Get the city from the environment variables
     selected_city: str = os.getenv("CITY").lower()
@@ -37,4 +38,7 @@ if __name__ == "__main__":
 
     # Get the data from the API
     data_set = asyncio.run(provided_city.async_get_locations())
-    print(data_set)
+    if data_set:
+        # Truncate and upload new data to the database
+        truncate(provided_city.name)
+        provided_city.upload_data(data_set)
