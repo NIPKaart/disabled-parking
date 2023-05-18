@@ -40,7 +40,7 @@ These are the cities currently supported:
 | Netherlands | Arnhem | 121 |  |
 | Netherlands | Den Haag | 234 (says 241) | every second day of the month at 02:30 | `30 2 2 * *` |
 | Netherlands | Eindhoven | 180 | every second day of the month at 03:00 | `0 3 2 * *` |
-| Netherlands | Groningen | 187 |  |
+| Netherlands | Groningen | 173 |  |
 | Netherlands | Zoetermeer | 388 |  |
 
 
