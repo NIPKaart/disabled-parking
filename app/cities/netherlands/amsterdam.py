@@ -8,18 +8,21 @@ from app.cities import City
 from app.database import connection, cursor
 from app.helper import centroid
 
-MUNICIPALITY = "Amsterdam"
-GEOCODE = "NL-NH"
-CBS_CODE = "0363"
 
-
-class Amsterdam(City):
+class Municipality(City):
     """Manage the location data of Amsterdam."""
 
     def __init__(self):
         """Initialize the class."""
-        super().__init__(MUNICIPALITY, "Netherlands", GEOCODE, CBS_CODE)
-        self.limit = 1500
+        super().__init__(
+            name="Amsterdam",
+            country="Netherlands",
+            country_id=157,
+            province_id=8,
+            geo_code="NL-NH",
+            cbs_code="0363",
+        )
+        self.limit = 2000
 
     async def async_get_locations(self):
         """Get parking data from API.
@@ -29,7 +32,7 @@ class Amsterdam(City):
         """
         async with ODPAmsterdam() as client:
             locations = await client.locations(limit=self.limit, parking_type="E6a")
-            print(f"Data retrieved from: {self.name}")
+            print(f"{self.name} - data has been retrieved")
             return locations
 
     def correct_orientation(self, orientation_type) -> str:
@@ -74,9 +77,9 @@ class Amsterdam(City):
                                 updated_at=values(updated_at)"""
                 val = (
                     location_id,
-                    int(157),
-                    int(8),
-                    str(MUNICIPALITY),
+                    int(self.country_id),
+                    int(self.province_id),
+                    str(self.name),
                     str(item.street),
                     self.correct_orientation(item.orientation),
                     int(item.number),
@@ -92,6 +95,6 @@ class Amsterdam(City):
         except Exception as error:
             print(f"MySQL error: {error}")
         finally:
-            print(f"Parking spaces found: {index}")
+            print(f"{self.name} - parking spaces found: {index}")
             print("---")
-            print(f"{MUNICIPALITY} - DONE with database update")
+            print(f"{self.name} - DONE with database update")

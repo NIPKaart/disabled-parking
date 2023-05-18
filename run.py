@@ -5,8 +5,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from app import database
 from app.cities.netherlands import amsterdam
-from app.database import truncate  # pylint: disable=unused-import # noqa: F401
 
 
 class CityProvider:
@@ -19,7 +19,7 @@ class CityProvider:
             city (str): The city to provide.
         """
         if city == "amsterdam":
-            return amsterdam.Amsterdam()
+            return amsterdam.Municipality()
         raise ValueError(f"{city} is not a valid city.")
 
 
@@ -40,5 +40,5 @@ if __name__ == "__main__":
     data_set = asyncio.run(provided_city.async_get_locations())
     if data_set:
         # Truncate and upload new data to the database
-        truncate(provided_city.name)
+        database.truncate(provided_city.name)
         provided_city.upload_data(data_set)
