@@ -52,7 +52,7 @@ class Municipality(City):
         """Upload the data from the JSON file to the database.
 
         Args:
-            data_set: The data_set to upload.
+            data_set: The data set to upload.
         """
         index: int
         try:

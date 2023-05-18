@@ -36,7 +36,7 @@ These are the cities currently supported:
 | Germany | Dusseldorf | 315 |  |
 | Germany | Hamburg | 812 (says 813) |  |
 | Netherlands | Amersfoort | 149 | every monday at 03:00 | `0 3 * * 1` |
-| Netherlands | Amsterdam | 1313 | every second day of the month at 03:00 | `0 3 2 * *` |
+| Netherlands | Amsterdam | 1328 | every second day of the month at 03:00 | `0 3 2 * *` |
 | Netherlands | Arnhem | 121 |  |
 | Netherlands | Den Haag | 234 (says 241) | every second day of the month at 02:30 | `30 2 2 * *` |
 | Netherlands | Eindhoven | 180 | every second day of the month at 03:00 | `0 3 2 * *` |
