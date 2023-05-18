@@ -13,31 +13,37 @@ from app.cities.netherlands import (
     den_haag,
     eindhoven,
     groningen,
+    zoetermeer,
 )
 
 
 class CityProvider:
     """Class to provide the correct city."""
 
-    def provide_city(self, city: str):
+    def provide_city(self, city_name: str):
         """Provide the correct city.
 
         Args:
-            city (str): The city to provide.
+            city_name (str): The city to provide.
         """
-        if city == "amersfoort":
-            return amersfoort.Municipality()
-        if city == "amsterdam":
-            return amsterdam.Municipality()
-        if city == "arnhem":
-            return arnhem.Municipality()
-        if city == "den haag":
-            return den_haag.Municipality()
-        if city == "eindhoven":
-            return eindhoven.Municipality()
-        if city == "groningen":
-            return groningen.Municipality()
-        raise ValueError(f"{city} is not a valid city.")
+        match city_name:
+            case "amersfoort":
+                city_class = amersfoort.Municipality()
+            case "amsterdam":
+                city_class = amsterdam.Municipality()
+            case "arnhem":
+                city_class = arnhem.Municipality()
+            case "den haag":
+                city_class = den_haag.Municipality()
+            case "eindhoven":
+                city_class = eindhoven.Municipality()
+            case "groningen":
+                city_class = groningen.Municipality()
+            case "zoetermeer":
+                city_class = zoetermeer.Municipality()
+            case _:
+                raise ValueError(f"{city_name} is not a valid city.")
+        return city_class
 
 
 if __name__ == "__main__":
@@ -54,7 +60,7 @@ if __name__ == "__main__":
     provided_city = cp.provide_city(selected_city)
 
     # Get the data from the API
-    if selected_city in ["groningen", "arnhem"]:
+    if selected_city in ["groningen", "arnhem", "zoetermeer"]:
         data_set = None  # pylint: disable=C0103
         provided_city.download()
     else:
