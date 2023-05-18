@@ -6,7 +6,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from app import database
-from app.cities.netherlands import amersfoort, amsterdam, arnhem, den_haag
+from app.cities.netherlands import amersfoort, amsterdam, arnhem, den_haag, eindhoven
 
 
 class CityProvider:
@@ -26,6 +26,8 @@ class CityProvider:
             return arnhem.Municipality()
         if city == "den haag":
             return den_haag.Municipality()
+        if city == "eindhoven":
+            return eindhoven.Municipality()
         raise ValueError(f"{city} is not a valid city.")
 
 
