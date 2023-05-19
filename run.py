@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 from app import database
 from app.cities.belgium import brussel, liege, namur
-from app.cities.germany import dusseldorf, hamburg
+from app.cities.germany import dresden, dusseldorf, hamburg
 from app.cities.netherlands import (
     amersfoort,
     amsterdam,
@@ -41,6 +41,8 @@ class CityProvider:
                 city_class = den_haag.Municipality()
             case "dusseldorf":
                 city_class = dusseldorf.Municipality()
+            case "dresden":
+                city_class = dresden.Municipality()
             case "eindhoven":
                 city_class = eindhoven.Municipality()
             case "groningen":
