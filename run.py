@@ -5,6 +5,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from app import database
 from app.cities.belgium import brussel, liege, namur
 from app.cities.germany import dresden, dusseldorf, hamburg
 from app.cities.netherlands import (
@@ -16,100 +17,73 @@ from app.cities.netherlands import (
     groningen,
     zoetermeer,
 )
-from app.database import truncate  # pylint: disable=unused-import # noqa: F401
+
+
+class CityProvider:
+    """Class to provide the correct city."""
+
+    def provide_city(self, city_name: str):
+        """Provide the correct city.
+
+        Args:
+            city_name (str): The city to provide.
+        """
+        match city_name:
+            case "amersfoort":
+                city_class = amersfoort.Municipality()
+            case "amsterdam":
+                city_class = amsterdam.Municipality()
+            case "arnhem":
+                city_class = arnhem.Municipality()
+            case "brussel":
+                city_class = brussel.Municipality()
+            case "den haag":
+                city_class = den_haag.Municipality()
+            case "dusseldorf":
+                city_class = dusseldorf.Municipality()
+            case "dresden":
+                city_class = dresden.Municipality()
+            case "eindhoven":
+                city_class = eindhoven.Municipality()
+            case "groningen":
+                city_class = groningen.Municipality()
+            case "hamburg":
+                city_class = hamburg.Municipality()
+            case "liege":
+                city_class = liege.Municipality()
+            case "namur":
+                city_class = namur.Municipality()
+            case "zoetermeer":
+                city_class = zoetermeer.Municipality()
+            case _:
+                raise ValueError(f"{city_name} is not a valid city.")
+        return city_class
+
 
 if __name__ == "__main__":
+    # Load environment variables
     load_dotenv()
     env_path = Path(".") / ".env"
     load_dotenv(dotenv_path=env_path)
-    city: str = os.getenv("CITY")
-    city = city.lower()
 
+    cp = CityProvider()
     print("--- Start program ---")
-    if city == "amsterdam":
-        # Amsterdam - NL
-        data_set = asyncio.run(amsterdam.async_get_locations(limit=2000))
-        if data_set:
-            print(f"Data retrieved from: {city}")
-            # truncate("Amsterdam")
-            amsterdam.upload(data_set)
-    elif city == "arnhem":
-        # Arnhem - NL
-        arnhem.download()
-        # truncate("Arnhem")
-        arnhem.upload()
-    elif city == "amersfoort":
-        # Amersfoort -NL
-        data_set = asyncio.run(amersfoort.async_get_locations())
-        if data_set:
-            print(f"Data retrieved from: {city}")
-            # truncate("Amersfoort")
-            amersfoort.upload(data_set)
-    elif city == "brussel":
-        # Brussels - BE
-        data_set = asyncio.run(brussel.async_get_locations(limit=1000))
-        if data_set:
-            print(f"Data retrieved from: {city}")
-            # truncate("Brussel")
-            brussel.upload(data_set)
-    elif city == "denhaag":
-        # Den Haag - NL
-        data_set = asyncio.run(den_haag.async_get_locations(limit=300))
-        if data_set:
-            print(f"Data retrieved from: {city}")
-            # truncate("Den Haag")
-            den_haag.upload(data_set)
-    elif city == "dusseldorf":
-        # Dusseldorf - DE
-        data_set = asyncio.run(dusseldorf.async_get_locations(limit=350))
-        if data_set:
-            print(f"Data retrieved from: {city}")
-            # truncate("Dusseldorf")
-            dusseldorf.upload(data_set)
-    elif city == "dresden":
-        # Dresden - DE
-        data_set = asyncio.run(dresden.async_get_locations(limit=500))
-        if data_set:
-            print(f"Data retrieved from: {city}")
-            # truncate("Dresden")
-            dresden.upload(data_set)
-    elif city == "eindhoven":
-        # Eindhoven - NL
-        data_set = asyncio.run(eindhoven.async_get_locations(limit=200))
-        if data_set:
-            print(f"Data retrieved from: {city}")
-            # truncate("Eindhoven")
-            eindhoven.upload(data_set)
-    elif city == "hamburg":
-        # Hamburg - DE
-        data_set = asyncio.run(hamburg.async_get_locations())
-        if data_set:
-            print(f"Data retrieved from: {city}")
-            # truncate("Hamburg")
-            hamburg.upload(data_set)
-    elif city == "liege":
-        # Liege - BE
-        data_set = asyncio.run(liege.async_get_locations(limit=1000))
-        if data_set:
-            print(f"Data retrieved from: {city}")
-            # truncate("Liege")
-            liege.upload(data_set)
-    elif city == "namur":
-        # Namur - BE
-        data_set = asyncio.run(namur.async_get_locations(limit=1000))
-        if data_set:
-            print(f"Data retrieved from: {city}")
-            # truncate("Namur")
-            namur.upload(data_set)
-    elif city == "groningen":
-        # Groningen
-        groningen.download()
-        # truncate("Groningen")
-        groningen.upload()
-    elif city == "zoetermeer":
-        # Zoetermeer
-        zoetermeer.download()
-        # truncate("Zoetermeer")
-        zoetermeer.upload()
+
+    # Get the city from the environment variables
+    selected_city: str = os.getenv("CITY").lower()
+    provided_city = cp.provide_city(selected_city)
+
+    # Get the data from the API
+    if selected_city in ["groningen", "arnhem", "zoetermeer"]:
+        data_set = None  # pylint: disable=C0103
+        provided_city.download()
     else:
-        print(f"{city} is currently not supported")
+        data_set = asyncio.run(provided_city.async_get_locations())
+
+    # Truncate and upload new data to the database
+    database.truncate(provided_city.name)
+    # Upload the data to the database
+    if data_set:
+        provided_city.upload_data(data_set)
+    else:
+        provided_city.upload_json()

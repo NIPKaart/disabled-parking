@@ -27,17 +27,17 @@ connection = pymysql.connect(
 cursor = connection.cursor()
 
 
-def truncate(city):
+def truncate(city_name):
     """Remove all data from a city.
 
     Args:
-        city: The name of the city, it's case sensitive!
+        city_name: The name of the city, it's case sensitive!
     """
     try:
         sql = "DELETE FROM `parking_cities` WHERE `municipality`=%s"
-        cursor.execute(sql, city)
+        cursor.execute(sql, city_name)
         connection.commit()
     except Exception as error:
         print(f"MySQL error: {error}")
     finally:
-        print(f"{city} - data has been deleted")
+        print(f"{city_name} - old data has been deleted")
