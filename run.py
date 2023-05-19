@@ -6,6 +6,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from app import database
+from app.cities.belgium import brussel, liege
 from app.cities.netherlands import (
     amersfoort,
     amsterdam,
@@ -33,12 +34,16 @@ class CityProvider:
                 city_class = amsterdam.Municipality()
             case "arnhem":
                 city_class = arnhem.Municipality()
+            case "brussel":
+                city_class = brussel.Municipality()
             case "den haag":
                 city_class = den_haag.Municipality()
             case "eindhoven":
                 city_class = eindhoven.Municipality()
             case "groningen":
                 city_class = groningen.Municipality()
+            case "liege":
+                city_class = liege.Municipality()
             case "zoetermeer":
                 city_class = zoetermeer.Municipality()
             case _:

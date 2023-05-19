@@ -25,8 +25,8 @@ class Municipality(City):
     async def async_get_locations(self):
         """Get parking data from API.
 
-        Args:
-            limit (int): The number of parking lots to get.
+        Returns:
+            list: A list of parking locations.
         """
         async with ODPBrussel() as client:
             locations = await client.disabled_parkings(limit=self.limit)
@@ -34,7 +34,7 @@ class Municipality(City):
             return locations
 
     def upload(self, data_set):
-        """Upload the data_set to the database.
+        """Upload the data set to the database.
 
         Args:
             data_set: The data set to upload.
