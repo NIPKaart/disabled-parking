@@ -12,6 +12,7 @@ class Municipality(City):
     """Manage the location data of Brussel."""
 
     def __init__(self):
+        """Initialize the class."""
         super().__init__(
             name="Brussel",
             country="Belgium",
