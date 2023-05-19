@@ -34,7 +34,7 @@ class Municipality(City):
             print(f"{self.name} - data has been retrieved")
             return locations
 
-    def upload(self, data_set):
+    def upload_data(self, data_set):
         """Upload the data set to the database.
 
         Args:
