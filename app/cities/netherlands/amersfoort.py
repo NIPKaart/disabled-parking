@@ -28,8 +28,8 @@ class Municipality(City):
             country_id=157,
             province_id=7,
             geo_code="NL-UT",
-            cbs_code="0307",
         )
+        self.cbs_code = "0307"
 
     async def async_get_locations(self):
         """Get the data from the CKAN API endpoint.

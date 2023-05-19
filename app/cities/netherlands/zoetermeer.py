@@ -27,8 +27,8 @@ class Municipality(City):
             country_id=157,
             province_id=9,
             geo_code="NL-ZH",
-            cbs_code="0637",
         )
+        self.cbs_code = "0637"
 
     def download(self):
         """Download the data as JSON file."""

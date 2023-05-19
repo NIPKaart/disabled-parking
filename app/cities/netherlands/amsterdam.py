@@ -20,9 +20,9 @@ class Municipality(City):
             country_id=157,
             province_id=8,
             geo_code="NL-NH",
-            cbs_code="0363",
         )
         self.limit = 2000
+        self.cbs_code = "0363"
 
     async def async_get_locations(self):
         """Get parking data from API.
