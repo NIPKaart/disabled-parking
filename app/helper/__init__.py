@@ -10,10 +10,10 @@ def centroid(vertexes):
     Returns:
         Point: The centroid of the polygon.
     """
-    _x_list = [vertex[0] for vertex in vertexes[0]]
-    _y_list = [vertex[1] for vertex in vertexes[0]]
+    _x_list = [vertex[0] for vertex in vertexes]
+    _y_list = [vertex[1] for vertex in vertexes]
 
-    _len = len(vertexes[0])
+    _len = len(vertexes)
     _x = sum(_x_list) / _len
     _y = sum(_y_list) / _len
     return (_y, _x)
