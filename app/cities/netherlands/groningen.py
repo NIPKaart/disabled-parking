@@ -2,10 +2,11 @@
 import datetime
 import json
 import os
-import urllib.request
 from pathlib import Path
 
+import pymysql
 import pytz
+import requests
 from dotenv import load_dotenv
 
 from app.cities import City
@@ -20,7 +21,7 @@ load_dotenv(dotenv_path=env_path)
 class Municipality(City):
     """Manage the location data of Groningen."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the class."""
         super().__init__(
             name="Groningen",
@@ -30,20 +31,22 @@ class Municipality(City):
             geo_code="NL-GR",
         )
         self.cbs_code = "0014"
+        self.local_file = "app/data/parking-groningen.json"
 
-    def download(self):
+    def download(self) -> None:
         """Download the data as JSON file."""
-
         # Create a variable and pass the url of file to be downloaded
-        url = f'{os.getenv("GRONINGEN_SOURCE")}/open-data/gemeentegroningen_parkeervakken.geojson'
-        # Copy a network object to a local file
-        urllib.request.urlretrieve(url, "app/data/parking-groningen.json")
+        remote_url = f'{os.getenv("GRONINGEN_SOURCE")}/open-data/gemeentegroningen_parkeervakken.geojson'  # noqa: E501
+        # Make http request for remote file data
+        data = requests.get(remote_url, timeout=10)
+        # Save file data to local copy
+        with Path(self.local_file).open("wb") as file:
+            file.write(data.content)
         print(f"{self.name} - KLAAR met downloaden")
 
-    def upload_json(self):
+    def upload_json(self) -> None:
         """Upload the data from the JSON file to the database."""
-        groningen_file = "app/data/parking-groningen.json"
-        with open(groningen_file, "r", encoding="UTF-8") as groningen_data:
+        with Path(self.local_file).open(encoding="UTF-8") as groningen_data:
             groningen_obj = json.load(groningen_data)
 
         count: int = 0
@@ -56,8 +59,8 @@ class Municipality(City):
                         f"{self.geo_code}-{self.cbs_code}-{item['properties']['VakID']}"
                     )
                     # Get the coordinates of the parking lot with centroid
-                    latitude, longitude = centroid(item["geometry"]["coordinates"])
-                    item = item["properties"]
+                    latitude, longitude = centroid(item["geometry"]["coordinates"][0])
+                    location = item["properties"]
 
                     # Make the sql query
                     sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, street, number, latitude, longitude, visibility, created_at, updated_at)
@@ -70,13 +73,13 @@ class Municipality(City):
                                 number=values(number),
                                 latitude=values(latitude),
                                 longitude=values(longitude),
-                                updated_at=values(updated_at)"""
+                                updated_at=values(updated_at)"""  # noqa: E501
                     val = (
                         location_id,
                         int(self.country_id),
                         int(self.province_id),
                         str(self.name),
-                        str(item["Straatnaam"]),
+                        str(location["Straatnaam"]),
                         int(1),
                         float(latitude),
                         float(longitude),
@@ -84,10 +87,9 @@ class Municipality(City):
                         (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
                         (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
                     )
-                    # print(val)
                     cursor.execute(sql, val)
             connection.commit()
-        except Exception as error:
+        except pymysql.Error as error:
             print(f"MySQL error: {error}")
         finally:
             print(f"{self.name} - parking spaces found: {count}")

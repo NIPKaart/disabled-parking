@@ -1,6 +1,7 @@
 """Manage the location data of Amsterdam."""
 import datetime
 
+import pymysql
 import pytz
 from odp_amsterdam import ODPAmsterdam
 
@@ -12,7 +13,7 @@ from app.helper import centroid
 class Municipality(City):
     """Manage the location data of Amsterdam."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the class."""
         super().__init__(
             name="Amsterdam",
@@ -24,10 +25,11 @@ class Municipality(City):
         self.limit = 2000
         self.cbs_code = "0363"
 
-    async def async_get_locations(self):
+    async def async_get_locations(self) -> list:
         """Get parking data from API.
 
-        Returns:
+        Returns
+        -------
             List of objects from all parking lots.
         """
         async with ODPAmsterdam() as client:
@@ -35,28 +37,32 @@ class Municipality(City):
             print(f"{self.name} - data has been retrieved")
             return locations
 
-    def correct_orientation(self, orientation_type) -> str:
+    def correct_orientation(self, orientation_type: str) -> str:
         """Correct the orientation of the parking lot.
 
         Args:
+        ----
             orientation_type (str): The orientation of the parking lot.
 
         Returns:
+        -------
             str: The corrected orientation name.
         """
         if orientation_type == "Vissengraat":
-            return str("Visgraat")
+            return "Visgraat"
         return str(orientation_type)
 
-    def upload_data(self, data_set):
+    def upload_data(self, data_set: list) -> None:
         """Upload the data from the JSON file to the database.
 
         Args:
+        ----
             data_set: The data set to upload.
         """
-        index: int
+        count: int = 0
         try:
-            for index, item in enumerate(data_set, 1):
+            for item in data_set:
+                count += 1
                 # Get the coordinates of the parking lot with centroid
                 latitude, longitude = centroid(item.coordinates)
                 # Define unique id
@@ -74,7 +80,7 @@ class Municipality(City):
                                 number=values(number),
                                 longitude=values(longitude),
                                 latitude=values(latitude),
-                                updated_at=values(updated_at)"""
+                                updated_at=values(updated_at)"""  # noqa: E501
                 val = (
                     location_id,
                     int(self.country_id),
@@ -89,12 +95,11 @@ class Municipality(City):
                     (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
                     (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
                 )
-                # print(val)
                 cursor.execute(sql, val)
             connection.commit()
-        except Exception as error:
+        except pymysql.Error as error:
             print(f"MySQL error: {error}")
         finally:
-            print(f"{self.name} - parking spaces found: {index}")
+            print(f"{self.name} - parking spaces found: {count}")
             print("---")
             print(f"{self.name} - DONE with database update")

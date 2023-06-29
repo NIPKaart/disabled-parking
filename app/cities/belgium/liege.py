@@ -1,6 +1,7 @@
 """Manage the location data of Liege."""
 import datetime
 
+import pymysql
 import pytz
 from liege import ODPLiege
 
@@ -12,7 +13,7 @@ from app.helper import get_unique_number
 class Municipality(City):
     """Manage the location data of Liege."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the class."""
         super().__init__(
             name="Liege",
@@ -24,10 +25,11 @@ class Municipality(City):
         self.limit = 1000
         self.phone_code = "0324"
 
-    async def async_get_locations(self):
+    async def async_get_locations(self) -> list:
         """Get parking data from API.
 
-        Returns:
+        Returns
+        -------
             list: A list of parking locations.
         """
         async with ODPLiege() as client:
@@ -35,17 +37,19 @@ class Municipality(City):
             print(f"{self.name} - data has been retrieved")
             return locations
 
-    def upload_data(self, data_set):
+    def upload_data(self, data_set: list) -> None:
         """Upload the data set to the database.
 
         Args:
+        ----
             data_set: The data set to upload.
         """
-        index: int
+        count: int = 0
         try:
-            for index, item in enumerate(data_set, 1):
+            for item in data_set:
+                count += 1
                 # Define unique id
-                location_id = f"{self.geo_code}-{self.phone_code}-{get_unique_number(item.latitude, item.longitude)}"
+                location_id = f"{self.geo_code}-{self.phone_code}-{get_unique_number(item.latitude, item.longitude)}"  # noqa: E501
                 # Make the sql query
                 sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, street, number, longitude, latitude, visibility, created_at, updated_at)
                         VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
@@ -57,7 +61,7 @@ class Municipality(City):
                                 number=values(number),
                                 longitude=values(longitude),
                                 latitude=values(latitude),
-                                updated_at=values(updated_at)"""
+                                updated_at=values(updated_at)"""  # noqa: E501
                 val = (
                     location_id,
                     int(self.country_id),
@@ -77,12 +81,11 @@ class Municipality(City):
                         or datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))
                     ),
                 )
-                # print(val)
                 cursor.execute(sql, val)
             connection.commit()
-        except Exception as error:
+        except pymysql.Error as error:
             print(f"MySQL error: {error}")
         finally:
-            print(f"{self.name} - parking spaces found: {index}")
+            print(f"{self.name} - parking spaces found: {count}")
             print("---")
             print(f"{self.name} - DONE with database update")

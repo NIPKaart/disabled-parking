@@ -4,6 +4,7 @@ import json
 import os
 
 import aiohttp
+import pymysql
 import pytz
 
 from app.cities import City
@@ -13,7 +14,7 @@ from app.database import connection, cursor
 class Municipality(City):
     """Manage the location data of Den Haag."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the class."""
         super().__init__(
             name="Den Haag",
@@ -25,41 +26,45 @@ class Municipality(City):
         self.limit = 300
         self.cbs_code = "0518"
 
-    async def async_get_locations(self):
+    async def async_get_locations(self) -> list:
         """Get the data from the CKAN API endpoint.
 
-        Returns:
+        Returns
+        -------
             List of objects from all parking lots.
         """
-        async with aiohttp.ClientSession() as client:
-            async with client.get(
-                f'{os.getenv("CKAN_SOURCE")}/api/3/action/datastore_search?resource_id=6dd4aa05-31bf-4b98-b8d5-2560b6cb9740&limit={self.limit}'
-            ) as resp:
-                print(f"{self.name} - data has been retrieved")
-                return json.loads(await resp.text())
+        async with aiohttp.ClientSession() as client, client.get(
+            f'{os.getenv("CKAN_SOURCE")}/api/3/action/datastore_search?resource_id=6dd4aa05-31bf-4b98-b8d5-2560b6cb9740&limit={self.limit}',
+        ) as resp:
+            print(f"{self.name} - data has been retrieved")
+            return json.loads(await resp.text())
 
-    def number(self, value):
+    def number(self, value: str) -> int:
         """Convert the value to an integer.
 
         Args:
+        ----
             value (str): The value to convert.
 
         Returns:
+        -------
             int: The converted value.
         """
         if value is None:
             return 1
         return value
 
-    def upload_data(self, data_set):
+    def upload_data(self, data_set: list) -> None:
         """Upload the data from the JSON file to the database.
 
         Args:
+        ----
             data_set (str): The data to upload.
         """
-        index: int
+        count: int = 0
         try:
-            for index, item in enumerate(data_set["result"]["records"], 1):
+            for item in data_set["result"]["records"]:
+                count += 1
                 # Define unique id
                 location_id = (
                     f"{self.geo_code}-{self.cbs_code}-{item['GUID'].split('{')[1]}"
@@ -77,7 +82,7 @@ class Municipality(City):
                                 number=values(number),
                                 longitude=values(longitude),
                                 latitude=values(latitude),
-                                updated_at=values(updated_at)"""
+                                updated_at=values(updated_at)"""  # noqa: E501
                 val = (
                     location_id,
                     int(self.country_id),
@@ -91,12 +96,11 @@ class Municipality(City):
                     (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
                     (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
                 )
-                # print(val)
                 cursor.execute(sql, val)
             connection.commit()
-        except Exception as error:
+        except pymysql.Error as error:
             print(f"MySQL error: {error}")
         finally:
-            print(f"{self.name} - parking spaces found: {index}")
+            print(f"{self.name} - parking spaces found: {count}")
             print("---")
             print(f"{self.name} - DONE with database update")

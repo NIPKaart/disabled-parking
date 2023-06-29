@@ -22,11 +22,16 @@ from app.cities.netherlands import (
 class CityProvider:
     """Class to provide the correct city."""
 
-    def provide_city(self, city_name: str):
+    def provide_city(self, city_name: str) -> object:
         """Provide the correct city.
 
         Args:
+        ----
             city_name (str): The city to provide.
+
+        Returns:
+        -------
+            city_class (class): The class of the city.
         """
         match city_name:
             case "amersfoort":
@@ -56,7 +61,8 @@ class CityProvider:
             case "zoetermeer":
                 city_class = zoetermeer.Municipality()
             case _:
-                raise ValueError(f"{city_name} is not a valid city.")
+                msg = f"{city_name} is not a valid city."
+                raise ValueError(msg)
         return city_class
 
 
