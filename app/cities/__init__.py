@@ -4,7 +4,14 @@
 class City:
     """General class for cities."""
 
-    def __init__(self, name, country, country_id, province_id, geo_code):
+    def __init__(  # noqa: PLR0913
+        self,
+        name: str,
+        country: str,
+        country_id: int,
+        province_id: int,
+        geo_code: str,
+    ) -> None:
         """Initialize the class."""
         self.name = name
         self.country = country

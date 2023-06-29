@@ -1,6 +1,7 @@
 """Manage the location data of Brussel."""
 import datetime
 
+import pymysql
 import pytz
 from brussel import ODPBrussel
 
@@ -11,7 +12,7 @@ from app.database import connection, cursor
 class Municipality(City):
     """Manage the location data of Brussel."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the class."""
         super().__init__(
             name="Brussel",
@@ -23,10 +24,11 @@ class Municipality(City):
         self.limit = 1000
         self.phone_code = "0322"
 
-    async def async_get_locations(self):
+    async def async_get_locations(self) -> list:
         """Get parking data from API.
 
-        Returns:
+        Returns
+        -------
             list: A list of parking locations.
         """
         async with ODPBrussel() as client:
@@ -34,15 +36,17 @@ class Municipality(City):
             print(f"{self.name} - data has been retrieved")
             return locations
 
-    def upload_data(self, data_set):
+    def upload_data(self, data_set: list) -> None:
         """Upload the data set to the database.
 
         Args:
+        ----
             data_set: The data set to upload.
         """
-        index: int
+        count: int = 0
         try:
-            for index, item in enumerate(data_set, 1):
+            for item in data_set:
+                count += 1
                 # Define unique id
                 location_id = f"{self.geo_code}-{self.phone_code}-{item.spot_id}"
                 # Make the sql query
@@ -56,7 +60,7 @@ class Municipality(City):
                                 number=values(number),
                                 longitude=values(longitude),
                                 latitude=values(latitude),
-                                updated_at=values(updated_at)"""
+                                updated_at=values(updated_at)"""  # noqa: E501
                 val = (
                     location_id,
                     int(self.country_id),
@@ -73,12 +77,11 @@ class Municipality(City):
                         or datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))
                     ),
                 )
-                # print(val)
                 cursor.execute(sql, val)
             connection.commit()
-        except Exception as error:
+        except pymysql.Error as error:
             print(f"MySQL error: {error}")
         finally:
-            print(f"{self.name} - parking spaces found: {index}")
+            print(f"{self.name} - parking spaces found: {count}")
             print("---")
             print(f"{self.name} - DONE with database update")
