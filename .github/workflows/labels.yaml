@@ -1,6 +1,7 @@
 ---
 name: Sync labels
 
+# yamllint disable-line rule:truthy
 on:
   push:
     branches:
@@ -13,6 +14,8 @@ jobs:
   labels:
     name: ♻️ Sync labels
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - name: ⤵️ Check out code from GitHub
         uses: actions/checkout@v3.5.3
