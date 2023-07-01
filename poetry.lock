@@ -123,6 +123,21 @@ files = [
 frozenlist = ">=1.1.0"
 
 [[package]]
+name = "arnhem"
+version = "0.1.0"
+description = "Asynchronous Python client providing Open Data information of Arnhem"
+optional = false
+python-versions = ">=3.9,<4.0"
+files = [
+    {file = "arnhem-0.1.0-py3-none-any.whl", hash = "sha256:9dd8d59c3ee883874efe0a8d185655b385c4f59d09abca0e06abe3a72f4d7813"},
+    {file = "arnhem-0.1.0.tar.gz", hash = "sha256:02f4aabffb2ec55c13863730ef57db962ccab90300bbeb786056ed0af1ba52dd"},
+]
+
+[package.dependencies]
+aiohttp = ">=3.0.0"
+yarl = ">=1.6.0"
+
+[[package]]
 name = "astroid"
 version = "2.15.5"
 description = "An abstract syntax tree for Python with inference support."
@@ -1393,4 +1408,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "ab4cd3197ee72a7bf3c204565b5f406cbd7e8f36eaa98916b55d211897cf7b7e"
+content-hash = "22ec6ca62e98947fb68ce690faa516f23db2c9a70d8e6492c4e546f302c9c79d"
