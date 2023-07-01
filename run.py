@@ -80,7 +80,7 @@ if __name__ == "__main__":
     provided_city = cp.provide_city(selected_city)
 
     # Get the data from the API
-    if selected_city in ["groningen", "arnhem", "zoetermeer"]:
+    if selected_city in ["groningen", "zoetermeer"]:
         data_set = None  # pylint: disable=C0103
         provided_city.download()
     else:

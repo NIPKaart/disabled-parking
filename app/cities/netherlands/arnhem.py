@@ -1,20 +1,13 @@
 """Manage the location data of Arnhem."""
 import datetime
-import json
-import os
-from pathlib import Path
 
 import pymysql
 import pytz
-import requests
-from dotenv import load_dotenv
+from arnhem import ODPArnhem
 
 from app.cities import City
 from app.database import connection, cursor
-
-load_dotenv()
-env_path = Path(".") / ".env"
-load_dotenv(dotenv_path=env_path)
+from app.helper import centroid
 
 
 class Municipality(City):
@@ -29,43 +22,47 @@ class Municipality(City):
             province_id=6,
             geo_code="NL-GE",
         )
+        self.limit = 200
         self.cbs_code = "0202"
-        self.local_file = "app/data/parking-arnhem.json"
 
-    def download(self) -> None:
-        """Download the data as JSON file."""
-        # Create a variable and pass the url of file to be downloaded
-        remote_url = (
-            f'{os.getenv("ARCGIS_SOURCE")}/6f301547133a4acda9074ec3ca9b075b_0.geojson'
-        )
-        # Make http request for remote file data
-        data = requests.get(remote_url, timeout=10)
-        # Save file data to local copy
-        with Path(self.local_file).open("wb") as file:
-            file.write(data.content)
-        print(f"{self.name} - KLAAR met downloaden")
+    async def async_get_locations(self) -> list:
+        """Get parking data from API.
 
-    def upload_json(self) -> None:
-        """Upload the data from the JSON file to the database."""
-        with Path(self.local_file).open(encoding="UTF-8") as arnhem_data:
-            arnhem_obj = json.load(arnhem_data)
+        Returns
+        -------
+            List of objects from all parking lots.
+        """
+        async with ODPArnhem() as client:
+            locations = await client.locations(
+                limit=self.limit,
+                set_filter="RVV_SOORT='E6a'",
+            )
+            print(f"{self.name} - data has been retrieved")
+            return locations
 
+    def upload_data(self, data_set: list) -> None:
+        """Upload the data_set to the database.
+
+        Args:
+        ----
+            data_set: The data set to upload.
+        """
         count: int = 0
         try:
-            for item in arnhem_obj["features"]:
+            for item in data_set:
                 count += 1
-                location = item["properties"]
+                # Get the coordinates of the parking lot with centroid
+                latitude, longitude = centroid(item.coordinates)
                 # Generate unique id
-                location_id = f"{self.geo_code}-{self.cbs_code}-{location['OBJECTID']}"
+                location_id = f"{self.geo_code}-{self.cbs_code}-{item.spot_id}"
 
-                sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, street, orientation, number, longitude, latitude, visibility, created_at, updated_at)
-                        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
+                sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, street, number, longitude, latitude, visibility, created_at, updated_at)
+                        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
                         UPDATE id=values(id),
                                 country_id=values(country_id),
                                 province_id=values(province_id),
                                 municipality=values(municipality),
                                 street=values(street),
-                                orientation=values(orientation),
                                 number=values(number),
                                 longitude=values(longitude),
                                 latitude=values(latitude),
@@ -75,11 +72,10 @@ class Municipality(City):
                     int(self.country_id),
                     int(self.province_id),
                     str(self.name),
-                    str(location["LOCATIE"]),
-                    str(location["TYPE_VAK"]),
-                    int(location["AANTAL"]),
-                    float(location["LON"]),
-                    float(location["LAT"]),
+                    str(item.street),
+                    int(1),
+                    float(longitude),
+                    float(latitude),
                     bool(True),
                     (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
                     (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
