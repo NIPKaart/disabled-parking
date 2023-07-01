@@ -33,7 +33,7 @@ These are the cities currently supported:
 | Belgium | Liege | 952 |  |
 | Belgium | Namur | 305 |  |
 | Germany | Dresden | 477 |  |
-| Germany | Dusseldorf | 315 |  |
+| Germany | Dusseldorf | 327 |  |
 | Germany | Hamburg | 812 (says 813) |  |
 | Netherlands | Amersfoort | 149 | every monday at 03:00 | `0 3 * * 1` |
 | Netherlands | Amsterdam | 1328 | every second day of the month at 03:00 | `0 3 2 * *` |
