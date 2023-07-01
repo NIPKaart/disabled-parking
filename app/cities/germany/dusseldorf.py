@@ -21,7 +21,6 @@ class Municipality(City):
             province_id=16,
             geo_code="DE-NW",
         )
-        self.limit = 350
         self.phone_code = "0211"
 
     async def async_get_locations(self) -> list:
@@ -32,7 +31,7 @@ class Municipality(City):
             list: A list of parking locations.
         """
         async with ODPDusseldorf() as client:
-            locations = await client.disabled_parkings(limit=self.limit)
+            locations = await client.disabled_parkings()
             print(f"{self.name} - data has been retrieved")
             return locations
 
