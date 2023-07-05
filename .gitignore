@@ -128,3 +128,4 @@ venv.bak/
 
 setup.py
 app/data/*.json
+.python-version
