@@ -70,8 +70,8 @@ class Municipality(City):
                     float(item.longitude),
                     float(item.latitude),
                     bool(True),
-                    (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
-                    (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
+                    (datetime.datetime.now(tz=pytz.timezone("Europe/Berlin"))),
+                    (datetime.datetime.now(tz=pytz.timezone("Europe/Berlin"))),
                 )
                 cursor.execute(sql, val)
             connection.commit()
