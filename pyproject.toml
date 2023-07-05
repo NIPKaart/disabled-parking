@@ -22,6 +22,7 @@ pytz = "^2023.3"
 requests = "^2.31.0"
 
 [tool.poetry.group.cities.dependencies]
+antwerpen = "^0.1.0"
 arnhem = "^0.1.0"
 brussel = "^0.2.1"
 dresden = "^0.2.1"

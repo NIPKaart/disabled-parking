@@ -29,6 +29,7 @@ These are the cities currently supported:
 
 | Country | City | Locations | Update frequency | Crontab |
 |:--------|:-----|:----------|:-----------------| :-------|
+| Belgium | Antwerpen | 1677 (cap on 1000) |  |
 | Belgium | Brussel | 877 |  |
 | Belgium | Liege | 952 |  |
 | Belgium | Namur | 305 |  |
