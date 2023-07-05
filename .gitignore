@@ -127,4 +127,4 @@ venv.bak/
 .pyre/
 
 setup.py
-app/data/*.json
+.python-version
