@@ -45,7 +45,9 @@ class Municipality(City):
         count: int = 0
         try:
             for item in data_set:
+                # Define unique id
                 location_id = f"{self.geo_code}-{self.phone_code}-{item.spot_id[-4:]}"
+                # Make the sql query
                 sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, street, number, longitude, latitude, visibility, created_at, updated_at)
                         VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
                         UPDATE id=values(id),
@@ -67,8 +69,8 @@ class Municipality(City):
                     float(item.longitude),
                     float(item.latitude),
                     bool(True),
-                    (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
-                    (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
+                    (datetime.datetime.now(tz=pytz.timezone("Europe/Berlin"))),
+                    (datetime.datetime.now(tz=pytz.timezone("Europe/Berlin"))),
                 )
                 if item.number is not None:
                     count += 1

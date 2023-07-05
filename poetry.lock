@@ -623,6 +623,21 @@ plugins = ["setuptools"]
 requirements-deprecated-finder = ["pip-api", "pipreqs"]
 
 [[package]]
+name = "koeln"
+version = "0.3.1"
+description = "Asynchronous Python client providing Open Data information of Köln"
+optional = false
+python-versions = ">=3.9,<4.0"
+files = [
+    {file = "koeln-0.3.1-py3-none-any.whl", hash = "sha256:51051587c751a0119f2fe91a3e762a99c075accf4df50e420142880f4288a797"},
+    {file = "koeln-0.3.1.tar.gz", hash = "sha256:35362ff27c7f13526c2e75e24e747afac73885d851a5d1a4c291bc705629bc2f"},
+]
+
+[package.dependencies]
+aiohttp = ">=3.0.0"
+yarl = ">=1.6.0"
+
+[[package]]
 name = "lazy-object-proxy"
 version = "1.9.0"
 description = "A fast and thorough lazy object proxy."
@@ -1408,4 +1423,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "5f39cebf29f5d656815833fca502a3e9ac94d02e030fd5e1a05ffe406187ea71"
+content-hash = "59dc52d49b47fb55f081566b95b866b94833b045c3eb0902fd9ea58fc6defb19"

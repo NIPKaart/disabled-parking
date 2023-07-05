@@ -35,6 +35,7 @@ These are the cities currently supported:
 | Germany | Dresden | 477 |  |
 | Germany | Dusseldorf | 327 |  |
 | Germany | Hamburg | 812 (says 813) |  |
+| Germany | Köln / Cologne | 441 |  |
 | Netherlands | Amersfoort | 149 | every monday at 03:00 | `0 3 * * 1` |
 | Netherlands | Amsterdam | 1328 | every second day of the month at 03:00 | `0 3 2 * *` |
 | Netherlands | Arnhem | 88 |  |
@@ -124,6 +125,29 @@ Certain datasets are regularly updated, so that we can update them automatically
 `*/2 * * * *` = Run every 2 minutes<br>
 
 Crontab generator: https://crontab.guru
+
+### Geocode
+
+The value you should use for this purpose can be obtained from the [ISO 3166-2 standard](https://en.wikipedia.org/wiki/ISO_3166-2). This code represents a province or state within a specific country. It helps differentiate data sets for the same area when multiple datasets are combined.
+
+### SQL query
+
+Below are the values that NIPKaart expects to get:
+
+| value | required? | description |
+|:------|:----------|:------------|
+| `id` | yes | The ID of the parking location |
+| `country_id` | yes | The country ID determined by NIPKaart |
+| `province_id` | yes | The province ID determined by NIPKaart |
+| `municipality` | yes | The municipality name |
+| `street` | no | The street name |
+| `orientation` | no | The orientation of the parking location |
+| `number` | yes | The number of parking spots on that location |
+| `longitude` | yes | The longitude of the parking location |
+| `latitude` | yes | The latitude of the parking location |
+| `visibility` | yes | The visibility of the parking location |
+| `created_at` | yes | The date and time of the creation of the parking location |
+| `updated_at` | yes | The date and time of the last update of the parking location |
 
 </details>
 

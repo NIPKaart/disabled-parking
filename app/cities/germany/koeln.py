@@ -1,28 +1,27 @@
-"""Manage the location data of Dresden."""
+"""Manage the location data of Hamburg."""
 import datetime
 
 import pymysql
 import pytz
-from dresden import ODPDresden
+from koeln import StadtKoeln
 
 from app.cities import City
 from app.database import connection, cursor
 
 
 class Municipality(City):
-    """Manage the location data of Dresden."""
+    """Manage the location data of Hamburg."""
 
     def __init__(self) -> None:
         """Initialize the class."""
         super().__init__(
-            name="Dresden",
+            name="Köln",
             country="Germany",
             country_id=83,
-            province_id=20,
-            geo_code="DE-SN",
+            province_id=16,
+            geo_code="DE-NW",
         )
-        self.limit = 1000
-        self.phone_code = "0351"
+        self.phone_code = "0221"
 
     async def async_get_locations(self) -> list:
         """Get parking data from API.
@@ -31,8 +30,8 @@ class Municipality(City):
         -------
             list: A list of parking locations.
         """
-        async with ODPDresden() as client:
-            locations = await client.disabled_parkings(limit=self.limit)
+        async with StadtKoeln() as client:
+            locations = await client.disabled_parkings()
             print(f"{self.name} - data has been retrieved")
             return locations
 
@@ -56,20 +55,20 @@ class Municipality(City):
                                 country_id=values(country_id),
                                 province_id=values(province_id),
                                 municipality=values(municipality),
+                                street=values(street),
                                 number=values(number),
                                 longitude=values(longitude),
-                                latitude=values(latitude),
-                                updated_at=values(updated_at)"""  # noqa: E501
+                                latitude=values(latitude)"""  # noqa: E501
                 val = (
                     location_id,
                     int(self.country_id),
                     int(self.province_id),
                     str(self.name),
-                    item.number or 1,
+                    item.number,
                     float(item.longitude),
                     float(item.latitude),
                     bool(True),
-                    item.created_at,
+                    (datetime.datetime.now(tz=pytz.timezone("Europe/Berlin"))),
                     (datetime.datetime.now(tz=pytz.timezone("Europe/Berlin"))),
                 )
                 cursor.execute(sql, val)
