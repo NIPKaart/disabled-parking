@@ -246,13 +246,13 @@ black = ">=22.1.0"
 
 [[package]]
 name = "brussel"
-version = "0.2.1"
+version = "0.2.2"
 description = "Asynchronous Python client providing Open Data information of Brussel (Belgium)"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "brussel-0.2.1-py3-none-any.whl", hash = "sha256:10addd5063d6301b3306e4f10fd20ef582ec616f8bfac6bfe2621dc3b2628760"},
-    {file = "brussel-0.2.1.tar.gz", hash = "sha256:9e0cf383111c032c1db1b805b09dc86910cc9df13fae3596257057ec083b6ed0"},
+    {file = "brussel-0.2.2-py3-none-any.whl", hash = "sha256:029dc5e02fa2caf5dc7baebc90dfcf374d9c6e0b57d16a20e033ad9b243d0722"},
+    {file = "brussel-0.2.2.tar.gz", hash = "sha256:4f3a8e2a39672757c6143eaaeafe30f46350435db63b33a2e1a53e5ce0c7ce69"},
 ]
 
 [package.dependencies]
