@@ -124,13 +124,13 @@ frozenlist = ">=1.1.0"
 
 [[package]]
 name = "antwerpen"
-version = "0.1.0"
+version = "0.2.0"
 description = "Asynchronous Python client providing Open Data information of Antwerpen"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "antwerpen-0.1.0-py3-none-any.whl", hash = "sha256:84652d3ad75d2ff4fffb27604cc01cdd463be700169835ed1b5e51047e5b482e"},
-    {file = "antwerpen-0.1.0.tar.gz", hash = "sha256:f957c4d3732a6d38e2aba4422be487b88887a187272780d522df74a070d5e68c"},
+    {file = "antwerpen-0.2.0-py3-none-any.whl", hash = "sha256:7a4c93ad56624fdd59c9334e16a057ae443b716f125072c1f09d9df1e62ddba6"},
+    {file = "antwerpen-0.2.0.tar.gz", hash = "sha256:4cba60661ce866cf3cd3f20160eb8f3c7479e1305014f2ccbb7c148daf1fea33"},
 ]
 
 [package.dependencies]
@@ -1437,4 +1437,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "92ea19164157d74c8ad1dffb35a3c8a11f5dad5bf346be91313344f4ce691cd8"
+content-hash = "749b444284b77843ef29a0d20f91f417a345a75a71d301f0e8ee219c4a92963c"
