@@ -13,7 +13,7 @@ from app.cities import City
 from app.database import connection, cursor
 
 load_dotenv()
-env_path = Path(".") / ".env"
+env_path = Path() / ".env"
 load_dotenv(dotenv_path=env_path)
 
 
