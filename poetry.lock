@@ -849,6 +849,22 @@ aiohttp = ">=3.0.0"
 yarl = ">=1.6.0"
 
 [[package]]
+name = "odp-stockholm"
+version = "0.1.0"
+description = "Asynchronous Python client providing Open Data information of Stockholm"
+optional = false
+python-versions = ">=3.9,<4.0"
+files = [
+    {file = "odp_stockholm-0.1.0-py3-none-any.whl", hash = "sha256:87d8bae5c11443d0878b027e90575912ad25bc3532b0399a760cd59e9de30631"},
+    {file = "odp_stockholm-0.1.0.tar.gz", hash = "sha256:5e2ddeda87e06b67e4d97d6babf28e308e61b04f8c80a3ad16e1f7e6488c1c42"},
+]
+
+[package.dependencies]
+aiohttp = ">=3.0.0"
+pytz = ">=2023.3,<2024.0"
+yarl = ">=1.6.0"
+
+[[package]]
 name = "packaging"
 version = "23.1"
 description = "Core utilities for Python packages"
@@ -1424,4 +1440,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "ddd608406e155a9166d1ebb31d894a53c7f83756f5354d789d781b7c6f29255e"
+content-hash = "a75e09c9a627166031ee410736e34a6be4f4954403ed7fe73f9e22110931317b"
