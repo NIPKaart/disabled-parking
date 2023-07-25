@@ -33,6 +33,7 @@ koeln = "^0.3.1"
 liege = "^0.2.0"
 namur = "^0.2.1"
 odp-amsterdam = "^5.1.0"
+odp-stockholm = "^0.1.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "23.7.0"
