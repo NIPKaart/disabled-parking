@@ -80,7 +80,7 @@ class Municipality(City):
                     int(location["plaatsen"]),
                     float(location["lon"]),
                     float(location["lat"]),
-                    bool(True),
+                    True,
                     (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
                     (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
                 )

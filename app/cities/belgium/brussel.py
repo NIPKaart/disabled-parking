@@ -70,7 +70,7 @@ class Municipality(City):
                     item.number or 1,
                     float(item.longitude),
                     float(item.latitude),
-                    bool(True),
+                    True,
                     (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
                     (
                         item.updated_at
