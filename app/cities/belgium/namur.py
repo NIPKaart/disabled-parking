@@ -69,7 +69,7 @@ class Municipality(City):
                     1,
                     float(item.longitude),
                     float(item.latitude),
-                    bool(True),
+                    True,
                     (
                         item.created_at
                         or datetime.datetime.now(tz=pytz.timezone("Europe/Brussels"))

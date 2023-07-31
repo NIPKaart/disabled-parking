@@ -83,7 +83,7 @@ class Municipality(City):
                     int(location["AANTAL_PLAATSEN"]),
                     float(longitude),
                     float(latitude),
-                    bool(True),
+                    True,
                     (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
                     (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
                 )

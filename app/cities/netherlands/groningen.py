@@ -80,10 +80,10 @@ class Municipality(City):
                         int(self.province_id),
                         str(self.name),
                         str(location["Straatnaam"]),
-                        int(1),
+                        1,
                         float(latitude),
                         float(longitude),
-                        bool(True),
+                        True,
                         (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
                         (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
                     )
