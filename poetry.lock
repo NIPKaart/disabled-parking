@@ -140,13 +140,13 @@ yarl = ">=1.6.0"
 
 [[package]]
 name = "arnhem"
-version = "0.1.0"
+version = "0.1.1"
 description = "Asynchronous Python client providing Open Data information of Arnhem"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "arnhem-0.1.0-py3-none-any.whl", hash = "sha256:9dd8d59c3ee883874efe0a8d185655b385c4f59d09abca0e06abe3a72f4d7813"},
-    {file = "arnhem-0.1.0.tar.gz", hash = "sha256:02f4aabffb2ec55c13863730ef57db962ccab90300bbeb786056ed0af1ba52dd"},
+    {file = "arnhem-0.1.1-py3-none-any.whl", hash = "sha256:518cdaa8eb86b0ffc8d27014eebb36a6ec12992aeb5434d842a82d9f258a5ad9"},
+    {file = "arnhem-0.1.1.tar.gz", hash = "sha256:fab92acc1c92a73a26c3cad027509a9c427ffbf62f0defd32d15b50ef023e78c"},
 ]
 
 [package.dependencies]
