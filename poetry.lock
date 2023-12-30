@@ -756,13 +756,13 @@ files = [
 
 [[package]]
 name = "namur"
-version = "0.2.1"
+version = "1.0.0"
 description = "Asynchronous Python client providing Open Data information of Namur"
 optional = false
-python-versions = ">=3.9,<4.0"
+python-versions = ">=3.11,<4.0"
 files = [
-    {file = "namur-0.2.1-py3-none-any.whl", hash = "sha256:8d28be389afe1f2880a822e4819c9857616c96f67aaabde5b6b331cbcaf0aed0"},
-    {file = "namur-0.2.1.tar.gz", hash = "sha256:a1da48c52bf00aac1218c68e03206408919f5d0c762d146e68880d295bcdf781"},
+    {file = "namur-1.0.0-py3-none-any.whl", hash = "sha256:6a26ce76e03c1c38ee046208219b68104a1935bcb5f83ee096279bac19e156d8"},
+    {file = "namur-1.0.0.tar.gz", hash = "sha256:2e68198fb3ec012c856fa1263338ffc689fd0a41fecd1b0305f9b26478c6d450"},
 ]
 
 [package.dependencies]
@@ -1306,4 +1306,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "8930571e21163b9a0a772510e705ff5c0b0fca4609d5869081e59b0991c6e466"
+content-hash = "4591b57ea349d1b28b7d2f20370f7fb351371b83c9a235b79acabc594cc08062"
