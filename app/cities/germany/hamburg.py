@@ -31,7 +31,7 @@ class Municipality(City):
             list: A list of parking locations.
         """
         async with UDPHamburg() as client:
-            locations = await client.disabled_parkings(bulk="true")
+            locations = await client.disabled_parkings(limit=1000)
             print(f"{self.name} - data has been retrieved")
             return locations
 
