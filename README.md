@@ -53,7 +53,7 @@ manager.
 
 You need at least:
 
-- Python 3.10+
+- Python 3.11+
 - [Poetry][poetry-install]
 
 1. Create a `.env` file
