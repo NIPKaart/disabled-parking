@@ -565,13 +565,13 @@ files = [
 
 [[package]]
 name = "hamburg"
-version = "1.1.0"
+version = "3.0.0"
 description = "Asynchronous Python client providing Urban Data information of Hamburg"
 optional = false
-python-versions = ">=3.9,<4.0"
+python-versions = ">=3.11,<4.0"
 files = [
-    {file = "hamburg-1.1.0-py3-none-any.whl", hash = "sha256:8e3f4d2fb458989b3a752856fff9a271559c0e7d62f9b12ebfd6b4d97f1686cd"},
-    {file = "hamburg-1.1.0.tar.gz", hash = "sha256:119ed3c97ec2c5c40af2a825b653bd0308ae0401a492fd655687eceba36bd26c"},
+    {file = "hamburg-3.0.0-py3-none-any.whl", hash = "sha256:1d020633663b75e5fe66f2806bbadbd65d19f911d86fbe934a564baaa5aeb3d4"},
+    {file = "hamburg-3.0.0.tar.gz", hash = "sha256:4d03ebefb95f119df69fb43255d274e508ecfdd2e5a439c31537e18043bc41b4"},
 ]
 
 [package.dependencies]
@@ -1306,4 +1306,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "95b9b0dcfae1bad3a736235c944feaffe809203428fa49fe3fe647fc8f525744"
+content-hash = "586ccd622235963f12eae92e2449fbe9254922bac248d0f06bd0d52a21bc4283"
