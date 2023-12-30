@@ -447,13 +447,13 @@ yarl = ">=1.6.0"
 
 [[package]]
 name = "eindhoven"
-version = "3.2.1"
+version = "4.0.0"
 description = "Asynchronous Python client providing Open Data information of Eindhoven"
 optional = false
-python-versions = ">=3.9,<4.0"
+python-versions = ">=3.11,<4.0"
 files = [
-    {file = "eindhoven-3.2.1-py3-none-any.whl", hash = "sha256:b3fed50b94255f6105eae553a922bc53dcfd85a6e1e7a7316bf7027232dce3fa"},
-    {file = "eindhoven-3.2.1.tar.gz", hash = "sha256:3b8e2dcb6748348dfd28041f8f893171015ccfbd9fb705997a90baa25e270162"},
+    {file = "eindhoven-4.0.0-py3-none-any.whl", hash = "sha256:a8c605a7297a7b851ee20a945f203df991caef986bf3b73a373eeb03a204ef38"},
+    {file = "eindhoven-4.0.0.tar.gz", hash = "sha256:b7069b307ab9d2e61f9a48abb9958dbee9526d5f80b0d9abc639e0e441e82fd8"},
 ]
 
 [package.dependencies]
@@ -1306,4 +1306,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "4591b57ea349d1b28b7d2f20370f7fb351371b83c9a235b79acabc594cc08062"
+content-hash = "95b9b0dcfae1bad3a736235c944feaffe809203428fa49fe3fe647fc8f525744"
