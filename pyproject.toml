@@ -31,7 +31,7 @@ eindhoven = "^3.2.1"
 hamburg = "^1.0.1"
 koeln = "^0.3.1"
 liege = "^0.2.0"
-namur = "^0.2.1"
+namur = "^1.0.0"
 odp-amsterdam = "^6.0.0"
 
 [tool.poetry.group.dev.dependencies]
