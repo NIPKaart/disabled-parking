@@ -635,13 +635,13 @@ yarl = ">=1.6.0"
 
 [[package]]
 name = "liege"
-version = "0.2.0"
+version = "1.0.0"
 description = "Asynchronous Python client providing Open Data information of Liège (luik)"
 optional = false
-python-versions = ">=3.9,<4.0"
+python-versions = ">=3.11,<4.0"
 files = [
-    {file = "liege-0.2.0-py3-none-any.whl", hash = "sha256:8bc592b3f057df868758c19c2104fd65bc1b99a61c5f0d78455abdc53561e51d"},
-    {file = "liege-0.2.0.tar.gz", hash = "sha256:e59fc11b2808523ebe5d64d448ccba32b2c6b862cb06dd76f396c0bdc5d7b69c"},
+    {file = "liege-1.0.0-py3-none-any.whl", hash = "sha256:38a03ce3ca33988f479103ec5e06f7b31ea374f0ad3666ae3316632b7d707b1b"},
+    {file = "liege-1.0.0.tar.gz", hash = "sha256:41c64954d47dbf0d5f4812a0c4fbb8e6a42c0a631edac953da69cc73e47c5c80"},
 ]
 
 [package.dependencies]
@@ -1306,4 +1306,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "586ccd622235963f12eae92e2449fbe9254922bac248d0f06bd0d52a21bc4283"
+content-hash = "718cc5d090fd72be8fb580988837af179d21ec45c575dd0dd26802f765c8bdc2"
