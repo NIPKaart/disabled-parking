@@ -1,4 +1,5 @@
 """Manage the location data of Antwerpen."""
+
 import datetime
 
 import pymysql
@@ -31,6 +32,7 @@ class Municipality(City):
         Returns
         -------
             list: A list of parking locations.
+
         """
         async with ODPAntwerpen() as client:
             locations = await client.disabled_parkings(limit=self.limit)
@@ -47,6 +49,7 @@ class Municipality(City):
         Returns:
         -------
             str: The corrected orientation name.
+
         """
         if orientation_type == "Dwars":
             return "Haaks"
@@ -60,6 +63,7 @@ class Municipality(City):
         Args:
         ----
             data_set: The data set to upload.
+
         """
         count: int = 0
         try:

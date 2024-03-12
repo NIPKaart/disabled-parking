@@ -1,4 +1,5 @@
 """Manage the location data of Amsterdam."""
+
 import datetime
 
 import pymysql
@@ -31,6 +32,7 @@ class Municipality(City):
         Returns
         -------
             List of objects from all parking lots.
+
         """
         async with ODPAmsterdam() as client:
             locations = await client.locations(limit=self.limit, parking_type="E6a")
@@ -47,6 +49,7 @@ class Municipality(City):
         Returns:
         -------
             str: The corrected orientation name.
+
         """
         if orientation_type == "Vissengraat":
             return "Visgraat"
@@ -58,6 +61,7 @@ class Municipality(City):
         Args:
         ----
             data_set: The data set to upload.
+
         """
         count: int = 0
         try:

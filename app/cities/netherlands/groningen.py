@@ -1,4 +1,5 @@
 """Manage the location data of Groningen."""
+
 import datetime
 import json
 import os
