@@ -1,4 +1,5 @@
 """Setup database connection."""
+
 import os
 from pathlib import Path
 
@@ -33,6 +34,7 @@ def truncate(city_name: str) -> None:
     Args:
     ----
         city_name: The name of the city, it's case sensitive!
+
     """
     try:
         sql = "DELETE FROM `parking_cities` WHERE `municipality`=%s"

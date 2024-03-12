@@ -1,4 +1,5 @@
 """Manage the location data of Arnhem."""
+
 import datetime
 
 import pymysql
@@ -31,6 +32,7 @@ class Municipality(City):
         Returns
         -------
             List of objects from all parking lots.
+
         """
         async with ODPArnhem() as client:
             locations = await client.locations(
@@ -46,6 +48,7 @@ class Municipality(City):
         Args:
         ----
             data_set: The data set to upload.
+
         """
         count: int = 0
         try:

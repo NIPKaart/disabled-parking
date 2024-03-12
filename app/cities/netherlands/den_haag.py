@@ -1,4 +1,5 @@
 """Manage the location data of Den Haag."""
+
 import datetime
 import json
 import os
@@ -32,10 +33,14 @@ class Municipality(City):
         Returns
         -------
             List of objects from all parking lots.
+
         """
-        async with aiohttp.ClientSession() as client, client.get(
-            f'{os.getenv("CKAN_SOURCE")}/api/3/action/datastore_search?resource_id=6dd4aa05-31bf-4b98-b8d5-2560b6cb9740&limit={self.limit}',
-        ) as resp:
+        async with (
+            aiohttp.ClientSession() as client,
+            client.get(
+                f'{os.getenv("CKAN_SOURCE")}/api/3/action/datastore_search?resource_id=6dd4aa05-31bf-4b98-b8d5-2560b6cb9740&limit={self.limit}',
+            ) as resp,
+        ):
             print(f"{self.name} - data has been retrieved")
             return json.loads(await resp.text())
 
@@ -49,6 +54,7 @@ class Municipality(City):
         Returns:
         -------
             int: The converted value.
+
         """
         if value is None:
             return 1
@@ -60,6 +66,7 @@ class Municipality(City):
         Args:
         ----
             data_set (str): The data to upload.
+
         """
         count: int = 0
         try:

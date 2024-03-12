@@ -1,4 +1,5 @@
 """Manage the location data of Brussel."""
+
 import datetime
 
 import pymysql
@@ -30,6 +31,7 @@ class Municipality(City):
         Returns
         -------
             list: A list of parking locations.
+
         """
         async with ODPBrussel() as client:
             locations = await client.disabled_parkings(limit=self.limit)
@@ -42,6 +44,7 @@ class Municipality(City):
         Args:
         ----
             data_set: The data set to upload.
+
         """
         count: int = 0
         try:

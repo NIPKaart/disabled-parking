@@ -1,4 +1,5 @@
 """Manage the location data of Zoetermeer."""
+
 import datetime
 import json
 import os

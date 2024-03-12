@@ -1,4 +1,5 @@
 """Download and upload disabled parking data to NIPKaart platform."""
+
 import asyncio
 import os
 from pathlib import Path
@@ -32,6 +33,7 @@ class CityProvider:
         Returns:
         -------
             city_class (class): The class of the city.
+
         """
         match city_name:
             case "antwerpen":

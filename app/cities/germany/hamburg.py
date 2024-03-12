@@ -1,4 +1,5 @@
 """Manage the location data of Hamburg."""
+
 import datetime
 
 import pymysql
@@ -29,6 +30,7 @@ class Municipality(City):
         Returns
         -------
             list: A list of parking locations.
+
         """
         async with UDPHamburg() as client:
             locations = await client.disabled_parkings(limit=1000)
@@ -41,6 +43,7 @@ class Municipality(City):
         Args:
         ----
             data_set: The data set to upload.
+
         """
         count: int = 0
         try:

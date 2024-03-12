@@ -11,6 +11,7 @@ def centroid(vertexes: list) -> tuple:
     Returns:
     -------
         Point: The centroid of the polygon.
+
     """
     _x_list = [vertex[0] for vertex in vertexes]
     _y_list = [vertex[1] for vertex in vertexes]
@@ -32,6 +33,7 @@ def get_unique_number(lat: float, lon: float) -> int:
     Returns:
     -------
         int: The unique number.
+
     """
     try:
         lat_int = int(lat * 1e7)

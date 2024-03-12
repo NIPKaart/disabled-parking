@@ -1,4 +1,5 @@
 """Manage the location data of Eindhoven."""
+
 import datetime
 
 import pymysql
@@ -30,6 +31,7 @@ class Municipality(City):
         Returns
         -------
             List of objects from all parking lots.
+
         """
         async with ODPEindhoven() as client:
             locations = await client.locations(limit=self.limit, parking_type=3)
@@ -42,6 +44,7 @@ class Municipality(City):
         Args:
         ----
             data_set: The data set to upload.
+
         """
         count: int = 0
         try:
