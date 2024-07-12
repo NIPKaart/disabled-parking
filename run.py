@@ -23,7 +23,7 @@ from app.cities.netherlands import (
 class CityProvider:
     """Class to provide the correct city."""
 
-    def provide_city(self, city_name: str) -> object:
+    def provide_city(self, city_name: str) -> object:  # noqa: C901, PLR0912
         """Provide the correct city.
 
         Args:
