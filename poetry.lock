@@ -135,13 +135,13 @@ typing-extensions = {version = ">=4.2", markers = "python_version < \"3.13\""}
 
 [[package]]
 name = "antwerpen"
-version = "1.0.1"
+version = "1.1.0"
 description = "Asynchronous Python client providing Open Data information of Antwerpen"
 optional = false
-python-versions = "<4.0,>=3.11"
+python-versions = ">=3.11"
 files = [
-    {file = "antwerpen-1.0.1-py3-none-any.whl", hash = "sha256:aa926049623e155675b04ebca4617a9b77376e6976b5debf35c2b3122e6baa5d"},
-    {file = "antwerpen-1.0.1.tar.gz", hash = "sha256:3a5173106e730543ed5e51d875b0d25518e36212f3ee816663698a6125cae756"},
+    {file = "antwerpen-1.1.0-py3-none-any.whl", hash = "sha256:d6c6da9064505607c3c1cf8405b6aa217da3b0ff28c50417ce8c343c013d8289"},
+    {file = "antwerpen-1.1.0.tar.gz", hash = "sha256:e2935f32f044b7bd59ef6f5dfa1f556c3d72af7f5798ce9d105862dfb6e398c2"},
 ]
 
 [package.dependencies]
