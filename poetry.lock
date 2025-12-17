@@ -189,14 +189,14 @@ yarl = ">=1.6.0"
 
 [[package]]
 name = "arnhem"
-version = "0.1.1"
+version = "1.0.0"
 description = "Asynchronous Python client providing Open Data information of Arnhem"
 optional = false
-python-versions = ">=3.9,<4.0"
+python-versions = ">=3.11"
 groups = ["cities"]
 files = [
-    {file = "arnhem-0.1.1-py3-none-any.whl", hash = "sha256:518cdaa8eb86b0ffc8d27014eebb36a6ec12992aeb5434d842a82d9f258a5ad9"},
-    {file = "arnhem-0.1.1.tar.gz", hash = "sha256:fab92acc1c92a73a26c3cad027509a9c427ffbf62f0defd32d15b50ef023e78c"},
+    {file = "arnhem-1.0.0-py3-none-any.whl", hash = "sha256:42f2ea881a74855e4a02fd70250c0991016f6e7d86a75086468f103afc1e930d"},
+    {file = "arnhem-1.0.0.tar.gz", hash = "sha256:02afecc1c73da1e5bb4fdf9478dbf9965139d49a54bc929f150f1accb9e43df6"},
 ]
 
 [package.dependencies]
@@ -1665,4 +1665,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "dec7a0260248373843d99f491d62c1d02a7db858509dcc1b0a5bce4316253c67"
+content-hash = "68d889d25e638f1850bbc5484a694bd8fbf72f042777dbe81de698995e7cc06b"
