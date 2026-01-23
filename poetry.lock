@@ -229,19 +229,18 @@ files = [
 
 [[package]]
 name = "brussel"
-version = "0.2.2"
+version = "1.0.0"
 description = "Asynchronous Python client providing Open Data information of Brussel (Belgium)"
 optional = false
-python-versions = ">=3.9,<4.0"
+python-versions = ">=3.11"
 groups = ["cities"]
 files = [
-    {file = "brussel-0.2.2-py3-none-any.whl", hash = "sha256:029dc5e02fa2caf5dc7baebc90dfcf374d9c6e0b57d16a20e033ad9b243d0722"},
-    {file = "brussel-0.2.2.tar.gz", hash = "sha256:4f3a8e2a39672757c6143eaaeafe30f46350435db63b33a2e1a53e5ce0c7ce69"},
+    {file = "brussel-1.0.0-py3-none-any.whl", hash = "sha256:6a37d1b8f8bff9c8f03e0165ae5e6f038cf2647e56f4939a385f02d2d6474ee0"},
+    {file = "brussel-1.0.0.tar.gz", hash = "sha256:4d6c0ff7b55899773e6cb89a37e38d2a743df7d232c5fdfec7a8904f968e9d07"},
 ]
 
 [package.dependencies]
 aiohttp = ">=3.0.0"
-pytz = ">=2022.7.1,<2024.0.0"
 yarl = ">=1.6.0"
 
 [[package]]
@@ -1598,4 +1597,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "ee3ae7e81b4efe3729a307f1e4b9e44788aaf35c9789ca2b085a1437c85a4bfb"
+content-hash = "5a4360bb3599ec3edd0c58b9b902ed2e2c808e95e0cb000dc258a36bba299188"
