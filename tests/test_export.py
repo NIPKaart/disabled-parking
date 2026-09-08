@@ -1,5 +1,4 @@
 """Exercise the locked package parsers, municipal mappings and local writer."""
-# Copyright (c) 2026 NIPKaart
 # ruff: noqa: PT009, PT027
 
 from __future__ import annotations

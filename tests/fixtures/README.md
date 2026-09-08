@@ -1,6 +1,6 @@
 # Fixture provenance
 
-These are up to the first two rows of the upstream fixtures at the package versions in `poetry.lock`. Response metadata is retained, so these reduced samples must never be treated as complete datasets. They are parser and mapping examples, not live source or licensing acceptance. Eindhoven contains generic parking examples; classification for a production disabled-parking fetch still requires validation.
+These are up to the first two rows of the upstream fixtures at the package versions in `uv.lock`. Response metadata is retained, so these reduced samples must never be treated as complete datasets. They are parser and mapping examples, not live source or licensing acceptance. Eindhoven contains generic parking examples; classification for a production disabled-parking fetch still requires validation.
 
 | Fixture | Upstream fixture | Package version |
 | --- | --- | --- |

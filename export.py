@@ -1,5 +1,4 @@
 """Export a captured municipal response through the existing package and adapter."""
-# Copyright (c) 2026 NIPKaart
 
 from __future__ import annotations
 

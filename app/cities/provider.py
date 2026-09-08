@@ -1,5 +1,4 @@
 """Select the existing municipal adapters without opening a database."""
-# Copyright (c) 2026 NIPKaart
 
 from app.cities.belgium import antwerpen, brussel, liege, namur
 from app.cities.germany import dresden, dusseldorf, hamburg, koeln

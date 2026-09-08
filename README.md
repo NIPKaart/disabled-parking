@@ -30,9 +30,9 @@ The existing municipality adapters now also expose `normalize(item) -> Municipal
 To try the complete offline path through a package's parser, adapter and file writer:
 
 ```bash
-poetry install
-poetry run python export.py --city hamburg --input tests/fixtures/hamburg.json --output /tmp/hamburg-draft.json
-poetry run python -m unittest discover -s tests -v
+uv sync --locked
+uv run --locked python export.py --city hamburg --input tests/fixtures/hamburg.json --output /tmp/hamburg-draft.json
+uv run --locked python -m unittest discover -s tests -v
 ```
 
 No `.env` or database credentials are needed for this path. `--input` is a captured response in the municipality's existing response shape. This command does not fetch or paginate a live API. The fixture example contains two sample rows; the historical location counts below are not current verification.
@@ -70,49 +70,18 @@ These are the cities currently supported:
 
 ## Development
 
-This Python project is fully managed using the [Poetry][poetry] dependency
-manager.
-
-You need at least:
-
-- Python 3.11+
-- [Poetry][poetry-install]
-
-1. Create a `.env` file
-```bash
-cp .env.example .env
-```
-2. Fillout the database credentials and which city you want to upload
-
-3. Install all packages, including all development requirements:
+This project uses [uv][uv] and Python 3.11+. Install [uv][uv-install], then install the locked application, municipality and development dependencies:
 
 ```bash
-poetry install
+uv sync --locked
+uv run --locked pre-commit install
+uv run --locked python -m unittest discover -s tests -v
+uv run --locked pre-commit run --all-files
 ```
 
-Poetry creates by default an virtual environment where it installs all
-necessary pip packages, to enter or exit the venv run the following commands:
+`uv run` uses the project's `.venv`; activating a shell is optional. The `cities` and `dev` dependency groups are installed by default. Use `uv sync --locked --no-dev` for runtime dependencies, including all municipality packages. CI and Docker use the committed `uv.lock`. Run `uv lock` after intentional dependency changes and commit both files.
 
-```bash
-poetry shell
-exit
-```
-
-Setup the pre-commit check, you must run this inside the virtual environment:
-
-```bash
-pre-commit install
-```
-
-*Now you're all set to get started!*
-
-As this repository uses the [pre-commit][pre-commit] framework, all changes
-are linted and tested with each commit. You can run all checks and tests
-manually, using the following command:
-
-```bash
-poetry run pre-commit run --all-files
-```
+Only the legacy database importer needs `.env`: copy `.env.example` and configure the database and municipality before using it. The local draft export needs no credentials.
 
 <details>
   <summary>Click here to see more!</summary>
@@ -223,6 +192,6 @@ SOFTWARE.
 [linting-shield]: https://github.com/nipkaart/disabled-parking/actions/workflows/linting.yaml/badge.svg
 [linting-url]: https://github.com/nipkaart/disabled-parking/actions/workflows/linting.yaml
 
-[poetry-install]: https://python-poetry.org/docs/#installation
-[poetry]: https://python-poetry.org
+[uv-install]: https://docs.astral.sh/uv/getting-started/installation/
+[uv]: https://docs.astral.sh/uv/
 [pre-commit]: https://pre-commit.com

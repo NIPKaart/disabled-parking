@@ -1,5 +1,4 @@
 """Write normalized records locally; never connect to core or a database."""
-# Copyright (c) 2026 NIPKaart
 
 from __future__ import annotations
 

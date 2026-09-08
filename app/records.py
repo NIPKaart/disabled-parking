@@ -1,5 +1,4 @@
 """Shared municipal output, independent of database and file storage."""
-# Copyright (c) 2026 NIPKaart
 
 from __future__ import annotations
 
