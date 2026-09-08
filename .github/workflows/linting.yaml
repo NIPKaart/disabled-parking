@@ -11,6 +11,29 @@ env:
   DEFAULT_PYTHON: "3.11"
 
 jobs:
+  tests:
+    name: Offline adapter tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Check out code from GitHub
+        uses: actions/checkout@v6.1.0
+      - name: 🏗 Set up Poetry
+        run: pipx install poetry
+      - name: 🏗 Set up Python ${{ env.DEFAULT_PYTHON }}
+        id: python
+        uses: actions/setup-python@v5.6.0
+        with:
+          python-version: ${{ env.DEFAULT_PYTHON }}
+          cache: "poetry"
+      - name: 🏗 Install workflow dependencies
+        run: |
+          poetry config virtualenvs.create true
+          poetry config virtualenvs.in-project true
+      - name: 🏗 Install Python dependencies
+        run: poetry install --no-interaction
+      - name: Run package fixture and export tests
+        run: poetry run python -m unittest discover -s tests -v
+
   ruff:
     name: Ruff
     runs-on: ubuntu-latest

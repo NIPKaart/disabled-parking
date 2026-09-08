@@ -5,9 +5,10 @@ import datetime
 import pymysql
 import pytz
 from dresden import ODPDresden
+from dresden.models import DisabledParking
 
 from app.cities import City
-from app.database import connection, cursor
+from app.records import MunicipalRecord, capacity, identifier, text
 
 
 class Municipality(City):
@@ -46,6 +47,10 @@ class Municipality(City):
             data_set: The data set to upload.
 
         """
+        # Database initialization belongs only to the legacy SQL path.
+        # pylint: disable-next=import-outside-toplevel
+        from app.database import connection, cursor  # noqa: PLC0415
+
         count: int = 0
         try:
             for item in data_set:
@@ -83,3 +88,25 @@ class Municipality(City):
             print(f"{self.name} - parking spaces found: {count}")
             print("---")
             print(f"{self.name} - DONE with database update")
+
+    def source_items(self, payload: dict) -> list[DisabledParking]:
+        """Parse captured source rows with the installed universal package."""
+        return [DisabledParking.from_dict(row) for row in payload["features"]]
+
+    def normalize(self, item: DisabledParking) -> MunicipalRecord:
+        """Translate the existing municipal fields without writing to the database."""
+        external_id = identifier(item.entry_id)
+        latitude, longitude = item.latitude, item.longitude
+        return MunicipalRecord(
+            external_id=external_id,
+            legacy_id=f"{self.source_id}-{external_id}",
+            latitude=float(latitude),
+            longitude=float(longitude),
+            number=capacity(item.number),
+            street=text(None),
+            orientation=None,
+            geometry_method="source_point",
+            source_created_at=item.created_at,
+            source_updated_at=None,
+            source_attributes={"usage_time": item.usage_time, "photo": item.photo},
+        )

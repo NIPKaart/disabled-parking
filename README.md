@@ -23,6 +23,28 @@
 
 This project makes it possible to download and upload parking data from municipalities to the [NIPkaart][nipkaart] platform. If the data is regularly updated, it is possible to automate this with a docker container.
 
+## Local draft export
+
+The existing municipality adapters now also expose `normalize(item) -> MunicipalRecord`. This pure mapping accepts the existing package models (or the four direct JSON sources) and does not open a database connection. `write_records(city, records, output)` writes these records to a local JSON file. The universal packages remain independent of NIPKaart.
+
+To try the complete offline path through a package's parser, adapter and file writer:
+
+```bash
+poetry install
+poetry run python export.py --city hamburg --input tests/fixtures/hamburg.json --output /tmp/hamburg-draft.json
+poetry run python -m unittest discover -s tests -v
+```
+
+No `.env` or database credentials are needed for this path. `--input` is a captured response in the municipality's existing response shape. This command does not fetch or paginate a live API. The fixture example contains two sample rows; the historical location counts below are not current verification.
+
+The draft contains source context and records with a full package identifier (`external_id`), the previously constructed database identifier (`legacy_id`), coordinates, nullable capacity, address/orientation where available, source dates and selected additional package attributes. Unknown capacity remains `null`, zero remains zero, and import time is not substituted for a missing source date. Polygon points retain the existing vertex-average calculation, explicitly named `vertex_average`. Amersfoort still uses a coordinate-derived identity, identified as `coordinate_hash`; Hamburg and Liège retain their old IDs separately for later migration review.
+
+The envelope has `exported_at`, `record_count`, `retrieved_at: null` and `complete: null`. Neither source retrieval time nor completeness can be inferred from a captured response. There is no publication flag or core database ID. This is a provisional review format, not a released core ingestion contract or evidence that the data may be published. Unknown pagination, source classification, source licenses and fields not exposed by the packages still need source-specific acceptance. The fixtures and their provenance are documented in [tests/fixtures/README.md](tests/fixtures/README.md).
+
+Malformed records, duplicate source IDs or limits above 10,000 records / 32 MiB fail the export. Output is replaced atomically only on success; a failed export leaves an existing output file intact. The limits are local operational guards, not a final platform contract. The captured-response path also rejects known lossy capacity parsing in Amsterdam and Düsseldorf instead of silently truncating values. Other upstream transformations are still the responsibility of the source packages.
+
+The legacy `run.py`, SQL methods, containers and schedules remain available with their existing behavior. They do not yet use this draft path. Switching them over, live-fetch completeness checks and core intake are follow-up work; this change supplies the independently testable mapping and local file boundary first.
+
 ## Supported cities
 
 These are the cities currently supported:

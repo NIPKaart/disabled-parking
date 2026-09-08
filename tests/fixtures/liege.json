@@ -1,0 +1,88 @@
+{
+  "nhits": 950,
+  "parameters": {
+    "dataset": "stationnement-pmr",
+    "rows": 10,
+    "start": 0,
+    "format": "json",
+    "timezone": "UTC"
+  },
+  "records": [
+    {
+      "datasetid": "stationnement-pmr",
+      "recordid": "cba258ed55c9c207f5bd4b9db97053be72f99eb7",
+      "fields": {
+        "street_code": 7241,
+        "geo_point_2d": [
+          50.602958578,
+          5.6051201
+        ],
+        "last_modified": "2021-11-26",
+        "available_spaces": 1,
+        "icar_street_id": 7730142,
+        "status": "Existant",
+        "gid": 1833,
+        "municipality": "Liège",
+        "street_name": "quai Saint-Paul de Sinçay",
+        "created": "2021-11-26",
+        "geo_shape": {
+          "coordinates": [
+            5.6051201,
+            50.602958578
+          ],
+          "type": "Point"
+        },
+        "house_number": "103",
+        "icar_address_id": 1108862,
+        "city": "Liège",
+        "postal_code": 4031
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.6051201,
+          50.602958578
+        ]
+      },
+      "record_timestamp": "2022-07-18T22:56:00Z"
+    },
+    {
+      "datasetid": "stationnement-pmr",
+      "recordid": "f532805125b393e03e1feffb45c5695a9370a4b3",
+      "fields": {
+        "street_code": 1258,
+        "geo_point_2d": [
+          50.6273122047,
+          5.584375254
+        ],
+        "last_modified": "2022-02-07",
+        "available_spaces": 1,
+        "icar_street_id": 7730730,
+        "status": "Existant",
+        "gid": 1668,
+        "municipality": "Liège",
+        "street_name": "rue des Vennes",
+        "created": "2021-03-31",
+        "geo_shape": {
+          "coordinates": [
+            5.584375254,
+            50.6273122047
+          ],
+          "type": "Point"
+        },
+        "house_number": "112",
+        "icar_address_id": 1241319,
+        "city": "Liège",
+        "postal_code": 4020
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.584375254,
+          50.6273122047
+        ]
+      },
+      "record_timestamp": "2022-07-18T22:56:00Z"
+    }
+  ]
+}

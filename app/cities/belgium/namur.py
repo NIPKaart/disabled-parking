@@ -5,9 +5,10 @@ import datetime
 import pymysql
 import pytz
 from namur import ODPNamur
+from namur.models import ParkingSpot
 
 from app.cities import City
-from app.database import connection, cursor
+from app.records import MunicipalRecord, identifier, text
 
 
 class Municipality(City):
@@ -46,6 +47,10 @@ class Municipality(City):
             data_set: The data set to upload.
 
         """
+        # Database initialization belongs only to the legacy SQL path.
+        # pylint: disable-next=import-outside-toplevel
+        from app.database import connection, cursor  # noqa: PLC0415
+
         count: int = 0
         try:
             for item in data_set:
@@ -90,3 +95,25 @@ class Municipality(City):
             print(f"{self.name} - parking spaces found: {count}")
             print("---")
             print(f"{self.name} - DONE with database update")
+
+    def source_items(self, payload: dict) -> list[ParkingSpot]:
+        """Parse captured source rows with the installed universal package."""
+        return [ParkingSpot.from_json(row) for row in payload["records"]]
+
+    def normalize(self, item: ParkingSpot) -> MunicipalRecord:
+        """Translate the existing municipal fields without writing to the database."""
+        external_id = identifier(item.spot_id)
+        latitude, longitude = item.latitude, item.longitude
+        return MunicipalRecord(
+            external_id=external_id,
+            legacy_id=f"{self.source_id}-{external_id}",
+            latitude=float(latitude),
+            longitude=float(longitude),
+            number=None,
+            street=text(item.street),
+            orientation=None,
+            geometry_method="source_point",
+            source_created_at=item.created_at,
+            source_updated_at=item.updated_at,
+            source_attributes={"parking_type": item.parking_type},
+        )

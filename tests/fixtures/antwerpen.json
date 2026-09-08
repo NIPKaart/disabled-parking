@@ -1,0 +1,122 @@
+{
+  "type": "FeatureCollection",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "EPSG:4326"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": 42044,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.391823216523055,
+              51.204380414721534
+            ],
+            [
+              4.391890655441355,
+              51.20439166725936
+            ],
+            [
+              4.391920670914526,
+              51.20439667495787
+            ],
+            [
+              4.391912910140442,
+              51.204413466938526
+            ],
+            [
+              4.391912672866264,
+              51.20441394067745
+            ],
+            [
+              4.391815870951576,
+              51.204397789063655
+            ],
+            [
+              4.391823216523055,
+              51.204380414721534
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "OBJECTID": 42044,
+        "Opnamedatum": null,
+        "GISID": "GIS_J_4213",
+        "Bestemming": "mindervalide",
+        "Orientatie": "Langs",
+        "Capaciteit": 1,
+        "WEGID": 442513,
+        "WBNID": 384109,
+        "toegang": "Beperkt",
+        "AREAMANAGER": "1",
+        "STATUS": "actief",
+        "Venstertijd": null,
+        "EEDD": null,
+        "VENSTERTIJD_BESCHR": null,
+        "EBDD": 1657584000000,
+        "Belijnd": "nee",
+        "SHAPE_Length": 18.047819820912522,
+        "SHAPE_Area": 14.048263731179244
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 42045,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.455675140268877,
+              51.23493059018865
+            ],
+            [
+              4.455645047689535,
+              51.234920763051
+            ],
+            [
+              4.455691403116768,
+              51.234864822120784
+            ],
+            [
+              4.455721494237986,
+              51.23487464924792
+            ],
+            [
+              4.455675140268877,
+              51.23493059018865
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "OBJECTID": 42045,
+        "Opnamedatum": null,
+        "GISID": "GIS_102",
+        "Bestemming": "mindervalide",
+        "Orientatie": "Langs",
+        "Capaciteit": 1,
+        "WEGID": 449816,
+        "WBNID": 494926,
+        "toegang": "Beperkt",
+        "AREAMANAGER": "1",
+        "STATUS": "actief",
+        "Venstertijd": null,
+        "EEDD": null,
+        "VENSTERTIJD_BESCHR": null,
+        "EBDD": 1580947200000,
+        "Belijnd": "ja",
+        "SHAPE_Length": 18.769159247163042,
+        "SHAPE_Area": 16.620405177015325
+      }
+    }
+  ],
+  "exceededTransferLimit": true
+}

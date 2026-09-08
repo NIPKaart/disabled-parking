@@ -11,8 +11,8 @@ import requests
 from dotenv import load_dotenv
 
 from app.cities import City
-from app.database import connection, cursor
 from app.helper import centroid
+from app.records import MunicipalRecord, identifier, text
 
 load_dotenv()
 env_path = Path() / ".env"
@@ -37,7 +37,7 @@ class Municipality(City):
     def download(self) -> None:
         """Download the data as JSON file."""
         # Create a variable and pass the url of file to be downloaded
-        remote_url = f'{os.getenv("GRONINGEN_SOURCE")}/open-data/gemeentegroningen_parkeervakken.geojson'  # noqa: E501
+        remote_url = f"{os.getenv('GRONINGEN_SOURCE')}/open-data/gemeentegroningen_parkeervakken.geojson"  # noqa: E501
         # Make http request for remote file data
         data = requests.get(remote_url, timeout=10)
         # Save file data to local copy
@@ -49,6 +49,10 @@ class Municipality(City):
         """Upload the data from the JSON file to the database."""
         with Path(self.local_file).open(encoding="UTF-8") as groningen_data:
             groningen_obj = json.load(groningen_data)
+
+        # Database initialization belongs only to the legacy SQL path.
+        # pylint: disable-next=import-outside-toplevel
+        from app.database import connection, cursor  # noqa: PLC0415
 
         count: int = 0
         try:
@@ -96,3 +100,30 @@ class Municipality(City):
             print(f"{self.name} - parking spaces found: {count}")
             print("---")
             print(f"{self.name} - DONE with database update")
+
+    def source_items(self, payload: dict) -> list[dict]:
+        """Select the same source rows as the existing municipal adapter."""
+        return [
+            row
+            for row in payload["features"]
+            if row["properties"]["Vakfunctie"] == "Invaliden_alg"
+        ]
+
+    def normalize(self, item: dict) -> MunicipalRecord:
+        """Translate the existing municipal fields without writing to the database."""
+        location = item["properties"]
+        latitude, longitude = centroid(item["geometry"]["coordinates"][0])
+        external_id = identifier(location["VakID"])
+        legacy_suffix = external_id
+        return MunicipalRecord(
+            external_id=external_id,
+            legacy_id=f"{self.source_id}-{legacy_suffix}",
+            latitude=float(latitude),
+            longitude=float(longitude),
+            number=None,
+            street=text(location.get("Straatnaam")),
+            orientation=None,
+            identity_method="source_id",
+            geometry_method="vertex_average",
+            source_attributes={"parking_type": location["Vakfunctie"]},
+        )

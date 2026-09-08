@@ -9,7 +9,7 @@ import pymysql
 import pytz
 
 from app.cities import City
-from app.database import connection, cursor
+from app.records import MunicipalRecord, capacity, identifier, orientation, text
 
 
 class Municipality(City):
@@ -38,7 +38,7 @@ class Municipality(City):
         async with (
             aiohttp.ClientSession() as client,
             client.get(
-                f'{os.getenv("CKAN_SOURCE")}/api/3/action/datastore_search?resource_id=6dd4aa05-31bf-4b98-b8d5-2560b6cb9740&limit={self.limit}',
+                f"{os.getenv('CKAN_SOURCE')}/api/3/action/datastore_search?resource_id=6dd4aa05-31bf-4b98-b8d5-2560b6cb9740&limit={self.limit}",
             ) as resp,
         ):
             print(f"{self.name} - data has been retrieved")
@@ -68,6 +68,10 @@ class Municipality(City):
             data_set (str): The data to upload.
 
         """
+        # Database initialization belongs only to the legacy SQL path.
+        # pylint: disable-next=import-outside-toplevel
+        from app.database import connection, cursor  # noqa: PLC0415
+
         count: int = 0
         try:
             for item in data_set["result"]["records"]:
@@ -111,3 +115,25 @@ class Municipality(City):
             print(f"{self.name} - parking spaces found: {count}")
             print("---")
             print(f"{self.name} - DONE with database update")
+
+    def source_items(self, payload: dict) -> list[dict]:
+        """Select the same source rows as the existing municipal adapter."""
+        return payload["result"]["records"]
+
+    def normalize(self, item: dict) -> MunicipalRecord:
+        """Translate the existing municipal fields without writing to the database."""
+        external_id = identifier(item["GUID"]).strip("{}")
+        latitude, longitude = item["LAT"], item["LONG"]
+        legacy_suffix = item["GUID"].split("{")[1]
+        return MunicipalRecord(
+            external_id=external_id,
+            legacy_id=f"{self.source_id}-{legacy_suffix}",
+            latitude=float(latitude),
+            longitude=float(longitude),
+            number=capacity(item.get("AANTALPLAATSEN")),
+            street=text(None),
+            orientation=orientation(item.get("ORIENTATIE")),
+            identity_method="source_id",
+            geometry_method="source_point",
+            source_attributes={},
+        )

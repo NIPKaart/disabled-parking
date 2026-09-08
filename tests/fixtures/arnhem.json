@@ -1,0 +1,347 @@
+{
+  "displayFieldName": "ID",
+  "fieldAliases": {
+    "OBJECTID": "OBJECTID",
+    "ID": "ID",
+    "SECTIE_ID": "SECTIE_ID",
+    "SOORT": "SOORT",
+    "STRAAT": "STRAAT",
+    "BUURTCODE": "BUURTCODE",
+    "BUURTNAAM": "BUURTNAAM",
+    "WIJKCODE": "WIJKCODE",
+    "WIJKNAAM": "WIJKNAAM",
+    "REGIME": "REGIME",
+    "RVV_SOORT": "RVV_SOORT",
+    "FISCAAL_GEBIED": "FISCAAL_GEBIED",
+    "BORD": "BORD",
+    "VERGUNNINGSGEBIED": "VERGUNNINGSGEBIED",
+    "GEBIED": "GEBIED",
+    "SHAPE.STArea()": "SHAPE.STArea()",
+    "SHAPE.STLength()": "SHAPE.STLength()"
+  },
+  "geometryType": "esriGeometryPolygon",
+  "spatialReference": {
+    "wkid": 4326,
+    "latestWkid": 4326
+  },
+  "fields": [
+    {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID"
+    },
+    {
+      "name": "ID",
+      "type": "esriFieldTypeInteger",
+      "alias": "ID"
+    },
+    {
+      "name": "SECTIE_ID",
+      "type": "esriFieldTypeInteger",
+      "alias": "SECTIE_ID"
+    },
+    {
+      "name": "SOORT",
+      "type": "esriFieldTypeString",
+      "alias": "SOORT",
+      "length": 40
+    },
+    {
+      "name": "STRAAT",
+      "type": "esriFieldTypeString",
+      "alias": "STRAAT",
+      "length": 60
+    },
+    {
+      "name": "BUURTCODE",
+      "type": "esriFieldTypeString",
+      "alias": "BUURTCODE",
+      "length": 20
+    },
+    {
+      "name": "BUURTNAAM",
+      "type": "esriFieldTypeString",
+      "alias": "BUURTNAAM",
+      "length": 50
+    },
+    {
+      "name": "WIJKCODE",
+      "type": "esriFieldTypeString",
+      "alias": "WIJKCODE",
+      "length": 20
+    },
+    {
+      "name": "WIJKNAAM",
+      "type": "esriFieldTypeString",
+      "alias": "WIJKNAAM",
+      "length": 60
+    },
+    {
+      "name": "REGIME",
+      "type": "esriFieldTypeString",
+      "alias": "REGIME",
+      "length": 50
+    },
+    {
+      "name": "RVV_SOORT",
+      "type": "esriFieldTypeString",
+      "alias": "RVV_SOORT",
+      "length": 45
+    },
+    {
+      "name": "FISCAAL_GEBIED",
+      "type": "esriFieldTypeString",
+      "alias": "FISCAAL_GEBIED",
+      "length": 60
+    },
+    {
+      "name": "BORD",
+      "type": "esriFieldTypeString",
+      "alias": "BORD",
+      "length": 120
+    },
+    {
+      "name": "VERGUNNINGSGEBIED",
+      "type": "esriFieldTypeString",
+      "alias": "VERGUNNINGSGEBIED",
+      "length": 50
+    },
+    {
+      "name": "GEBIED",
+      "type": "esriFieldTypeString",
+      "alias": "GEBIED",
+      "length": 60
+    },
+    {
+      "name": "SHAPE.STArea()",
+      "type": "esriFieldTypeDouble",
+      "alias": "SHAPE.STArea()"
+    },
+    {
+      "name": "SHAPE.STLength()",
+      "type": "esriFieldTypeDouble",
+      "alias": "SHAPE.STLength()"
+    }
+  ],
+  "features": [
+    {
+      "attributes": {
+        "OBJECTID": 96,
+        "ID": 100077,
+        "SECTIE_ID": null,
+        "SOORT": "bijzonder",
+        "STRAAT": "G.A. van Nispenstraat",
+        "BUURTCODE": "BU02021261",
+        "BUURTNAAM": "Burgemeesterswijk",
+        "WIJKCODE": "WK020212",
+        "WIJKNAAM": null,
+        "REGIME": "Ongereguleerd",
+        "RVV_SOORT": "E6a",
+        "FISCAAL_GEBIED": null,
+        "BORD": null,
+        "VERGUNNINGSGEBIED": null,
+        "GEBIED": "Sector C Burgermeesterkwartier",
+        "SHAPE.STArea()": 10.726566955,
+        "SHAPE.STLength()": 13.685782982611673
+      },
+      "geometry": {
+        "rings": [
+          [
+            [
+              5.894436974354539,
+              51.991877507180675
+            ],
+            [
+              5.894429617405334,
+              51.991876221207356
+            ],
+            [
+              5.894393754011804,
+              51.99186950962195
+            ],
+            [
+              5.894378463265797,
+              51.991866654326714
+            ],
+            [
+              5.894378222251264,
+              51.99186658525656
+            ],
+            [
+              5.894377975524996,
+              51.991866526098256
+            ],
+            [
+              5.894377723107441,
+              51.991866478649314
+            ],
+            [
+              5.8943774649883185,
+              51.99186644201097
+            ],
+            [
+              5.894377202633767,
+              51.99186641707575
+            ],
+            [
+              5.894376938945331,
+              51.99186640293229
+            ],
+            [
+              5.8943766739434,
+              51.99186640137817
+            ],
+            [
+              5.8943764090635,
+              51.99186641060957
+            ],
+            [
+              5.89437614721739,
+              51.99186643061386
+            ],
+            [
+              5.894375886969502,
+              51.991866463195
+            ],
+            [
+              5.8943756312113225,
+              51.99186650654278
+            ],
+            [
+              5.894375381398706,
+              51.991866560650934
+            ],
+            [
+              5.894375138987564,
+              51.99186662551316
+            ],
+            [
+              5.894374903977898,
+              51.99186670112958
+            ],
+            [
+              5.894374679261083,
+              51.99186678568992
+            ],
+            [
+              5.894374463401657,
+              51.9918668809981
+            ],
+            [
+              5.894374259290994,
+              51.99186698524402
+            ],
+            [
+              5.894374068374837,
+              51.99186709752252
+            ],
+            [
+              5.894373889207444,
+              51.99186721873871
+            ],
+            [
+              5.894373726125989,
+              51.99186734617747
+            ],
+            [
+              5.894373577694954,
+              51.99186748164254
+            ],
+            [
+              5.894373443883829,
+              51.99186762243759
+            ],
+            [
+              5.89437332760428,
+              51.99186776855011
+            ],
+            [
+              5.894373228856464,
+              51.99186791998
+            ],
+            [
+              5.894373146164027,
+              51.99186807493605
+            ],
+            [
+              5.894373082438792,
+              51.991868233405704
+            ],
+            [
+              5.894373037670643,
+              51.9918683944901
+            ],
+            [
+              5.894364404111697,
+              51.99188656390106
+            ],
+            [
+              5.894427580929397,
+              51.991898003360305
+            ],
+            [
+              5.894436974354539,
+              51.991877507180675
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 105,
+        "ID": 108123,
+        "SECTIE_ID": null,
+        "SOORT": "bijzonder",
+        "STRAAT": "Coehoornstraat",
+        "BUURTCODE": "BU02020104",
+        "BUURTNAAM": "Stationsplein",
+        "WIJKCODE": "WK020201",
+        "WIJKNAAM": null,
+        "REGIME": "Mengvorm",
+        "RVV_SOORT": "E6a",
+        "FISCAAL_GEBIED": "26001",
+        "BORD": null,
+        "VERGUNNINGSGEBIED": "Sector A",
+        "GEBIED": "26001",
+        "SHAPE.STArea()": 9.335955535,
+        "SHAPE.STLength()": 15.703308317465705
+      },
+      "geometry": {
+        "rings": [
+          [
+            [
+              5.901505793265879,
+              51.9828482239919
+            ],
+            [
+              5.901529780627893,
+              51.98285299710266
+            ],
+            [
+              5.901535071524492,
+              51.982843693492526
+            ],
+            [
+              5.901551042852021,
+              51.982814357574696
+            ],
+            [
+              5.901540361654022,
+              51.98279688596718
+            ],
+            [
+              5.901539118911973,
+              51.98279133659611
+            ],
+            [
+              5.901505793265879,
+              51.9828482239919
+            ]
+          ]
+        ]
+      }
+    }
+  ],
+  "exceededTransferLimit": true
+}

@@ -1,0 +1,82 @@
+{
+  "displayFieldName": "bezeichnung",
+  "fieldAliases": {
+    "objectid": "OBJECTID",
+    "bezeichnung": "Bezeichnung",
+    "nr_stadtbezirk": "Stadtbezirk (Nr.)",
+    "stadtteil": "Stadtteil",
+    "anzahl": "Anzahl",
+    "bemerkung": "Bemerkung"
+  },
+  "geometryType": "esriGeometryPoint",
+  "spatialReference": {
+    "wkid": 4326,
+    "latestWkid": 4326
+  },
+  "fields": [
+    {
+      "name": "objectid",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID"
+    },
+    {
+      "name": "bezeichnung",
+      "type": "esriFieldTypeString",
+      "alias": "Bezeichnung",
+      "length": 100
+    },
+    {
+      "name": "nr_stadtbezirk",
+      "type": "esriFieldTypeString",
+      "alias": "Stadtbezirk (Nr.)",
+      "length": 75
+    },
+    {
+      "name": "stadtteil",
+      "type": "esriFieldTypeString",
+      "alias": "Stadtteil",
+      "length": 75
+    },
+    {
+      "name": "anzahl",
+      "type": "esriFieldTypeInteger",
+      "alias": "Anzahl"
+    },
+    {
+      "name": "bemerkung",
+      "type": "esriFieldTypeString",
+      "alias": "Bemerkung",
+      "length": 254
+    }
+  ],
+  "features": [
+    {
+      "attributes": {
+        "objectid": 1,
+        "bezeichnung": "Am Schwanebitzer Hof",
+        "nr_stadtbezirk": "7",
+        "stadtteil": "Urbach",
+        "anzahl": 1,
+        "bemerkung": "Am Schwanebitzer Hof"
+      },
+      "geometry": {
+        "x": 7.080332599332128,
+        "y": 50.88211573130589
+      }
+    },
+    {
+      "attributes": {
+        "objectid": 2,
+        "bezeichnung": "Dülkenstr. 18",
+        "nr_stadtbezirk": "7",
+        "stadtteil": "Porz",
+        "anzahl": 2,
+        "bemerkung": "Dülkenstr. 18"
+      },
+      "geometry": {
+        "x": 7.052518230108007,
+        "y": 50.890362687931805
+      }
+    }
+  ]
+}

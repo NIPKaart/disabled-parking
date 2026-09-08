@@ -1,0 +1,104 @@
+{
+  "nhits": 305,
+  "parameters": {
+    "dataset": "namur-parking-emplacements",
+    "rows": 10,
+    "start": 0,
+    "refine": {
+      "type_parking": "PMR"
+    },
+    "format": "json",
+    "timezone": "UTC"
+  },
+  "records": [
+    {
+      "datasetid": "namur-parking-emplacements",
+      "recordid": "e91dc682c519dfe8fffce50919b56755b2eb1bac",
+      "fields": {
+        "geo_shape": {
+          "coordinates": [
+            4.87520726773486,
+            50.46580805599107
+          ],
+          "type": "Point"
+        },
+        "largeur": 3.5,
+        "num_police": "2",
+        "rue_nom": "Place de l'Ecole des Cadets",
+        "localite": "NAMUR",
+        "type_parking": "PMR",
+        "zone_stationn": "Orange",
+        "code_rue": "1813",
+        "identifiant": "2172",
+        "date_creation": "2020-09-16",
+        "horaire": "Lundi au Samedi, de 9h à 17h - max. 8h",
+        "longueur": 5.0,
+        "distance_ptadresse": 9.9539280576,
+        "geo_point_2d": [
+          50.46580805599107,
+          4.87520726773486
+        ],
+        "superficie": 17.51
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.87520726773486,
+          50.46580805599107
+        ]
+      },
+      "record_timestamp": "2022-08-28T01:10:00Z"
+    },
+    {
+      "datasetid": "namur-parking-emplacements",
+      "recordid": "17432e1f006f20ce4c2309210eb4af4cdde66c6f",
+      "fields": {
+        "geo_shape": {
+          "coordinates": [
+            4.868819424458087,
+            50.46702277846857
+          ],
+          "type": "Point"
+        },
+        "largeur": 3.0,
+        "num_police": "16",
+        "rue_nom": "Rue Lucien Namêche",
+        "localite": "NAMUR",
+        "type_parking": "PMR",
+        "zone_stationn": "Rouge",
+        "code_rue": "1273",
+        "identifiant": "2529",
+        "date_creation": "2020-09-16",
+        "horaire": "Lundi au Samedi, de 9h à 17h - max. 3h",
+        "longueur": 4.88,
+        "distance_ptadresse": 16.59676176229,
+        "geo_point_2d": [
+          50.46702277846857,
+          4.868819424458087
+        ],
+        "superficie": 15.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.868819424458087,
+          50.46702277846857
+        ]
+      },
+      "record_timestamp": "2022-08-28T01:10:00Z"
+    }
+  ],
+  "facet_groups": [
+    {
+      "name": "type_parking",
+      "facets": [
+        {
+          "name": "PMR",
+          "count": 305,
+          "state": "refined",
+          "path": "PMR"
+        }
+      ]
+    }
+  ]
+}

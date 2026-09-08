@@ -11,8 +11,8 @@ import pytz
 from dotenv import load_dotenv
 
 from app.cities import City
-from app.database import connection, cursor
 from app.helper import centroid, get_unique_number
+from app.records import MunicipalRecord, capacity, identifier, text
 
 load_dotenv()
 env_path = Path() / ".env"
@@ -44,7 +44,7 @@ class Municipality(City):
         async with (
             aiohttp.ClientSession() as client,
             client.get(
-                f'{os.getenv("CKAN_SOURCE")}/dataset/280abd40-bd4a-4d76-9537-2c2bae526296/resource/417f3e35-4a5b-47c6-a23f-cbf92938c9e5/download/amersfoort-gehandicaptenparkeerplaatsen.json',
+                f"{os.getenv('CKAN_SOURCE')}/dataset/280abd40-bd4a-4d76-9537-2c2bae526296/resource/417f3e35-4a5b-47c6-a23f-cbf92938c9e5/download/amersfoort-gehandicaptenparkeerplaatsen.json",
             ) as resp,
         ):
             print(f"{self.name} - data has been retrieved")
@@ -58,6 +58,10 @@ class Municipality(City):
             data_set: The data set to upload.
 
         """
+        # Database initialization belongs only to the legacy SQL path.
+        # pylint: disable-next=import-outside-toplevel
+        from app.database import connection, cursor  # noqa: PLC0415
+
         count: int = 0
         try:
             for item in data_set["features"]:
@@ -101,3 +105,26 @@ class Municipality(City):
             print(f"{self.name} - parking spaces found: {count}")
             print("---")
             print(f"{self.name} - DONE with database update")
+
+    def source_items(self, payload: dict) -> list[dict]:
+        """Select the same source rows as the existing municipal adapter."""
+        return payload["features"]
+
+    def normalize(self, item: dict) -> MunicipalRecord:
+        """Translate the existing municipal fields without writing to the database."""
+        location = item["properties"]
+        latitude, longitude = centroid(item["geometry"]["coordinates"][0])
+        external_id = identifier(get_unique_number(latitude, longitude))
+        legacy_suffix = external_id
+        return MunicipalRecord(
+            external_id=external_id,
+            legacy_id=f"{self.source_id}-{legacy_suffix}",
+            latitude=float(latitude),
+            longitude=float(longitude),
+            number=capacity(location["AANTAL_PLAATSEN"]),
+            street=text(location.get("STRAATNAAM")),
+            orientation=None,
+            identity_method="coordinate_hash",
+            geometry_method="vertex_average",
+            source_attributes={},
+        )
