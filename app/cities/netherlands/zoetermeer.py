@@ -1,12 +1,8 @@
 """Manage the location data of Zoetermeer."""
 
-import datetime
-import json
 import os
 from pathlib import Path
 
-import pymysql
-import pytz
 import requests
 from dotenv import load_dotenv
 
@@ -26,8 +22,6 @@ class Municipality(City):
         super().__init__(
             name="Zoetermeer",
             country="Netherlands",
-            country_id=157,
-            province_id=9,
             geo_code="NL-ZH",
         )
         self.cbs_code = "0637"
@@ -46,58 +40,6 @@ class Municipality(City):
             file.write(data.content)
         print(f"{self.name} - KLAAR met downloaden")
 
-    def upload_json(self) -> None:
-        """Upload the data from the JSON file to the database."""
-        with Path(self.local_file).open(encoding="UTF-8") as zoetermeer_data:
-            zoetermeer_obj = json.load(zoetermeer_data)
-
-        # Database initialization belongs only to the legacy SQL path.
-        # pylint: disable-next=import-outside-toplevel
-        from app.database import connection, cursor  # noqa: PLC0415
-
-        count: int = 0
-        try:
-            for item in zoetermeer_obj["features"]:
-                count += 1
-                location = item["properties"]
-                # Define unique id
-                location_id = (
-                    f"{self.geo_code}-{self.cbs_code}-{location['OBJECTID_1']}"
-                )
-
-                sql = """INSERT INTO `parking_cities` (id, country_id, province_id, municipality, number, longitude, latitude, visibility, created_at, updated_at)
-                        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY
-                        UPDATE id=values(id),
-                                country_id=values(country_id),
-                                province_id=values(province_id),
-                                municipality=values(municipality),
-                                street=values(street),
-                                orientation=values(orientation),
-                                number=values(number),
-                                longitude=values(longitude),
-                                latitude=values(latitude),
-                                updated_at=values(updated_at)"""  # noqa: E501
-                val = (
-                    location_id,
-                    int(self.country_id),
-                    int(self.province_id),
-                    str(self.name),
-                    int(location["plaatsen"]),
-                    float(location["lon"]),
-                    float(location["lat"]),
-                    True,
-                    (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
-                    (datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))),
-                )
-                cursor.execute(sql, val)
-            connection.commit()
-        except pymysql.Error as error:
-            print(f"MySQL error: {error}")
-        finally:
-            print(f"{self.name} - parking spaces found: {count}")
-            print("---")
-            print(f"{self.name} - DONE with database update")
-
     def source_items(self, payload: dict) -> list[dict]:
         """Select the same source rows as the existing municipal adapter."""
         return payload["features"]
@@ -107,10 +49,8 @@ class Municipality(City):
         location = item["properties"]
         latitude, longitude = location["lat"], location["lon"]
         external_id = identifier(location["OBJECTID_1"])
-        legacy_suffix = external_id
         return MunicipalRecord(
             external_id=external_id,
-            legacy_id=f"{self.source_id}-{legacy_suffix}",
             latitude=float(latitude),
             longitude=float(longitude),
             number=capacity(location.get("plaatsen")),

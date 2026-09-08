@@ -80,7 +80,6 @@ class MappingTests(unittest.TestCase):
                 )
                 self.assertAlmostEqual(record.latitude, expected[3], places=3)
                 self.assertAlmostEqual(record.longitude, expected[4], places=3)
-                self.assertTrue(record.legacy_id.startswith(city.source_id + "-"))
 
     def test_unknown_zero_and_full_identity(self) -> None:
         """Do not replace unknown or zero capacity, or shorten Hamburg's source ID."""
@@ -96,10 +95,12 @@ class MappingTests(unittest.TestCase):
         item = replace(city.source_items(sample("hamburg"))[0], spot_id="00017460")
         record = city.normalize(item)
         self.assertEqual(record.external_id, "00017460")
-        self.assertTrue(record.legacy_id.endswith("-7460"))
         city = CityProvider().provide_city("liege")
-        record = city.normalize(city.source_items(sample("liege"))[0])
-        self.assertFalse(record.legacy_id.endswith(record.external_id))
+        item = city.source_items(sample("liege"))[0]
+        self.assertEqual(
+            city.normalize(item).external_id,
+            city.normalize(replace(item, latitude=item.latitude + 0.001)).external_id,
+        )
 
     def test_restrictions_and_source_dates(self) -> None:
         """Retain package information that the legacy SQL mapping discarded."""
@@ -210,7 +211,6 @@ class MappingTests(unittest.TestCase):
             with self.subTest(latitude=latitude), self.assertRaises(ValueError):
                 MunicipalRecord(
                     external_id="1",
-                    legacy_id="old-1",
                     latitude=latitude,
                     longitude=longitude,
                     number=None,
@@ -235,7 +235,8 @@ class WriterTests(unittest.TestCase):
             self.assertIsNone(result["complete"])
             self.assertIsNone(result["retrieved_at"])
             self.assertIn("exported_at", result)
-            self.assertNotIn("visibility", result["records"][0])
+            for field in ("visibility", "legacy_id", "country_id", "province_id"):
+                self.assertNotIn(field, result["records"][0])
             with self.assertRaises(ValueError):
                 write_records(city, [records[0], records[0]], output)
             with patch("app.export.MAX_RECORDS", 1), self.assertRaises(ValueError):
@@ -272,15 +273,13 @@ class WriterTests(unittest.TestCase):
             self.assertIn("Export failed:", result.stderr)
             self.assertEqual(output.read_text(encoding="utf-8"), "previous")
 
-    def test_cli_without_database_or_network(self) -> None:
+    def test_cli_without_network(self) -> None:
         """Run the actual entry point with connection attempts explicitly forbidden."""
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "export.json"
             code = (
                 "import runpy, socket; from unittest.mock import patch; "
                 "from contextlib import ExitStack; stack = ExitStack(); "
-                "stack.enter_context(patch('pymysql.connect', "
-                "side_effect=AssertionError('database'))); "
                 "stack.enter_context(patch.object(socket.socket, 'connect', "
                 "side_effect=AssertionError('network'))); "
                 "runpy.run_path('export.py', run_name='__main__')"

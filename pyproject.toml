@@ -1,7 +1,7 @@
 [project]
 name = "disabled-parking"
 version = "0.0.0"
-description = "A tool to fetch and upload disabled parking data to NIPKaart."
+description = "Normalize municipal disabled parking data into local review files."
 requires-python = ">=3.11,<4.0"
 authors = [{ name = "NIPKaart", email = "hello@nipkaart.nl" }]
 maintainers = [{ name = "Klaas Schoute", email = "hello@student-techlife.com" }]
@@ -9,9 +9,7 @@ license = "MIT"
 readme = "README.md"
 keywords = ["disabled", "parking", "nipkaart", "locations", "api"]
 dependencies = [
-  "pymysql>=1.1.0,<2.0.0",
   "python-dotenv>=1.0.0,<2.0.0",
-  "pytz>=2023.3,<2024.0",
   "requests>=2.31.0,<3.0.0",
 ]
 

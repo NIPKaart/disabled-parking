@@ -13,15 +13,11 @@ class City:
         self,
         name: str,
         country: str,
-        country_id: int,
-        province_id: int,
         geo_code: str,
     ) -> None:
         """Initialize the class."""
         self.name = name
         self.country = country
-        self.country_id = country_id
-        self.province_id = province_id
         self.geo_code = geo_code
 
     @property

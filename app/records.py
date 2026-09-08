@@ -55,7 +55,6 @@ class MunicipalRecord:
     """One source statement; neither visibility nor publication is decided here."""
 
     external_id: str
-    legacy_id: str
     latitude: float
     longitude: float
     number: int | None
@@ -70,7 +69,6 @@ class MunicipalRecord:
     def __post_init__(self) -> None:
         """Reject malformed records before they reach any output writer."""
         identifier(self.external_id)
-        identifier(self.legacy_id)
         if (
             not math.isfinite(self.latitude)
             or not -90 <= self.latitude <= 90
