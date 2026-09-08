@@ -1,45 +1,49 @@
-[tool.poetry]
+[project]
 name = "disabled-parking"
-package-mode = false
-description = "A tool to fetch and upload disabled parking data to NIPKaart."
-authors = ["NIPKaart <hello@nipkaart.nl>"]
-maintainers = ["Klaas Schoute <hello@student-techlife.com>"]
+version = "0.0.0"
+description = "Normalize municipal disabled parking data into local review files."
+requires-python = ">=3.11,<4.0"
+authors = [{ name = "NIPKaart", email = "hello@nipkaart.nl" }]
+maintainers = [{ name = "Klaas Schoute", email = "hello@student-techlife.com" }]
 license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/nipkaart/disabled-parking"
-repository = "https://github.com/nipkaart/disabled-parking"
-documentation = "https://github.com/nipkaart/disabled-parking"
 keywords = ["disabled", "parking", "nipkaart", "locations", "api"]
-packages = [
-  { include = "app" },
+dependencies = [
+  "python-dotenv>=1.0.0,<2.0.0",
+  "requests>=2.31.0,<3.0.0",
 ]
 
-[tool.poetry.dependencies]
-pymysql = "^1.1.0"
-python = "^3.11"
-python-dotenv = "^1.0.0"
-pytz = "^2023.3"
-requests = "^2.31.0"
+[project.urls]
+Homepage = "https://github.com/nipkaart/disabled-parking"
+Repository = "https://github.com/nipkaart/disabled-parking"
+Documentation = "https://github.com/nipkaart/disabled-parking"
 
-[tool.poetry.group.cities.dependencies]
-antwerpen = "^1.0.0"
-arnhem = "^0.1.0"
-brussel = "^0.2.1"
-dresden = "^0.2.1"
-dusseldorf = "^1.0.0"
-eindhoven = "^4.0.0"
-hamburg = "^3.0.0"
-koeln = "^0.3.1"
-liege = "^1.0.0"
-namur = "^1.0.0"
-odp-amsterdam = "^6.0.0"
+[dependency-groups]
+cities = [
+  "antwerpen>=1.0.0,<2.0.0",
+  "arnhem>=0.1.0,<0.2.0",
+  "brussel>=0.2.1,<0.3.0",
+  "dresden>=0.2.1,<0.3.0",
+  "dusseldorf>=1.0.0,<2.0.0",
+  "eindhoven>=4.0.0,<5.0.0",
+  "hamburg>=3.0.0,<4.0.0",
+  "koeln>=0.3.1,<0.4.0",
+  "liege>=1.0.0,<2.0.0",
+  "namur>=1.0.0,<2.0.0",
+  "odp-amsterdam>=6.0.0,<7.0.0",
+  "async-timeout>=4,<6",
+]
+dev = [
+  "pre-commit==3.8.0",
+  "pre-commit-hooks==4.6.0",
+  "pylint==3.3.9",
+  "ruff==0.16.4",
+  "yamllint==1.38.0",
+]
 
-[tool.poetry.group.dev.dependencies]
-pre-commit = "3.8.0"
-pre-commit-hooks = "4.6.0"
-pylint = "3.3.9"
-ruff = "0.16.4"
-yamllint = "1.38.0"
+[tool.uv]
+package = false
+default-groups = ["cities", "dev"]
 
 [tool.pylint.BASIC]
 good-names = [
@@ -78,7 +82,7 @@ max-attributes = 20
 target-version = "py311"
 lint.select = ["ALL"]
 lint.ignore = [
-  "ANN101", # Self... explanatory
+  "CPY001", # Copyright is documented in LICENSE, not individual Python files
   "ANN401", # Opinioated warning on disallowing dynamically typed expressions
   "D203", # Conflicts with other rules
   "D213", # Conflicts with other rules
@@ -94,7 +98,3 @@ lint.ignore = [
 [tool.ruff.lint.flake8-pytest-style]
 mark-parentheses = false
 fixture-parentheses = false
-
-[build-system]
-build-backend = "poetry.core.masonry.api"
-requires = ["poetry-core>=1.0.0"]

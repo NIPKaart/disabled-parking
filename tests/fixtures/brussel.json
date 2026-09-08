@@ -1,0 +1,58 @@
+{
+  "nhits": 877,
+  "parameters": {
+    "dataset": "parking-spaces-for-disabled",
+    "rows": 10,
+    "start": 0,
+    "format": "json",
+    "timezone": "UTC"
+  },
+  "records": [
+    {
+      "datasetid": "parking-spaces-for-disabled",
+      "recordid": "13b70cf5f967267f1ea88d2352ec66d43a841258",
+      "fields": {
+        "nombre_d_emplacements": 1,
+        "latitude": "50.8422727",
+        "coordinates": [
+          50.8422727,
+          4.3736393
+        ],
+        "adres": "Aarlenstraat, 63",
+        "longitude": "4.3736393",
+        "adresse": "Arlon (rue d'), 63"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3736393,
+          50.8422727
+        ]
+      },
+      "record_timestamp": "2017-04-04T14:41:15Z"
+    },
+    {
+      "datasetid": "parking-spaces-for-disabled",
+      "recordid": "f5710507f4d78fff721214212e24bc0e6359e227",
+      "fields": {
+        "nombre_d_emplacements": 2,
+        "latitude": "50.8704161829",
+        "coordinates": [
+          50.8704161829,
+          4.36042895397
+        ],
+        "adres": "Antwerpsestw, 447",
+        "longitude": "4.36042895397",
+        "adresse": "Anvers (chée), 447"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.36042895397,
+          50.8704161829
+        ]
+      },
+      "record_timestamp": "2017-04-04T14:41:15Z"
+    }
+  ]
+}

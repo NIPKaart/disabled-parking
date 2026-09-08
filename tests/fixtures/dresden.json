@@ -1,0 +1,129 @@
+{
+  "type": "FeatureCollection",
+  "links": [
+    {
+      "href": "https://www.cardogis.com/WFS3Server#items",
+      "rel": "serviceDocumentation",
+      "type": "text/html",
+      "title": "Beschreibung der Dienste-Implementierung"
+    }
+  ],
+  "timeStamp": "2022-09-18T00:11:45.4834741Z",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "crs": {
+          "type": "name",
+          "properties": {
+            "name": "urn:ogc:def:crs:EPSG::4326"
+          }
+        },
+        "coordinates": [
+          13.742268570662187,
+          51.02948009055888
+        ]
+      },
+      "id": 1,
+      "properties": {
+        "stellplatzanzahl": 1,
+        "nutzungszeit": "von 00:00 Uhr bis 24:00 Uhr",
+        "breite_links": 150,
+        "hoehe_links": 0,
+        "breite_rechts": 150,
+        "hoehe_rechts": 10,
+        "laenge_hinten": 250,
+        "hoehe_hinten": 0,
+        "laengsneigung": 2,
+        "laengsneigung_txt": "geringe Neigung bis 3 %",
+        "laengsneigung_txt_en": "gradient until 3%",
+        "querneigung": 2,
+        "querneigung_txt": "geringe Neigung bis 3 %",
+        "querneigung_txt_en": "gradient until 3%",
+        "of_berollbar": 2,
+        "of_berollbar_txt": "gut berollbar (Asphalt, Beton oder vergleichbar)",
+        "of_berollbar_txt_en": "smooth surface (asphalt, concrete or comparable)",
+        "of_fest": true,
+        "entfernung": 1,
+        "entfernung_txt": "Bordabsenkung direkt am Stellplatz",
+        "entfernung_txt_en": "curb lowering  next to the parking space",
+        "weg_gehweg": 2,
+        "weg_gehweg_txt": "gut berollbar (Asphalt, Beton oder vergleichbar)",
+        "weg_gehweg_txt_en": "smooth surface (asphalt, concrete or comparable)",
+        "stufen": 1,
+        "stufen_txt": "max. 3 cm Stufenhöhe / Bordabsenkung",
+        "stufen_txt_en": "step/curb lowering of 3 cm maximum",
+        "bewertung_ohne_seitenabstand": 1,
+        "bewertung_ohne_seitenabstand_txt": "Stellplatz uneingeschränkt nutzbar",
+        "bewertung_ohne_seitenabstand_txt_en": "Parking space fully accessible",
+        "bewertung_breite_links": 1,
+        "bewertung_breite_rechts": 1,
+        "bewertung_laenge_hinten": 1,
+        "url_www": "https://stadtplan.dresden.de/getimage/image.ashx?w=500&id=1978248&k=344F09182ED278EE3E432616DBDBA137",
+        "url_www_small": "https://stadtplan.dresden.de/getimage/image.ashx?h=150&id=1978248&k=344F09182ED278EE3E432616DBDBA137",
+        "kks_mdd": "24.05.2021 07:00:16",
+        "maptip_de": "<img src=\"https://stadtplan.dresden.de/getimage/image.ashx?h=150&id=1978248&k=344F09182ED278EE3E432616DBDBA137\" style=\"cursor:pointer;\" onclick=\"window.open('https://stadtplan.dresden.de/getimage/image.ashx?w=500&id=1978248&k=344F09182ED278EE3E432616DBDBA137','DDPARKEN', ''); return false;\"></img></br><strong>Bewertung:</strong>&nbsp;Stellplatz uneingeschränkt nutzbar</br></br><div style='font-size:0.9em'><table style='background-color:#f2f2f2;'><col width='40%'><col width='60%'><tr><td colspan=2 style='font-weight:700;'>Stellplatz:</td></tr><tr><td style='vertical-align:top;'>Stellplatzanzahl:</td><td>1</td></tr><tr><td style='vertical-align:top;'>Nutzungszeit:</td><td>von 00:00 Uhr bis 24:00 Uhr</td></tr><tr><td style='vertical-align:top;'>Ausstieg rechts - Beifahrerseite:</td><td>10&nbsp;cm&nbsp;Bordh&ouml;he</td></tr></table><br></div>",
+        "maptip_en": "<img src=\"https://stadtplan.dresden.de/getimage/image.ashx?h=150&id=1978248&k=344F09182ED278EE3E432616DBDBA137\" style=\"cursor:pointer;\" onclick=\"window.open('https://stadtplan.dresden.de/getimage/image.ashx?w=500&id=1978248&k=344F09182ED278EE3E432616DBDBA137','DDPARKEN', ''); return false;\"></img></br><strong>Rating:</strong>&nbsp;Parking space fully accessible</br></br><div style='font-size:0.9em'><table style='background-color:#f2f2f2;'><col width='40%'><col width='60%'><tr><td colspan=2 style='font-weight:700;'>Parking space:</td></tr><tr><td style='vertical-align:top;'>Number of parking spaces:</td><td>1</td></tr><tr><td style='vertical-align:top;'>Using hours:</td><td>von 00:00 Uhr bis 24:00 Uhr</td></tr><tr><td style='vertical-align:top;'>Right vehicle access:</td><td>10&nbsp;cm&nbsp;curb</td></tr></table><br></div>"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "crs": {
+          "type": "name",
+          "properties": {
+            "name": "urn:ogc:def:crs:EPSG::4326"
+          }
+        },
+        "coordinates": [
+          13.758444170054375,
+          51.044549186051114
+        ]
+      },
+      "id": 10,
+      "properties": {
+        "stellplatzanzahl": 1,
+        "nutzungszeit": "von 00:00 Uhr bis 24:00 Uhr",
+        "breite_links": 150,
+        "hoehe_links": 0,
+        "breite_rechts": 150,
+        "hoehe_rechts": 0,
+        "laenge_hinten": 250,
+        "hoehe_hinten": 0,
+        "laengsneigung": 3,
+        "laengsneigung_txt": "relativ eben",
+        "laengsneigung_txt_en": "almost flat",
+        "querneigung": 3,
+        "querneigung_txt": "relativ eben",
+        "querneigung_txt_en": "almost flat",
+        "of_berollbar": 1,
+        "of_berollbar_txt": "eingeschränkt berollbar (z.B. Kleinpflaster, weniger grobes Großkopfpflaster, gute wassergebundene Deckschicht, leichte Schäden)",
+        "of_berollbar_txt_en": "Surface with some obstacles (for example pavement with smaller cobblestones, pavement with big even cobblestones, gravel in usable condition, surface with slight damage)",
+        "of_fest": true,
+        "entfernung": 0,
+        "entfernung_txt": "keine Bordabsenkung erforderlich",
+        "entfernung_txt_en": "no curb lowering required",
+        "weg_gehweg": 1,
+        "weg_gehweg_txt": "eingeschränkt berollbar (z.B. Kleinpflaster, weniger grobes Großkopfpflaster, gute wassergebundene Deckschicht, leichte Schäden)",
+        "weg_gehweg_txt_en": "Surface with some obstacles (for example pavement with smaller cobblestones, pavement with big even cobblestones, gravel in usable condition, surface with slight damage)",
+        "stufen": 1,
+        "stufen_txt": "max. 3 cm Stufenhöhe / Bordabsenkung",
+        "stufen_txt_en": "step/curb lowering of 3 cm maximum",
+        "bewertung_ohne_seitenabstand": 2,
+        "bewertung_ohne_seitenabstand_txt": "Stellplatz mit Einschränkungen nutzbar",
+        "bewertung_ohne_seitenabstand_txt_en": "Parking space with some restrictions",
+        "bewertung_breite_links": 1,
+        "bewertung_breite_rechts": 1,
+        "bewertung_laenge_hinten": 1,
+        "url_www": "https://stadtplan.dresden.de/getimage/image.ashx?w=500&id=1978278&k=391EE625D756C404C3EDEAC946A14A2F",
+        "url_www_small": "https://stadtplan.dresden.de/getimage/image.ashx?h=150&id=1978278&k=391EE625D756C404C3EDEAC946A14A2F",
+        "kks_mdd": "28.05.2018 16:38:38",
+        "maptip_de": "<img src=\"https://stadtplan.dresden.de/getimage/image.ashx?h=150&id=1978278&k=391EE625D756C404C3EDEAC946A14A2F\" style=\"cursor:pointer;\" onclick=\"window.open('https://stadtplan.dresden.de/getimage/image.ashx?w=500&id=1978278&k=391EE625D756C404C3EDEAC946A14A2F','DDPARKEN', ''); return false;\"></img></br><strong>Bewertung:</strong>&nbsp;Stellplatz mit Einschränkungen nutzbar</br></br><div style='font-size:0.9em'><table style='background-color:#f2f2f2;'><col width='40%'><col width='60%'><tr><td colspan=2 style='font-weight:700;'>Stellplatz:</td></tr><tr><td style='vertical-align:top;'>Stellplatzanzahl:</td><td>1</td></tr><tr><td style='vertical-align:top;'>Nutzungszeit:</td><td>von 00:00 Uhr bis 24:00 Uhr</td></tr><tr><td style='vertical-align:top;'>Oberfl&auml;che:</td><td>eingeschränkt berollbar (z.B. Kleinpflaster, weniger grobes Großkopfpflaster, gute wassergebundene Deckschicht, leichte Schäden)</td></tr><tr><td colspan=2 style='font-weight:700;'>Strecke zum Gehweg:</td></tr><tr><td style='vertical-align:top;'>Oberfl&auml;che:</td><td>eingeschränkt berollbar (z.B. Kleinpflaster, weniger grobes Großkopfpflaster, gute wassergebundene Deckschicht, leichte Schäden)</td></tr></table><br></div>",
+        "maptip_en": "<img src=\"https://stadtplan.dresden.de/getimage/image.ashx?h=150&id=1978278&k=391EE625D756C404C3EDEAC946A14A2F\" style=\"cursor:pointer;\" onclick=\"window.open('https://stadtplan.dresden.de/getimage/image.ashx?w=500&id=1978278&k=391EE625D756C404C3EDEAC946A14A2F','DDPARKEN', ''); return false;\"></img></br><strong>Rating:</strong>&nbsp;Parking space with some restrictions</br></br><div style='font-size:0.9em'><table style='background-color:#f2f2f2;'><col width='40%'><col width='60%'><tr><td colspan=2 style='font-weight:700;'>Parking space:</td></tr><tr><td style='vertical-align:top;'>Number of parking spaces:</td><td>1</td></tr><tr><td style='vertical-align:top;'>Using hours:</td><td>von 00:00 Uhr bis 24:00 Uhr</td></tr><tr><td style='vertical-align:top;'>Surface:</td><td>Surface with some obstacles (for example pavement with smaller cobblestones, pavement with big even cobblestones, gravel in usable condition, surface with slight damage)</td></tr><tr><td colspan=2 style='font-weight:700;'>Route to the sidewalk:</td></tr><tr><td style='vertical-align:top;'>Surface:</td><td>Surface with some obstacles (for example pavement with smaller cobblestones, pavement with big even cobblestones, gravel in usable condition, surface with slight damage)</td></tr></table><br></div>"
+      }
+    }
+  ],
+  "numberReturned": 476
+}

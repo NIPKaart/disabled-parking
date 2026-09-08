@@ -1,23 +1,13 @@
-# BASE IMAGE
-FROM python:3.11-slim-buster
+FROM python:3.11-slim-bookworm
+COPY --from=ghcr.io/astral-sh/uv:0.11.32 /uv /uvx /bin/
 LABEL Maintainer="Klaas Schoute"
 
-COPY . /app
 WORKDIR /app
+ENV UV_PYTHON_DOWNLOADS=never
 
-# Install requirements
-RUN apt-get update && apt-get -y install cron
+COPY pyproject.toml uv.lock ./
+RUN uv sync --locked --no-dev --no-cache
+COPY . /app
 
-# Install poetry and dependencies
-RUN pip install poetry
-RUN poetry config virtualenvs.create false
-RUN poetry install --with cities --without dev
-
-# Add crontab file in the cron directory
-COPY crontab /etc/cron.d/crontab
-RUN chmod 0644 /etc/cron.d/crontab
-RUN /usr/bin/crontab /etc/cron.d/crontab
-
-RUN touch /var/log/cron.log
-
-CMD ["cron", "-f"]
+ENTRYPOINT ["/app/.venv/bin/python", "/app/export.py"]
+CMD ["--help"]

@@ -1,0 +1,61 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "behindertenparkplatz.a29702e7-94ae-4556-8e83-b57e8368f7c9",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          6.85161382,
+          51.17041525
+        ]
+      },
+      "geometry_name": "_geometry",
+      "properties": {
+        "_dic_id": "behplz",
+        "beschreibung": "Stadtbad Niederheid",
+        "zeitbegrenzung": null,
+        "anzahl": "4 Stellplätze",
+        "adresse": "Paul-Thomas-Straße 35 ",
+        "plz": "40589",
+        "stadtteil": "Holthausen",
+        "stadt": "Düsseldorf",
+        "_last_update": "2022-10-28"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "behindertenparkplatz.eec91bb1-95ae-4be4-8c10-c34e95b1a9a7",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          6.88558867,
+          51.14448552
+        ]
+      },
+      "geometry_name": "_geometry",
+      "properties": {
+        "_dic_id": "behplz",
+        "beschreibung": "Einkaufszentrum",
+        "zeitbegrenzung": null,
+        "anzahl": "2 Stellplätze",
+        "adresse": "Peter-Behrens-Straße 2 ",
+        "plz": "40595",
+        "stadtteil": "Garath",
+        "stadt": "Düsseldorf",
+        "_last_update": "2022-10-28"
+      }
+    }
+  ],
+  "totalFeatures": 10,
+  "numberMatched": 10,
+  "numberReturned": 10,
+  "timeStamp": "2023-06-29T09:16:15.932Z",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:EPSG::4326"
+    }
+  }
+}

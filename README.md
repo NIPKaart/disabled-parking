@@ -21,136 +21,65 @@
 
 ## About
 
-This project makes it possible to download and upload parking data from municipalities to the [NIPkaart][nipkaart] platform. If the data is regularly updated, it is possible to automate this with a docker container.
+This project normalizes municipal disabled parking data into local review files for [NIPKaart][nipkaart]. Universal Python packages parse source data; municipality adapters map it to shared records.
 
-## Supported cities
+## Local draft export
 
-These are the cities currently supported:
+The existing municipality adapters expose `normalize(item) -> MunicipalRecord`. This pure mapping accepts the existing package models (or the four direct JSON sources) and does not open a database connection. `write_records(city, records, output)` writes these records to a local JSON file. The universal packages remain independent of NIPKaart.
 
-| Country | City | Locations | Update frequency | Crontab |
-|:--------|:-----|:----------|:-----------------| :-------|
-| Belgium | Antwerpen | 1664 |  |
-| Belgium | Brussel | 877 |  |
-| Belgium | Liege | 952 |  |
-| Belgium | Namur | 305 |  |
-| Germany | Dresden | 477 |  |
-| Germany | Dusseldorf | 327 |  |
-| Germany | Hamburg | 812 (says 813) |  |
-| Germany | Köln / Cologne | 441 |  |
-| Netherlands | Amersfoort | 149 | every monday at 03:00 | `0 3 * * 1` |
-| Netherlands | Amsterdam | 1328 | every second day of the month at 03:00 | `0 3 2 * *` |
-| Netherlands | Arnhem | 88 |  |
-| Netherlands | Den Haag | 234 (says 241) | every second day of the month at 02:30 | `30 2 2 * *` |
-| Netherlands | Eindhoven | 180 | every second day of the month at 03:00 | `0 3 2 * *` |
-| Netherlands | Groningen | 173 |  |
-| Netherlands | Zoetermeer | 388 |  |
+To try the complete offline path through a package's parser, adapter and file writer:
 
+```bash
+uv sync --locked
+uv run --locked python export.py --city hamburg --input tests/fixtures/hamburg.json --output /tmp/hamburg-draft.json
+uv run --locked python -m unittest discover -s tests -v
+```
+
+No `.env` or database credentials are needed for this path. `--input` is a captured response in the municipality's existing response shape. This command does not fetch or paginate a live API. The fixture example contains two sample rows.
+
+The draft contains source context and records with a full package identifier (`external_id`), coordinates, nullable capacity, address/orientation where available, source dates and selected additional package attributes. Unknown capacity remains `null`, zero remains zero, and import time is not substituted for a missing source date. Polygon points retain the existing vertex-average calculation, explicitly named `vertex_average`. Amersfoort still uses a coordinate-derived identity, identified as `coordinate_hash`.
+
+The envelope has `exported_at`, `record_count`, `retrieved_at: null` and `complete: null`. Neither source retrieval time nor completeness can be inferred from a captured response. There is no publication flag or core database ID. This is a provisional review format, not a released core ingestion contract or evidence that the data may be published. Unknown pagination, source classification, source licenses and fields not exposed by the packages still need source-specific acceptance. The fixtures and their provenance are documented in [tests/fixtures/README.md](tests/fixtures/README.md).
+
+Malformed records, duplicate source IDs or limits above 10,000 records / 32 MiB fail the export. Output is replaced atomically only on success; a failed export leaves an existing output file intact. The limits are local operational guards, not a final platform contract. The captured-response path also rejects known lossy capacity parsing in Amsterdam and Düsseldorf instead of silently truncating values. Other upstream transformations are still the responsibility of the source packages.
+
+The database importer, SQL upload methods, database compatibility IDs and scheduled deployment configuration have been removed. Source-fetch helpers remain available independently, but the CLI consumes captured responses only. Live-fetch orchestration, pagination/completeness verification and core intake remain follow-up work.
+
+## Supported mappings
+
+- Belgium: Antwerpen, Brussel, Liège and Namur.
+- Germany: Dresden, Düsseldorf, Hamburg and Köln.
+- Netherlands: Amersfoort, Amsterdam, Arnhem, Den Haag, Eindhoven, Groningen and Zoetermeer.
 
 ## Development
 
-This Python project is fully managed using the [Poetry][poetry] dependency
-manager.
-
-You need at least:
-
-- Python 3.11+
-- [Poetry][poetry-install]
-
-1. Create a `.env` file
-```bash
-cp .env.example .env
-```
-2. Fillout the database credentials and which city you want to upload
-
-3. Install all packages, including all development requirements:
+This project uses [uv][uv] and Python 3.11+. Install [uv][uv-install], then install the locked application, municipality and development dependencies:
 
 ```bash
-poetry install
+uv sync --locked
+uv run --locked pre-commit install
+uv run --locked python -m unittest discover -s tests -v
+uv run --locked pre-commit run --all-files
 ```
 
-Poetry creates by default an virtual environment where it installs all
-necessary pip packages, to enter or exit the venv run the following commands:
+`uv run` uses the project's `.venv`; activating a shell is optional. The `cities` and `dev` dependency groups are installed by default. Use `uv sync --locked --no-dev` for runtime dependencies, including all municipality packages. CI and Docker use the committed `uv.lock`. Run `uv lock` after intentional dependency changes and commit both files.
+
+The optional `.env.example` contains source endpoint settings used by the direct-source download helpers. The local export requires no `.env` or database credentials.
+
+## Container
+
+Build and run the offline export with an input fixture and a writable output directory:
 
 ```bash
-poetry shell
-exit
+docker build -t disabled-parking .
+mkdir -p output
+docker run --rm --network none \
+  -v "$PWD/tests/fixtures:/input:ro" \
+  -v "$PWD/output:/output" \
+  disabled-parking --city hamburg --input /input/hamburg.json --output /output/hamburg.json
 ```
 
-Setup the pre-commit check, you must run this inside the virtual environment:
-
-```bash
-pre-commit install
-```
-
-*Now you're all set to get started!*
-
-As this repository uses the [pre-commit][pre-commit] framework, all changes
-are linted and tested with each commit. You can run all checks and tests
-manually, using the following command:
-
-```bash
-poetry run pre-commit run --all-files
-```
-
-<details>
-  <summary>Click here to see more!</summary>
-
-### Build image
-
-```bash
-docker build -t parking-[CITY] .
-```
-
-### Run the image
-
-```bash
-docker run parking-[CITY] -d --restart on-failure --name nipkaart-parking-[CITY]
-```
-
-or
-
-```bash
-docker stack deploy -c deploy/[CITY].yml parking
-```
-
-### Crontab
-
-Certain datasets are regularly updated, so that we can update them automatically in the NIPKaart database.
-
-`0 3 1 * *` = Run every first day of the month at 03:00<br>
-`30 2 2 * *` = Run every second day of the month at 02:30<br>
-`0 3 2 * *` = Run every second day of the month at 03:00<br>
-`0 3 * * 1` = Run every monday at 03:00<br>
-`30 2 * * 1` = Run every monday at 02:30<br>
-`0 3 * * 2` = Run every thuesday at 03:00<br>
-`*/2 * * * *` = Run every 2 minutes<br>
-
-Crontab generator: https://crontab.guru
-
-### Geocode
-
-The value you should use for this purpose can be obtained from the [ISO 3166-2 standard](https://en.wikipedia.org/wiki/ISO_3166-2). This code represents a province or state within a specific country. It helps differentiate data sets for the same area when multiple datasets are combined.
-
-### SQL query
-
-Below are the values that NIPKaart expects to get:
-
-| value | required? | description |
-|:------|:----------|:------------|
-| `id` | yes | The ID of the parking location |
-| `country_id` | yes | The country ID determined by NIPKaart |
-| `province_id` | yes | The province ID determined by NIPKaart |
-| `municipality` | yes | The municipality name |
-| `street` | no | The street name |
-| `orientation` | no | The orientation of the parking location |
-| `number` | yes | The number of parking spots on that location |
-| `longitude` | yes | The longitude of the parking location |
-| `latitude` | yes | The latitude of the parking location |
-| `visibility` | yes | The visibility of the parking location |
-| `created_at` | yes | The date and time of the creation of the parking location |
-| `updated_at` | yes | The date and time of the last update of the parking location |
-
-</details>
+Running the image without arguments shows CLI help. The container runs once and exits; it no longer starts cron or writes directly to a database.
 
 ## Contributing
 
@@ -201,6 +130,6 @@ SOFTWARE.
 [linting-shield]: https://github.com/nipkaart/disabled-parking/actions/workflows/linting.yaml/badge.svg
 [linting-url]: https://github.com/nipkaart/disabled-parking/actions/workflows/linting.yaml
 
-[poetry-install]: https://python-poetry.org/docs/#installation
-[poetry]: https://python-poetry.org
+[uv-install]: https://docs.astral.sh/uv/getting-started/installation/
+[uv]: https://docs.astral.sh/uv/
 [pre-commit]: https://pre-commit.com

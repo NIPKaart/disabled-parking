@@ -1,0 +1,58 @@
+{
+  "type": "FeatureCollection",
+  "numberReturned": 10,
+  "numberMatched": 901,
+  "timeStamp": "2023-12-13T02:47:38Z",
+  "features": [
+    {
+      "type": "Feature",
+      "id": 7460,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          9.946928367655032,
+          53.58310925250252
+        ]
+      },
+      "properties": {
+        "nahe_adresse": "Steenwisch 105                                                                                                                                                                                                                                                 ",
+        "anzahl": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 7461,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          9.938008848629853,
+          53.58105081830283
+        ]
+      },
+      "properties": {
+        "nahe_adresse": "Langenfelder Damm 67                                                                                                                                                                                                                                           ",
+        "anzahl": 1
+      }
+    }
+  ],
+  "links": [
+    {
+      "href": "https://api.hamburg.de/datasets/v1/behindertenstellplaetze/collections/verkehr_behindertenparkpl/items?limit=10&f=json",
+      "rel": "self",
+      "type": "application/geo+json",
+      "title": "This document"
+    },
+    {
+      "href": "https://api.hamburg.de/datasets/v1/behindertenstellplaetze/collections/verkehr_behindertenparkpl/items?limit=10&f=html",
+      "rel": "alternate",
+      "type": "text/html",
+      "title": "This document as HTML"
+    },
+    {
+      "href": "https://api.hamburg.de/datasets/v1/behindertenstellplaetze/collections/verkehr_behindertenparkpl/items?offset=10",
+      "rel": "next",
+      "type": "application/geo+json",
+      "title": "Next page"
+    }
+  ]
+}
