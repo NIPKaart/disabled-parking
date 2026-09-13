@@ -48,49 +48,15 @@ These are the cities currently supported:
 
 ## Development
 
-This Python project is fully managed using the [Poetry][poetry] dependency
-manager.
-
-You need at least:
-
-- Python 3.11+
-- [Poetry][poetry-install]
-
-1. Create a `.env` file
-```bash
-cp .env.example .env
-```
-2. Fillout the database credentials and which city you want to upload
-
-3. Install all packages, including all development requirements:
+Use [uv](https://docs.astral.sh/uv/) and Python 3.11+:
 
 ```bash
-poetry install
+uv sync --locked
+uv run pre-commit install
+uv run pre-commit run --all-files
 ```
 
-Poetry creates by default an virtual environment where it installs all
-necessary pip packages, to enter or exit the venv run the following commands:
-
-```bash
-poetry shell
-exit
-```
-
-Setup the pre-commit check, you must run this inside the virtual environment:
-
-```bash
-pre-commit install
-```
-
-*Now you're all set to get started!*
-
-As this repository uses the [pre-commit][pre-commit] framework, all changes
-are linted and tested with each commit. You can run all checks and tests
-manually, using the following command:
-
-```bash
-poetry run pre-commit run --all-files
-```
+The `cities` and `dev` groups are installed by default. Runtime containers use `uv sync --locked --no-dev`, including all source packages. Commit `pyproject.toml` and `uv.lock` together after intentional dependency changes. The existing database importer still needs `.env` configured from `.env.example`; this tooling change does not activate or replace it.
 
 <details>
   <summary>Click here to see more!</summary>
@@ -201,6 +167,4 @@ SOFTWARE.
 [linting-shield]: https://github.com/nipkaart/disabled-parking/actions/workflows/linting.yaml/badge.svg
 [linting-url]: https://github.com/nipkaart/disabled-parking/actions/workflows/linting.yaml
 
-[poetry-install]: https://python-poetry.org/docs/#installation
-[poetry]: https://python-poetry.org
 [pre-commit]: https://pre-commit.com

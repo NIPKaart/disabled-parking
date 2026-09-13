@@ -38,7 +38,7 @@ class Municipality(City):
         async with (
             aiohttp.ClientSession() as client,
             client.get(
-                f'{os.getenv("CKAN_SOURCE")}/api/3/action/datastore_search?resource_id=6dd4aa05-31bf-4b98-b8d5-2560b6cb9740&limit={self.limit}',
+                f"{os.getenv('CKAN_SOURCE')}/api/3/action/datastore_search?resource_id=6dd4aa05-31bf-4b98-b8d5-2560b6cb9740&limit={self.limit}",
             ) as resp,
         ):
             print(f"{self.name} - data has been retrieved")

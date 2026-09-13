@@ -44,7 +44,7 @@ class Municipality(City):
         async with (
             aiohttp.ClientSession() as client,
             client.get(
-                f'{os.getenv("CKAN_SOURCE")}/dataset/280abd40-bd4a-4d76-9537-2c2bae526296/resource/417f3e35-4a5b-47c6-a23f-cbf92938c9e5/download/amersfoort-gehandicaptenparkeerplaatsen.json',
+                f"{os.getenv('CKAN_SOURCE')}/dataset/280abd40-bd4a-4d76-9537-2c2bae526296/resource/417f3e35-4a5b-47c6-a23f-cbf92938c9e5/download/amersfoort-gehandicaptenparkeerplaatsen.json",
             ) as resp,
         ):
             print(f"{self.name} - data has been retrieved")
