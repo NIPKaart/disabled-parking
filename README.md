@@ -31,8 +31,8 @@ Use [uv](https://docs.astral.sh/uv/) and Python 3.11+:
 
 ```bash
 uv sync --locked
-uv run --locked pre-commit install
-uv run --locked pre-commit run --all-files
+uv run pre-commit install
+uv run pre-commit run --all-files
 ```
 
 The `cities` and `dev` groups are installed by default. `.env.example` contains only source endpoint settings for the direct-source helpers. No database connection is opened when importing the municipality classes. Source/parser behavior remains owned by the universal packages.
