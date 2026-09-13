@@ -21,30 +21,9 @@
 
 ## About
 
-This project makes it possible to download and upload parking data from municipalities to the [NIPkaart][nipkaart] platform. If the data is regularly updated, it is possible to automate this with a docker container.
+This repository retains the municipal source clients and configuration for NIPKaart. The direct SQL importer, database credentials, cron, Docker runtime and deployment stacks have been removed. This change does not install their replacement or activate any production job.
 
-## Supported cities
-
-These are the cities currently supported:
-
-| Country | City | Locations | Update frequency | Crontab |
-|:--------|:-----|:----------|:-----------------| :-------|
-| Belgium | Antwerpen | 1664 |  |
-| Belgium | Brussel | 877 |  |
-| Belgium | Liege | 952 |  |
-| Belgium | Namur | 305 |  |
-| Germany | Dresden | 477 |  |
-| Germany | Dusseldorf | 327 |  |
-| Germany | Hamburg | 812 (says 813) |  |
-| Germany | Köln / Cologne | 441 |  |
-| Netherlands | Amersfoort | 149 | every monday at 03:00 | `0 3 * * 1` |
-| Netherlands | Amsterdam | 1328 | every second day of the month at 03:00 | `0 3 2 * *` |
-| Netherlands | Arnhem | 88 |  |
-| Netherlands | Den Haag | 234 (says 241) | every second day of the month at 02:30 | `30 2 2 * *` |
-| Netherlands | Eindhoven | 180 | every second day of the month at 03:00 | `0 3 2 * *` |
-| Netherlands | Groningen | 173 |  |
-| Netherlands | Zoetermeer | 388 |  |
-
+The next importer is tracked in [#774](https://github.com/NIPKaart/disabled-parking/issues/774): one accepted source through its universal package, a small mapping and one file for core. Automatic delivery later uses a private bucket; see [the cross-repository epic](https://github.com/NIPKaart/core/issues/1176). Existing source-fetch methods are retained as reusable source knowledge, not proof of complete live data.
 
 ## Development
 
@@ -56,67 +35,7 @@ uv run --locked pre-commit install
 uv run --locked pre-commit run --all-files
 ```
 
-The `cities` and `dev` groups are installed by default. Runtime containers use `uv sync --locked --no-dev`, including all source packages. Commit `pyproject.toml` and `uv.lock` together after intentional dependency changes. The existing database importer still needs `.env` configured from `.env.example`; this tooling change does not activate or replace it.
-
-<details>
-  <summary>Click here to see more!</summary>
-
-### Build image
-
-```bash
-docker build -t parking-[CITY] .
-```
-
-### Run the image
-
-```bash
-docker run parking-[CITY] -d --restart on-failure --name nipkaart-parking-[CITY]
-```
-
-or
-
-```bash
-docker stack deploy -c deploy/[CITY].yml parking
-```
-
-### Crontab
-
-Certain datasets are regularly updated, so that we can update them automatically in the NIPKaart database.
-
-`0 3 1 * *` = Run every first day of the month at 03:00<br>
-`30 2 2 * *` = Run every second day of the month at 02:30<br>
-`0 3 2 * *` = Run every second day of the month at 03:00<br>
-`0 3 * * 1` = Run every monday at 03:00<br>
-`30 2 * * 1` = Run every monday at 02:30<br>
-`0 3 * * 2` = Run every thuesday at 03:00<br>
-`*/2 * * * *` = Run every 2 minutes<br>
-
-Crontab generator: https://crontab.guru
-
-### Geocode
-
-The value you should use for this purpose can be obtained from the [ISO 3166-2 standard](https://en.wikipedia.org/wiki/ISO_3166-2). This code represents a province or state within a specific country. It helps differentiate data sets for the same area when multiple datasets are combined.
-
-### SQL query
-
-Below are the values that NIPKaart expects to get:
-
-| value | required? | description |
-|:------|:----------|:------------|
-| `id` | yes | The ID of the parking location |
-| `country_id` | yes | The country ID determined by NIPKaart |
-| `province_id` | yes | The province ID determined by NIPKaart |
-| `municipality` | yes | The municipality name |
-| `street` | no | The street name |
-| `orientation` | no | The orientation of the parking location |
-| `number` | yes | The number of parking spots on that location |
-| `longitude` | yes | The longitude of the parking location |
-| `latitude` | yes | The latitude of the parking location |
-| `visibility` | yes | The visibility of the parking location |
-| `created_at` | yes | The date and time of the creation of the parking location |
-| `updated_at` | yes | The date and time of the last update of the parking location |
-
-</details>
+The `cities` and `dev` groups are installed by default. `.env.example` contains only source endpoint settings for the direct-source helpers. No database connection is opened when importing the municipality classes. Source/parser behavior remains owned by the universal packages.
 
 ## Contributing
 
