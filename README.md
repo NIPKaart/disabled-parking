@@ -29,9 +29,9 @@ The target is package → adapter → private bucket → core. This example only
 
 ```bash
 uv sync --locked
-uv run --locked python export.py --city hamburg --input tests/fixtures/hamburg.json --output /tmp/hamburg.json
-uv run --locked python -m unittest discover -s tests -v
-uv run --locked pre-commit run --all-files
+uv run python export.py --city hamburg --input tests/fixtures/hamburg.json --output /tmp/hamburg.json
+uv run python -m unittest discover -s tests -v
+uv run pre-commit run --all-files
 ```
 
 Only `hamburg` is supported by the example CLI. No source request, database credentials or cloud account is required. The response sample contains one feature; [its attribution](tests/fixtures/README.md) is retained in one place. All other tests use small Python objects, not copied upstream fixtures.
