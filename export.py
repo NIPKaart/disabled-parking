@@ -1,50 +1,25 @@
-"""Export a captured municipal response through the existing package and adapter."""
-
-from __future__ import annotations
+"""Export Amsterdam general accessible parking to a local file for core review."""
 
 import argparse
-import json
+import asyncio
 from pathlib import Path
 
-from app.cities.provider import CityProvider
-from app.export import MAX_BYTES, write_records
+from odp_amsterdam.exceptions import ODPAmsterdamError
 
-
-def read_input(path: Path) -> dict:
-    """Bound the captured response before decoding it."""
-    with path.open("rb") as stream:
-        data = stream.read(MAX_BYTES + 1)
-    if len(data) > MAX_BYTES:
-        raise ValueError(MAX_BYTES)
-    return json.loads(data)
+from app.export import export_amsterdam
 
 
 def main() -> None:
-    """Produce a local draft without fetching data or opening a database."""
+    """Fetch one complete selection; never publish or connect to core."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--city", required=True, choices=["hamburg"])
-    parser.add_argument(
-        "--input", required=True, type=Path, help="Captured JSON response"
-    )
+    parser.add_argument("--city", required=True, choices=["amsterdam"])
     parser.add_argument("--output", required=True, type=Path)
     args = parser.parse_args()
     try:
-        city = CityProvider().provide_city(args.city.lower())
-        payload = read_input(args.input)
-        items = city.source_items(payload)
-        count = write_records(
-            city, (city.normalize(item) for item in items), args.output
-        )
-    except (
-        OSError,
-        ValueError,
-        KeyError,
-        TypeError,
-        IndexError,
-        RecursionError,
-    ) as error:
+        count = asyncio.run(export_amsterdam(args.output))
+    except (ODPAmsterdamError, OSError, ValueError, TypeError, KeyError) as error:
         parser.exit(1, f"Export failed: {error}\n")
-    print(f"Exported {count} records; source completeness has not been verified.")
+    print(f"Exported {count} records; complete source selection ready for core review.")
 
 
 if __name__ == "__main__":

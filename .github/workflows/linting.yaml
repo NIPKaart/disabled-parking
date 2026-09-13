@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  DEFAULT_PYTHON: "3.11"
+  DEFAULT_PYTHON: "3.12"
 
 jobs:
   tests:
@@ -24,7 +24,7 @@ jobs:
           enable-cache: true
       - name: Install locked dependencies
         run: uv sync --locked
-      - name: Run package fixture and export tests
+      - name: Run offline adapter and export tests
         run: uv run python -m unittest discover -s tests -v
 
   ruff:

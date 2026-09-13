@@ -2,7 +2,7 @@
 name = "disabled-parking"
 version = "0.0.0"
 description = "A tool to fetch and upload disabled parking data to NIPKaart."
-requires-python = ">=3.11,<4.0"
+requires-python = ">=3.12,<4.0"
 authors = [{ name = "NIPKaart", email = "hello@nipkaart.nl" }]
 maintainers = [{ name = "Klaas Schoute", email = "hello@student-techlife.com" }]
 license = "MIT"
@@ -30,7 +30,7 @@ cities = [
   "koeln>=0.3.1,<0.4.0",
   "liege>=1.0.0,<2.0.0",
   "namur>=1.0.0,<2.0.0",
-  "odp-amsterdam>=6.0.0,<7.0.0",
+  "odp-amsterdam==7.0.0",
   "async-timeout>=4,<6",
 ]
 dev = [
@@ -80,7 +80,7 @@ max-line-length = 88
 max-attributes = 20
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py312"
 lint.select = ["ALL"]
 lint.ignore = [
   "CPY001", # Copyright is documented in LICENSE, not individual Python files

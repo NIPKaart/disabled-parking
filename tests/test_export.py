@@ -1,171 +1,197 @@
-"""Test NIPKaart mapping/output; source parser suites remain upstream."""
+"""Exercise the adapter boundary with small package objects, without source HTTP."""
 # ruff: noqa: PT009, PT027
 
 from __future__ import annotations
 
 import json
-import subprocess
-import sys
 import tempfile
 import unittest
 from dataclasses import replace
+from datetime import UTC, date, datetime
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import AsyncMock, patch
+from uuid import UUID
 
-from hamburg.models import DisabledParking
+from odp_amsterdam.models import ParkingLocations, ParkingSpot
 
-from app.cities.germany.hamburg import Municipality
-from app.export import write_records
-from app.records import MunicipalRecord, capacity
-
-ROOT = Path(__file__).resolve().parents[1]
-FIXTURE = ROOT / "tests/fixtures/hamburg.json"
+from app.cities.netherlands.amsterdam import Municipality
+from app.export import export_amsterdam, write_records
 
 
-def source_record() -> DisabledParking:
-    """Build a small package object for our mapping tests."""
-    return DisabledParking(
+def source_record() -> ParkingSpot:
+    """Represent a source claim, including restrictions and a polygon hole."""
+    rings = [
+        [[4.9, 52.3], [4.91, 52.3], [4.91, 52.31], [4.9, 52.3]],
+        [[4.905, 52.301], [4.908, 52.302], [4.907, 52.304], [4.905, 52.301]],
+    ]
+    return ParkingSpot(
         spot_id="00017460",
-        street=" Teststraat 1 ",
-        limitation="max. 2h",
-        number=2,
-        longitude=9.9,
-        latitude=53.5,
+        spot_type="E6a",
+        spot_description="Gehandicaptenparkeerplaats algemeen",
+        street="Teststraat",
+        number=2.0,
+        orientation="Haaks",
+        coordinates=rings[0],
+        geometry={"type": "Polygon", "coordinates": rings},
+        regimes=[
+            {
+                "eType": "E6a",
+                "eTypeDescription": "Gehandicaptenparkeerplaats algemeen",
+                "beginTijd": "09:00:00",
+                "dagen": ["ma"],
+                "kenteken": "",
+            }
+        ],
+        version_date=date(2026, 9, 1),
     )
 
 
 class MappingTests(unittest.TestCase):
-    """Keep identity, unknown values and restrictions meaningful."""
+    """Preserve source meaning and reject scope changes without dropping rows."""
 
-    def test_mapping_preserves_source_meaning(self) -> None:
-        """Full IDs and restrictions survive mapping; source dates are not invented."""
-        city = Municipality()
-        record = city.normalize(source_record())
-        self.assertEqual(record.external_id, "00017460")
-        self.assertEqual(record.street, "Teststraat 1")
-        self.assertEqual((record.latitude, record.longitude), (53.5, 9.9))
-        self.assertEqual(record.number, 2)
-        self.assertEqual(record.source_attributes, {"limitation": "max. 2h"})
-        self.assertIsNone(record.source_updated_at)
-        for number in (None, 0):
+    def test_preserves_source_claims(self) -> None:
+        """Full IDs, polygons, restrictions, dates and unknown capacity survive."""
+        item = source_record()
+        for number in (None, 0, 2.0):
             with self.subTest(number=number):
-                item = replace(source_record(), number=number, street=None)
-                record = city.normalize(item)
-                self.assertEqual(record.number, number)
-                self.assertIsNone(record.street)
-
-    def test_invalid_capacity_and_coordinates(self) -> None:
-        """Invalid counts/coordinates cannot enter a delivery."""
-        for value in (-1, 1.5, "NaN", "Infinity", True):
-            with self.subTest(value=value), self.assertRaises((ValueError, TypeError)):
-                capacity(value)
-        for latitude, longitude in ((91, 5), (52, 181), (float("nan"), 5)):
-            with self.subTest(latitude=latitude), self.assertRaises(ValueError):
-                MunicipalRecord(
-                    external_id="1", latitude=latitude, longitude=longitude, number=None
+                record = Municipality().normalize(replace(item, number=number))
+                self.assertEqual(record["external_id"], "00017460")
+                self.assertEqual(record["geometry"], item.geometry)
+                self.assertEqual(record["number"], number)
+                self.assertEqual(record["access_category"], "general")
+                self.assertEqual(
+                    record["source_attributes"],
+                    {
+                        "regimes": item.regimes,
+                        "orientation": "Haaks",
+                        "version_date": "2026-09-01",
+                    },
                 )
+                self.assertIsNone(record["source_updated_at"])
+        record = Municipality().normalize(replace(item, version_date=None, street=None))
+        self.assertIsNone(record["source_attributes"]["version_date"])
+        self.assertIsNone(record["street"])
+
+    def test_rejects_invalid_claims(self) -> None:
+        """No lossy capacity, guessed identity, out-of-scope regime or bad geometry."""
+        item = source_record()
+        invalid = [
+            replace(item, spot_id=""),
+            replace(item, spot_id=" 1"),
+            replace(item, number=1.5),
+            replace(item, number=-1),
+            replace(item, number=True),
+            replace(item, number=float("nan")),
+            replace(item, spot_type="E6b"),
+            replace(item, regimes=[]),
+            replace(item, regimes=[*item.regimes, {"eType": "E6b"}]),
+            replace(item, regimes=[{**item.regimes[0], "kenteken": "AA-00-AA"}]),
+            replace(item, geometry={"type": "Point", "coordinates": [4.9, 52.3]}),
+            replace(item, geometry={"type": "Polygon", "coordinates": [[]]}),
+            replace(
+                item,
+                geometry={
+                    "type": "Polygon",
+                    "coordinates": [
+                        [[181, 52], [4, 52], [4, 53], [181, 52]],
+                    ],
+                },
+            ),
+        ]
+        for value in invalid:
+            with self.subTest(value=value), self.assertRaises((ValueError, TypeError)):
+                Municipality().normalize(value)
 
 
 class WriterTests(unittest.TestCase):
-    """Exercise success and data-loss boundaries with small normalized objects."""
+    """Test delivery metadata and failure-safe replacement."""
 
-    def test_success_and_failure_preserve_existing_output(self) -> None:
-        """Unknown completeness stays explicit and failures preserve the last file."""
-        city = Municipality()
-        record = city.normalize(source_record())
-        records = [record, replace(record, external_id="second")]
+    def test_delivery_and_failed_replacements(self) -> None:
+        """Invalid results, serialization and filesystem failures preserve output."""
+        item = source_record()
+        result = ParkingLocations(records=[item], total_count=1, pages_fetched=1)
+        started = datetime(2026, 9, 14, tzinfo=UTC)
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "export.json"
-            self.assertEqual(write_records(city, records, output), 2)
+            self.assertEqual(write_records(Municipality(), result, output, started), 1)
             original = output.read_bytes()
             payload = json.loads(original)
-            self.assertEqual(payload["record_count"], 2)
-            self.assertIsNone(payload["complete"])
-            self.assertIsNone(payload["retrieved_at"])
-            self.assertEqual(payload["source_id"], "DE-HH-040")
-            for field in ("visibility", "legacy_id", "country_id", "province_id"):
-                self.assertNotIn(field, payload["records"][0])
-            with self.assertRaises(ValueError):
-                write_records(city, [record, record], output)
-            with patch("app.export.MAX_RECORDS", 1), self.assertRaises(ValueError):
-                write_records(city, records, output)
-            with patch("app.export.MAX_BYTES", 1), self.assertRaises(ValueError):
-                write_records(city, records, output)
-            self.assertEqual(output.read_bytes(), original)
-            self.assertEqual(list(Path(directory).iterdir()), [output])
+            UUID(payload["delivery_id"])
+            self.assertEqual(payload["format"], "nipkaart-municipal-pilot-1")
+            self.assertEqual(payload["dataset"], "nl-amsterdam-parkeervakken-e6a")
+            self.assertEqual(payload["selection"], "e6a-all")
+            self.assertEqual(payload["retrieved_at"], "2026-09-14T00:00:00Z")
+            self.assertTrue(payload["complete"])
+            self.assertEqual(payload["source_count"], len(payload["records"]))
+            for invalid in (
+                ParkingLocations([], 0, 1),
+                ParkingLocations([item], 2, 1),
+                ParkingLocations([item, item], 2, 1),
+                ParkingLocations([item], 1, 0),
+                ParkingLocations([replace(item, number=1.5)], 1, 1),
+                ParkingLocations(
+                    [
+                        replace(
+                            item,
+                            regimes=[
+                                {**item.regimes[0], "aantal": float("nan")},
+                            ],
+                        )
+                    ],
+                    1,
+                    1,
+                ),
+            ):
+                with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                    write_records(Municipality(), invalid, output, started)
+                self.assertEqual(output.read_bytes(), original)
+            for target, value in (("MAX_BYTES", 1), ("MAX_RECORDS", 0)):
+                with (
+                    patch(f"app.export.{target}", value),
+                    self.assertRaises(ValueError),
+                ):
+                    write_records(Municipality(), result, output, started)
+            for target in ("os.fsync", "Path.replace"):
+                with (
+                    patch(f"app.export.{target}", side_effect=OSError),
+                    self.assertRaises(OSError),
+                ):
+                    write_records(Municipality(), result, output, started)
+                self.assertEqual(output.read_bytes(), original)
+                self.assertEqual(list(Path(directory).iterdir()), [output])
 
-    def test_failed_mapping_leaves_previous_file(self) -> None:
-        """A producer failing midway must not publish a partial result."""
-        city = Municipality()
-        items = [source_record(), replace(source_record(), longitude=181)]
+
+class CollectionTests(unittest.IsolatedAsyncioTestCase):
+    """Connect package results to the file without duplicating pagination tests."""
+
+    async def test_package_selection(self) -> None:
+        """Use the released package for the bounded E6a selection."""
+        result = ParkingLocations([source_record()], 1, 1)
+        with patch("app.cities.netherlands.amsterdam.ODPAmsterdam") as factory:
+            client = factory.return_value.__aenter__.return_value
+            client.locations.return_value = result
+            self.assertIs(await Municipality().async_get_locations(), result)
+            client.locations.assert_awaited_once_with(limit=10001, parking_type="E6a")
+
+    async def test_collection_success_and_failure(self) -> None:
+        """Verified package metadata reaches the writer; fetch errors do not."""
+        result = ParkingLocations([source_record()], 1, 1)
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "export.json"
-            output.write_text("previous", encoding="utf-8")
-            with self.assertRaises(ValueError):
-                write_records(city, (city.normalize(item) for item in items), output)
-            self.assertEqual(output.read_text(encoding="utf-8"), "previous")
-            self.assertEqual(list(Path(directory).iterdir()), [output])
-
-    def test_cli_package_boundary_without_network(self) -> None:
-        """One tiny upstream sample verifies installed parser → adapter → file."""
-        with tempfile.TemporaryDirectory() as directory:
-            output = Path(directory) / "export.json"
-            code = (
-                "import runpy,socket; from unittest.mock import patch; "
-                "guard=patch.object(socket.socket,'connect',"
-                "side_effect=AssertionError('network')); guard.start(); "
-                "runpy.run_path('export.py',run_name='__main__')"
-            )
-            result = subprocess.run(  # noqa: S603
-                [
-                    sys.executable,
-                    "-c",
-                    code,
-                    "--city",
-                    "hamburg",
-                    "--input",
-                    str(FIXTURE),
-                    "--output",
-                    str(output),
-                ],
-                cwd=ROOT,
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-            self.assertEqual(result.returncode, 0, result.stderr)
-            payload = json.loads(output.read_text(encoding="utf-8"))
-            self.assertEqual(payload["record_count"], 1)
-            self.assertEqual(payload["records"][0]["external_id"], "7460")
-            self.assertIn("completeness has not been verified", result.stdout)
-
-    def test_cli_failure_keeps_existing_file(self) -> None:
-        """Unsupported examples and malformed responses cannot replace a file."""
-        with tempfile.TemporaryDirectory() as directory:
-            source = Path(directory) / "source.json"
-            output = Path(directory) / "output.json"
-            source.write_text("{}", encoding="utf-8")
-            output.write_text("previous", encoding="utf-8")
-            for city in ("hamburg", "amsterdam"):
-                with self.subTest(city=city):
-                    result = subprocess.run(  # noqa: S603
-                        [
-                            sys.executable,
-                            "export.py",
-                            "--city",
-                            city,
-                            "--input",
-                            str(source),
-                            "--output",
-                            str(output),
-                        ],
-                        cwd=ROOT,
-                        capture_output=True,
-                        text=True,
-                        check=False,
-                    )
-                    self.assertNotEqual(result.returncode, 0)
-                    self.assertEqual(output.read_text(encoding="utf-8"), "previous")
+            with patch(
+                "app.export.Municipality.async_get_locations", new_callable=AsyncMock
+            ) as fetch:
+                fetch.return_value = result
+                before = datetime.now(UTC)
+                self.assertEqual(await export_amsterdam(output), 1)
+                original = output.read_bytes()
+                retrieved = datetime.fromisoformat(json.loads(original)["retrieved_at"])
+                self.assertLessEqual(before, retrieved)
+                self.assertLessEqual(retrieved, datetime.now(UTC))
+                fetch.side_effect = TimeoutError("source unavailable")
+                with self.assertRaises(TimeoutError):
+                    await export_amsterdam(output)
+                self.assertEqual(output.read_bytes(), original)
 
 
 if __name__ == "__main__":
