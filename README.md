@@ -52,8 +52,8 @@ Use [uv](https://docs.astral.sh/uv/) and Python 3.11+:
 
 ```bash
 uv sync --locked
-uv run --locked pre-commit install
-uv run --locked pre-commit run --all-files
+uv run pre-commit install
+uv run pre-commit run --all-files
 ```
 
 The `cities` and `dev` groups are installed by default. Runtime containers use `uv sync --locked --no-dev`, including all source packages. Commit `pyproject.toml` and `uv.lock` together after intentional dependency changes. The existing database importer still needs `.env` configured from `.env.example`; this tooling change does not activate or replace it.
