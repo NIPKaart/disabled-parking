@@ -37,7 +37,7 @@ class Municipality(City):
     def download(self) -> None:
         """Download the data as JSON file."""
         # Create a variable and pass the url of file to be downloaded
-        remote_url = f'{os.getenv("GRONINGEN_SOURCE")}/open-data/gemeentegroningen_parkeervakken.geojson'  # noqa: E501
+        remote_url = f"{os.getenv('GRONINGEN_SOURCE')}/open-data/gemeentegroningen_parkeervakken.geojson"  # noqa: E501
         # Make http request for remote file data
         data = requests.get(remote_url, timeout=10)
         # Save file data to local copy

@@ -37,7 +37,7 @@ class Municipality(City):
         """Download the data as JSON file."""
         # Create a variable and pass the url of file to be downloaded
         remote_url = (
-            f'{os.getenv("ARCGIS_SOURCE")}/308bb3581ba646afad6f776a8f7e4e67_0.geojson'
+            f"{os.getenv('ARCGIS_SOURCE')}/308bb3581ba646afad6f776a8f7e4e67_0.geojson"
         )
         # Make http request for remote file data
         data = requests.get(remote_url, timeout=10)
