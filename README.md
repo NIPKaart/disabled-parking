@@ -19,23 +19,37 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 
-## About
+## Status: small export example, awaiting pilot selection
 
-This repository retains the municipal source clients and configuration for NIPKaart. The direct SQL importer, database credentials, cron, Docker runtime and deployment stacks have been removed. This change does not install their replacement or activate any production job.
+This draft retains only the Hamburg mapping as an example from the earlier experiment. **Hamburg has not been accepted as the live pilot.** All other municipality source-fetch methods remain available; they are not migrated to a new export interface here. Source choice and actual live fetching belong to [core#1214](https://github.com/NIPKaart/core/issues/1214) and [#774](https://github.com/NIPKaart/disabled-parking/issues/774).
 
-The next importer is tracked in [#774](https://github.com/NIPKaart/disabled-parking/issues/774): one accepted source through its universal package, a small mapping and one file for core. Automatic delivery later uses a private bucket; see [the cross-repository epic](https://github.com/NIPKaart/core/issues/1176). Existing source-fetch methods are retained as reusable source knowledge, not proof of complete live data.
+The target is package → adapter → private bucket → core. This example only demonstrates package parsing → mapping → local file. The bucket implementation and core intake are not built. See [the canonical plan](https://github.com/NIPKaart/core/issues/1176).
 
-## Development
-
-Use [uv](https://docs.astral.sh/uv/) and Python 3.11+:
+## Run the example
 
 ```bash
 uv sync --locked
-uv run pre-commit install
+uv run python export.py --city hamburg --input tests/fixtures/hamburg.json --output /tmp/hamburg.json
+uv run python -m unittest discover -s tests -v
 uv run pre-commit run --all-files
 ```
 
-The `cities` and `dev` groups are installed by default. `.env.example` contains only source endpoint settings for the direct-source helpers. No database connection is opened when importing the municipality classes. Source/parser behavior remains owned by the universal packages.
+Only `hamburg` is supported by the example CLI. No source request, database credentials or cloud account is required. The response sample contains one feature; [its attribution](tests/fixtures/README.md) is retained in one place. All other tests use small Python objects, not copied upstream fixtures.
+
+The file retains full source IDs, nullable capacity and available restrictions. Invalid/duplicate records or the 10,000-record / 32 MiB operational limits fail the export; an existing output file is replaced only after successful writing. The experimental envelope reports unknown retrieval time and completeness, and is not a valid complete live delivery.
+
+## Required replacement before pilot acceptance
+
+Issue #774 must connect the selected live source, replace `municipal-records-draft` and unconditional null live metadata with the format consumed by core, and remove superseded code/tests/instructions in the same change. This reference must be reduced to the selected source or discarded if it does not fit; it creates no requirement to adopt its abstraction or retain a compatibility layer. Local replay can remain useful using the same accepted format.
+
+## Container
+
+```bash
+docker build -t disabled-parking .
+docker run --rm --network none disabled-parking --city hamburg --input /app/tests/fixtures/hamburg.json --output /tmp/hamburg.json
+```
+
+The container runs once and exits; without arguments it shows help. Output in this disposable example container is discarded. Mount a writable output directory to retain it. The old SQL/cron runtime is removed.
 
 ## Contributing
 
