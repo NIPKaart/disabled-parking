@@ -19,37 +19,36 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 
-## Status: small export example, awaiting pilot selection
+## Amsterdam export
 
-This draft retains only the Hamburg mapping as an example from the earlier experiment. **Hamburg has not been accepted as the live pilot.** All other municipality source-fetch methods remain available; they are not migrated to a new export interface here. Source choice and actual live fetching belong to [core#1214](https://github.com/NIPKaart/core/issues/1214) and [#774](https://github.com/NIPKaart/disabled-parking/issues/774).
-
-The target is package → adapter → private bucket → core. This example only demonstrates package parsing → mapping → local file. The bucket implementation and core intake are not built. See [the canonical plan](https://github.com/NIPKaart/core/issues/1176).
-
-## Run the example
+Fetch the complete Amsterdam `E6a` selection through `odp-amsterdam` and write one local JSON file for core review:
 
 ```bash
 uv sync --locked
-uv run python export.py --city hamburg --input tests/fixtures/hamburg.json --output /tmp/hamburg.json
+uv run python export.py --city amsterdam --output /tmp/amsterdam.json
 uv run python -m unittest discover -s tests -v
 uv run pre-commit run --all-files
 ```
 
-Only `hamburg` is supported by the example CLI. No source request, database credentials or cloud account is required. The response sample contains one feature; [its attribution](tests/fixtures/README.md) is retained in one place. All other tests use small Python objects, not copied upstream fixtures.
+Python 3.12 or newer is required. The command needs network access, runs once and exits. It supports Amsterdam only; other municipalities retain their existing source-fetch methods.
 
-The file retains full source IDs, nullable capacity and available restrictions. Invalid/duplicate records or the 10,000-record / 32 MiB operational limits fail the export; an existing output file is replaced only after successful writing. The experimental envelope reports unknown retrieval time and completeness, and is not a valid complete live delivery.
+The `nipkaart-municipal-pilot-1` document identifies dataset `nl-amsterdam-parkeervakken-e6a`, selection `e6a-all`, a delivery UUID, UTC retrieval-start time and the verified source count. Records retain full source IDs, Polygon rings, nullable estimated capacity, every regime and dataset validity dates. Core derives display points and reviews publication; general accessible parking does not mean unrestricted or currently available parking.
 
-## Required replacement before pilot acceptance
+Incomplete/empty responses, duplicate IDs, unexpected personal reservations, invalid mappings or exceeded limits fail without replacing the last good file. Limits are 10,000 records, 32 MiB per file, 180 seconds for fetching and 100 rings / 10,000 positions per polygon. Core validates polygon topology using PostGIS. Run only one collection per dataset at a time; retry delivery using the same saved file.
 
-Issue #774 must connect the selected live source, replace `municipal-records-draft` and unconditional null live metadata with the format consumed by core, and remove superseded code/tests/instructions in the same change. This reference must be reduced to the selected source or discarded if it does not fit; it creates no requirement to adopt its abstraction or retain a compatibility layer. Local replay can remain useful using the same accepted format.
+The first handoff is this local file to [core#1215](https://github.com/NIPKaart/core/issues/1215). Later, [#775](https://github.com/NIPKaart/disabled-parking/issues/775) uploads the same format to a private bucket. No core database/API credentials, automatic publication or cloud transport are included here. See the [pilot source evidence](https://github.com/NIPKaart/core/blob/b068570/docs/development/data-import-pilot.md) and [file agreement](https://github.com/NIPKaart/core/blob/b068570/docs/development/data-import-contract.md). The government catalogue identifies the dataset as CC0; recheck the current API license before public use. The source announces future API-key requirements.
+
+CI uses small package objects without live source requests. A separate live probe establishes source availability at that time, not an atomic snapshot or complete coverage of real-world parking.
 
 ## Container
 
 ```bash
 docker build -t disabled-parking .
-docker run --rm --network none disabled-parking --city hamburg --input /app/tests/fixtures/hamburg.json --output /tmp/hamburg.json
+mkdir -p output
+docker run --rm -v "$PWD/output:/output" disabled-parking --city amsterdam --output /output/amsterdam.json
 ```
 
-The container runs once and exits; without arguments it shows help. Output in this disposable example container is discarded. Mount a writable output directory to retain it. The old SQL/cron runtime is removed.
+The container runs once and exits; without arguments it shows help. The mounted directory retains the completed file.
 
 ## Contributing
 

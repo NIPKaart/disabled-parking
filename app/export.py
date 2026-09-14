@@ -1,83 +1,83 @@
-"""Write normalized records locally; never connect to core or a database."""
+"""Fetch one live source and atomically write the agreed core pilot file."""
 
 from __future__ import annotations
 
+import asyncio
 import json
 import os
 import tempfile
-from dataclasses import asdict
-from datetime import UTC, date, datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
+from uuid import uuid4
+
+from app.cities.netherlands.amsterdam import MAX_RECORDS, Municipality
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from odp_amsterdam.models import ParkingLocations
 
-    from app.cities import City
-    from app.records import MunicipalRecord
-
-MAX_RECORDS = 10000
 MAX_BYTES = 32 * 1024 * 1024
-
-
-def _json_default(value: object) -> str:
-    if isinstance(value, (date, datetime)):
-        return value.isoformat()
-    raise TypeError(type(value))
+FETCH_TIMEOUT = 180
 
 
 def write_records(
-    city: City,
-    records: Iterable[MunicipalRecord],
+    city: Municipality,
+    result: ParkingLocations,
     output: Path,
+    retrieved_at: datetime,
 ) -> int:
-    """Atomically replace a local draft only after every record is validated."""
-    header = {
-        "format": "municipal-records-draft",
-        "source_id": city.source_id,
-        "municipality": city.name,
-        "country_code": city.geo_code.split("-", 1)[0],
-        "region_code": city.geo_code,
-        "exported_at": datetime.now(UTC).isoformat(),
-        "retrieved_at": None,
-        "complete": None,
+    """Keep the last valid file intact unless the entire delivery is valid."""
+    if (
+        not result.complete
+        or not 0 < result.total_count <= MAX_RECORDS
+        or result.pages_fetched < 1
+    ):
+        msg = "Source delivery is empty, incomplete or exceeds the pilot limit"
+        raise ValueError(msg)
+    records = [city.normalize(item) for item in result.records]
+    if len({record["external_id"] for record in records}) != result.total_count:
+        msg = "Source count does not match unique records"
+        raise ValueError(msg)
+    if retrieved_at.tzinfo is None:
+        msg = "Retrieval start must include a timezone"
+        raise ValueError(msg)
+    payload = {
+        "format": "nipkaart-municipal-pilot-1",
+        "dataset": "nl-amsterdam-parkeervakken-e6a",
+        "delivery_id": str(uuid4()),
+        "retrieved_at": retrieved_at.astimezone(UTC).isoformat().replace("+00:00", "Z"),
+        "selection": "e6a-all",
+        "complete": True,
+        "source_count": result.total_count,
+        "records": records,
     }
-    seen: set[str] = set()
-    temporary: Path | None = None
+    data = (json.dumps(payload, ensure_ascii=False, allow_nan=False) + "\n").encode()
+    if len(data) > MAX_BYTES:
+        msg = "Delivery exceeds the 32 MiB pilot limit"
+        raise ValueError(msg)
+    temporary = None
     try:
         with tempfile.NamedTemporaryFile(
-            mode="w",
-            encoding="utf-8",
             dir=output.parent,
             prefix=".parking-",
             suffix=".tmp",
             delete=False,
         ) as stream:
             temporary = Path(stream.name)
-            stream.write(json.dumps(header, ensure_ascii=False)[:-1] + ',"records":[')
-            for record in records:
-                if record.external_id in seen or len(seen) >= MAX_RECORDS:
-                    raise ValueError(record.external_id)
-                if seen:
-                    stream.write(",")
-                seen.add(record.external_id)
-                stream.write(
-                    json.dumps(
-                        asdict(record),
-                        ensure_ascii=False,
-                        allow_nan=False,
-                        default=_json_default,
-                    )
-                )
-                if stream.tell() > MAX_BYTES:
-                    raise ValueError(MAX_BYTES)
-            stream.write(f'],"record_count":{len(seen)}}}\n')
-            if stream.tell() > MAX_BYTES:
-                raise ValueError(MAX_BYTES)
+            stream.write(data)
             stream.flush()
             os.fsync(stream.fileno())
         temporary.replace(output)
     finally:
         if temporary is not None:
             temporary.unlink(missing_ok=True)
-    return len(seen)
+    return len(records)
+
+
+async def export_amsterdam(output: Path) -> int:
+    """Bound live collection and only write after complete retrieval."""
+    city = Municipality()
+    retrieved_at = datetime.now(UTC)
+    async with asyncio.timeout(FETCH_TIMEOUT):
+        result = await city.async_get_locations()
+    return write_records(city, result, output, retrieved_at)
