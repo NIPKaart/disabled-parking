@@ -41,6 +41,35 @@ class SchedulerTests(unittest.TestCase):
                     ),
                 )
 
+    def test_shutdown_does_not_log_failure_or_wait(self) -> None:
+        """An intentional stop during a run exits quietly without scheduling a retry."""
+        stopped = Event()
+
+        def stop_during_run(*_args: object) -> bool:
+            stopped.set()
+            return False
+
+        with (
+            patch("scheduler.run_command", side_effect=stop_during_run),
+            patch.object(stopped, "wait") as wait,
+            self.assertNoLogs("scheduler", level="WARNING"),
+        ):
+            schedule(["producer"], 600, 10, stopped)
+            wait.assert_not_called()
+
+    def test_stopping_child_does_not_warn(self) -> None:
+        """Intentional child termination must not look like a deadline failure."""
+        stopped = Event()
+        stopped.set()
+        with self.assertNoLogs("scheduler", level="WARNING"):
+            self.assertFalse(
+                run_command(
+                    [sys.executable, "-c", "import time; time.sleep(60)"],
+                    1,
+                    stopped,
+                ),
+            )
+
     def test_failure_waits_before_retry(self) -> None:
         """Source failures do not create a tight retry loop."""
         stopped = Event()

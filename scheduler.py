@@ -27,7 +27,8 @@ def run_command(command: list[str], timeout: int, stopped: Event) -> bool:
                     return process.wait(timeout=1) == 0
                 except subprocess.TimeoutExpired:
                     remaining -= 1
-            LOGGER.warning("Producer stopped or exceeded its deadline")
+            if not stopped.is_set():
+                LOGGER.warning("Producer exceeded its deadline")
             return False
         finally:
             if process.poll() is None:
@@ -43,6 +44,8 @@ def schedule(command: list[str], interval: int, timeout: int, stopped: Event) ->
     """Start immediately, then wait after each attempt; never overlap runs."""
     while not stopped.is_set():
         successful = run_command(command, timeout, stopped)
+        if stopped.is_set():
+            break
         if not successful:
             LOGGER.error(
                 "Producer run failed; next attempt follows the configured wait"
