@@ -1,4 +1,4 @@
-"""Run a finite producer command serially, with interruptible waits and a deadline."""
+"""Run a finite collector command serially, with interruptible waits and a deadline."""
 
 from __future__ import annotations
 
@@ -28,7 +28,7 @@ def run_command(command: list[str], timeout: int, stopped: Event) -> bool:
                 except subprocess.TimeoutExpired:
                     remaining -= 1
             if not stopped.is_set():
-                LOGGER.warning("Producer exceeded its deadline")
+                LOGGER.warning("Collector exceeded its deadline")
             return False
         finally:
             if process.poll() is None:
@@ -48,7 +48,7 @@ def schedule(command: list[str], interval: int, timeout: int, stopped: Event) ->
             break
         if not successful:
             LOGGER.error(
-                "Producer run failed; next attempt follows the configured wait"
+                "Collector run failed; next attempt follows the configured wait"
             )
         stopped.wait(interval if successful else min(interval, 300))
 
@@ -63,7 +63,7 @@ def positive_seconds(value: str) -> int:
 
 
 def main() -> None:
-    """Hold a shared-volume lock while scheduling a trusted producer command."""
+    """Hold a shared-volume lock while scheduling a trusted collector command."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--interval", type=positive_seconds, default=86400)
     parser.add_argument("--timeout", type=positive_seconds, default=300)
@@ -74,7 +74,7 @@ def main() -> None:
     if command and command[0] == "--":
         command = command[1:]
     if not command:
-        parser.error("A producer command is required after --")
+        parser.error("A collector command is required after --")
     logging.basicConfig(
         level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s"
     )

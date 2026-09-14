@@ -15,10 +15,10 @@ import boto3
 from botocore.response import StreamingBody
 from botocore.stub import ANY, Stubber
 
-from producer import DATASET, run_once, upload
+from collector import DATASET, run_once, upload
 
 
-class ProducerTests(unittest.TestCase):
+class CollectorTests(unittest.TestCase):
     """Keep the exact delivery on failures and refuse identity conflicts."""
 
     def setUp(self) -> None:
@@ -64,7 +64,7 @@ class ProducerTests(unittest.TestCase):
                 expected_params=self.parameters,
             )
             stub.add_response("put_object", {}, self.parameters)
-            with patch("producer.export_amsterdam", new_callable=AsyncMock) as fetch:
+            with patch("collector.export_amsterdam", new_callable=AsyncMock) as fetch:
                 with self.assertRaises(self.client.exceptions.ClientError):
                     run_once(self.client, "test", path)
                 self.assertEqual(pending.read_bytes(), self.data)
@@ -113,7 +113,7 @@ class ProducerTests(unittest.TestCase):
             path = Path(directory)
             (path / "last.json").write_bytes(b"last good")
             with (
-                patch("producer.export_amsterdam", side_effect=TimeoutError),
+                patch("collector.export_amsterdam", side_effect=TimeoutError),
                 self.assertRaises(TimeoutError),
             ):
                 run_once(self.client, "test", path)
@@ -128,7 +128,7 @@ class ProducerTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as directory, Stubber(self.client) as stub:
             stub.add_response("put_object", {}, self.parameters)
-            with patch("producer.export_amsterdam", side_effect=collect):
+            with patch("collector.export_amsterdam", side_effect=collect):
                 run_once(self.client, "test", Path(directory))
             self.assertEqual((Path(directory) / "last.json").read_bytes(), self.data)
 
@@ -137,6 +137,6 @@ class ProducerTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory, Stubber(self.client):
             pending = Path(directory) / "pending.json"
             pending.write_bytes(self.data)
-            with patch("producer.MAX_BYTES", 1), self.assertRaises(ValueError):
+            with patch("collector.MAX_BYTES", 1), self.assertRaises(ValueError):
                 upload(self.client, "test", pending)
             self.assertEqual(pending.read_bytes(), self.data)

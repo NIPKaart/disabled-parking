@@ -27,7 +27,7 @@ class SchedulerTests(unittest.TestCase):
         )
 
     def test_deadline_and_shutdown_stop_child(self) -> None:
-        """A hanging producer cannot block its scheduler indefinitely."""
+        """A hanging collector cannot block its scheduler indefinitely."""
         for stop_before_start in (False, True):
             with self.subTest(stop_before_start=stop_before_start):
                 stopped = Event()
@@ -54,7 +54,7 @@ class SchedulerTests(unittest.TestCase):
             patch.object(stopped, "wait") as wait,
             self.assertNoLogs("scheduler", level="WARNING"),
         ):
-            schedule(["producer"], 600, 10, stopped)
+            schedule(["collector"], 600, 10, stopped)
             wait.assert_not_called()
 
     def test_stopping_child_does_not_warn(self) -> None:
@@ -87,15 +87,15 @@ class SchedulerTests(unittest.TestCase):
                 return stopped.is_set()
 
             wait.side_effect = wait_and_stop
-            schedule(["producer"], 600, 10, stopped)
+            schedule(["collector"], 600, 10, stopped)
             self.assertEqual(command.call_count, 2)
             self.assertEqual(wait.call_count, 2)
             self.assertEqual([call.args[0] for call in wait.call_args_list], [300, 600])
 
     def test_shared_volume_rejects_second_scheduler(self) -> None:
-        """A second container using the same volume cannot start another producer."""
+        """A second container using the same volume cannot start another collector."""
         with tempfile.TemporaryDirectory() as directory:
-            lock_path = Path(directory) / "producer.lock"
+            lock_path = Path(directory) / "collector.lock"
             with lock_path.open("a") as lock:
                 fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
                 result = subprocess.run(  # noqa: S603

@@ -13,4 +13,4 @@ USER 10001:10001
 ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
 
 ENTRYPOINT ["/app/.venv/bin/python"]
-CMD ["/app/producer.py", "--help"]
+CMD ["/app/collector.py", "--help"]

@@ -127,7 +127,7 @@ def main() -> None:
         KeyError,
     ) as error:
         parser.exit(
-            1, f"Producer failed ({type(error).__name__}); pending file retained\n"
+            1, f"Collector failed ({type(error).__name__}); pending file retained\n"
         )
 
 
