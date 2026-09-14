@@ -22,11 +22,14 @@ def validate_geometry(geometry: dict[str, Any]) -> None:
     if geometry.get("type") != "Polygon" or not isinstance(rings, list) or not rings:
         msg = "Expected a Polygon with coordinates"
         raise ValueError(msg)
+    if any(not isinstance(ring, list) for ring in rings):
+        msg = "Polygon rings must be lists of positions"
+        raise ValueError(msg)
     if len(rings) > 100 or sum(len(ring) for ring in rings) > 10000:
         msg = "Polygon exceeds pilot geometry limits"
         raise ValueError(msg)
     for ring in rings:
-        if not isinstance(ring, list) or len(ring) < 4 or ring[0] != ring[-1]:
+        if len(ring) < 4 or ring[0] != ring[-1]:
             msg = "Polygon rings must be closed and have at least four positions"
             raise ValueError(msg)
         for point in ring:

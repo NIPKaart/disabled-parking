@@ -6,8 +6,10 @@ from __future__ import annotations
 import json
 import tempfile
 import unittest
+from contextlib import redirect_stderr
 from dataclasses import replace
 from datetime import UTC, date, datetime
+from io import StringIO
 from pathlib import Path
 from unittest.mock import AsyncMock, patch
 from uuid import UUID
@@ -16,6 +18,7 @@ from odp_amsterdam.models import ParkingLocations, ParkingSpot
 
 from app.cities.netherlands.amsterdam import Municipality
 from app.export import export_amsterdam, write_records
+from export import main
 
 
 def source_record() -> ParkingSpot:
@@ -71,6 +74,26 @@ class MappingTests(unittest.TestCase):
         record = Municipality().normalize(replace(item, version_date=None, street=None))
         self.assertIsNone(record["source_attributes"]["version_date"])
         self.assertIsNone(record["street"])
+
+    def test_rejects_non_list_rings(self) -> None:
+        """Malformed ring types produce a useful validation error."""
+        for ring in (None, 42, "invalid", {}):
+            with (
+                self.subTest(ring=ring),
+                self.assertRaisesRegex(
+                    ValueError,
+                    "Polygon rings must be lists of positions",
+                ),
+            ):
+                Municipality().normalize(
+                    replace(
+                        source_record(),
+                        geometry={
+                            "type": "Polygon",
+                            "coordinates": [ring],
+                        },
+                    )
+                )
 
     def test_rejects_invalid_claims(self) -> None:
         """No lossy capacity, guessed identity, out-of-scope regime or bad geometry."""
@@ -159,6 +182,36 @@ class WriterTests(unittest.TestCase):
                     write_records(Municipality(), result, output, started)
                 self.assertEqual(output.read_bytes(), original)
                 self.assertEqual(list(Path(directory).iterdir()), [output])
+
+
+class CliTests(unittest.TestCase):
+    """Keep collection failures readable at the command-line boundary."""
+
+    def test_timeout_exits_cleanly(self) -> None:
+        """A fetch deadline uses the existing OSError handler without a traceback."""
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "export.json"
+            output.write_text("previous", encoding="utf-8")
+            error_output = StringIO()
+            with (
+                patch(
+                    "sys.argv",
+                    ["export.py", "--city", "amsterdam", "--output", str(output)],
+                ),
+                patch(
+                    "app.export.Municipality.async_get_locations",
+                    new_callable=AsyncMock,
+                    side_effect=TimeoutError("source deadline"),
+                ),
+                redirect_stderr(error_output),
+                self.assertRaises(SystemExit) as error,
+            ):
+                main()
+            self.assertEqual(error.exception.code, 1)
+            self.assertEqual(
+                error_output.getvalue(), "Export failed: source deadline\n"
+            )
+            self.assertEqual(output.read_text(encoding="utf-8"), "previous")
 
 
 class CollectionTests(unittest.IsolatedAsyncioTestCase):
