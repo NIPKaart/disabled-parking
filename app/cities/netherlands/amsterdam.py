@@ -48,7 +48,7 @@ def validate_geometry(geometry: dict[str, Any]) -> None:
 
 
 class Municipality(City):
-    """One source selection; no publication or point derivation in the producer."""
+    """One source selection; no publication or point derivation in the collector."""
 
     def __init__(self) -> None:
         """Initialize the existing municipality identity."""
