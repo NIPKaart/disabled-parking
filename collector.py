@@ -1,4 +1,4 @@
-"""Collect Amsterdam and deliver one complete, retryable JSON object to private R2."""
+"""Deliver a complete, retryable municipal JSON object to private R2."""
 
 from __future__ import annotations
 
@@ -16,17 +16,18 @@ from uuid import UUID
 import boto3
 from botocore.config import Config
 from botocore.exceptions import BotoCoreError, ClientError
-from odp_amsterdam.exceptions import ODPAmsterdamError
 
-from app.export import MAX_BYTES, export_amsterdam
+from app.datasets import DATASETS
+from app.export import MAX_BYTES, export_dataset
+from app.records import SourceError
 
 if TYPE_CHECKING:
     from botocore.client import BaseClient
 
-DATASET = "nl-amsterdam-parkeervakken-e6a"
 
-
-def upload(client: BaseClient, bucket: str, pending: Path) -> str:
+def upload(
+    client: BaseClient, bucket: str, pending: Path, city: str = "amsterdam"
+) -> str:
     """Create an immutable delivery; verify matching bytes after an uncertain PUT."""
     with pending.open("rb") as stream:
         data = stream.read(MAX_BYTES + 1)
@@ -35,10 +36,10 @@ def upload(client: BaseClient, bucket: str, pending: Path) -> str:
         raise ValueError(message)
     payload = json.loads(data)
     delivery_id = str(UUID(payload["delivery_id"]))
-    if payload["dataset"] != DATASET:
+    if payload["dataset"] != DATASETS[city].code:
         message = "Pending delivery belongs to another dataset"
         raise ValueError(message)
-    key = f"municipal/{DATASET}/{delivery_id}.json"
+    key = f"municipal/{payload['dataset']}/{delivery_id}.json"
     digest = hashlib.sha256(data).hexdigest()
     print(f"Uploading {key} sha256={digest}", flush=True)
     try:
@@ -65,8 +66,12 @@ def upload(client: BaseClient, bucket: str, pending: Path) -> str:
     return key
 
 
-def run_once(client: BaseClient, bucket: str, directory: Path) -> str:
+def run_once(
+    client: BaseClient, bucket: str, directory: Path, city: str = "amsterdam"
+) -> str:
     """Keep the pending artifact until acknowledged; never fetch its replacement."""
+    dataset = DATASETS[city]
+    directory = directory / dataset.code
     directory.mkdir(parents=True, exist_ok=True)
     with (directory / "delivery.lock").open("a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -74,9 +79,9 @@ def run_once(client: BaseClient, bucket: str, directory: Path) -> str:
         if not pending.exists():
             for temporary in directory.glob(".parking-*.tmp"):
                 temporary.unlink()
-            asyncio.run(export_amsterdam(pending))
+            asyncio.run(export_dataset(city, pending))
         sync_directory(directory)
-        key = upload(client, bucket, pending)
+        key = upload(client, bucket, pending, city)
         pending.replace(directory / "last.json")
         sync_directory(directory)
         print(f"Delivered {key}", flush=True)
@@ -96,6 +101,7 @@ def main() -> None:
     """Require R2 credentials and keep credential-bearing errors out of logs."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--directory", type=Path, default=Path("/data"))
+    parser.add_argument("--city", choices=DATASETS, default="amsterdam")
     args = parser.parse_args()
     try:
         endpoint = os.environ["R2_ENDPOINT"]
@@ -116,11 +122,11 @@ def main() -> None:
                 response_checksum_validation="when_required",
             ),
         )
-        run_once(client, bucket, args.directory)
+        run_once(client, bucket, args.directory, args.city)
     except (
         BotoCoreError,
         ClientError,
-        ODPAmsterdamError,
+        SourceError,
         OSError,
         ValueError,
         TypeError,

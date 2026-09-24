@@ -11,18 +11,20 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 from uuid import uuid4
 
-from app.cities.netherlands.amsterdam import MAX_RECORDS, Municipality
+from app.datasets import DATASETS
 
 if TYPE_CHECKING:
-    from odp_amsterdam.models import ParkingLocations
+    from app.datasets import Dataset
+    from app.records import Collection
 
+MAX_RECORDS = 10000
 MAX_BYTES = 32 * 1024 * 1024
 FETCH_TIMEOUT = 180
 
 
 def write_records(
-    city: Municipality,
-    result: ParkingLocations,
+    dataset: Dataset,
+    result: Collection,
     output: Path,
     retrieved_at: datetime,
 ) -> int:
@@ -34,8 +36,11 @@ def write_records(
     ):
         msg = "Source delivery is empty, incomplete or exceeds the pilot limit"
         raise ValueError(msg)
-    records = [city.normalize(item) for item in result.records]
-    if len({record["external_id"] for record in records}) != result.total_count:
+    records = result.records
+    if (
+        len(records) != result.total_count
+        or len({record["external_id"] for record in records}) != result.total_count
+    ):
         msg = "Source count does not match unique records"
         raise ValueError(msg)
     if retrieved_at.tzinfo is None:
@@ -43,10 +48,10 @@ def write_records(
         raise ValueError(msg)
     payload = {
         "format": "nipkaart-municipal-pilot-1",
-        "dataset": "nl-amsterdam-parkeervakken-e6a",
+        "dataset": dataset.code,
         "delivery_id": str(uuid4()),
         "retrieved_at": retrieved_at.astimezone(UTC).isoformat().replace("+00:00", "Z"),
-        "selection": "e6a-all",
+        "selection": dataset.selection,
         "complete": True,
         "source_count": result.total_count,
         "records": records,
@@ -74,10 +79,10 @@ def write_records(
     return len(records)
 
 
-async def export_amsterdam(output: Path) -> int:
-    """Bound live collection and only write after complete retrieval."""
-    city = Municipality()
+async def export_dataset(city: str, output: Path) -> int:
+    """Bound source collection and write only its verified complete result."""
+    dataset = DATASETS[city]
     retrieved_at = datetime.now(UTC)
     async with asyncio.timeout(FETCH_TIMEOUT):
-        result = await city.async_get_locations()
-    return write_records(city, result, output, retrieved_at)
+        result = await dataset.source().collect()
+    return write_records(dataset, result, output, retrieved_at)

@@ -17,7 +17,9 @@ from uuid import UUID
 from odp_amsterdam.models import ParkingLocations, ParkingSpot
 
 from app.cities.netherlands.amsterdam import Municipality
-from app.export import export_amsterdam, write_records
+from app.datasets import DATASETS
+from app.export import export_dataset, write_records
+from app.records import Collection
 from export import main
 
 
@@ -46,6 +48,16 @@ def source_record() -> ParkingSpot:
             }
         ],
         version_date=date(2026, 9, 1),
+    )
+
+
+def mapped_collection(result: ParkingLocations) -> Collection:
+    """Adapt a source fixture through the same normalization boundary."""
+    return Collection(
+        [Municipality().normalize(record) for record in result.records],
+        result.total_count,
+        result.pages_fetched,
+        result.complete,
     )
 
 
@@ -136,12 +148,17 @@ class WriterTests(unittest.TestCase):
         started = datetime(2026, 9, 14, tzinfo=UTC)
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "export.json"
-            self.assertEqual(write_records(Municipality(), result, output, started), 1)
+            self.assertEqual(
+                write_records(
+                    DATASETS["amsterdam"], mapped_collection(result), output, started
+                ),
+                1,
+            )
             original = output.read_bytes()
             payload = json.loads(original)
             UUID(payload["delivery_id"])
             self.assertEqual(payload["format"], "nipkaart-municipal-pilot-1")
-            self.assertEqual(payload["dataset"], "nl-amsterdam-parkeervakken-e6a")
+            self.assertEqual(payload["dataset"], "nl-amsterdam")
             self.assertEqual(payload["selection"], "e6a-all")
             self.assertEqual(payload["retrieved_at"], "2026-09-14T00:00:00Z")
             self.assertTrue(payload["complete"])
@@ -166,20 +183,35 @@ class WriterTests(unittest.TestCase):
                 ),
             ):
                 with self.subTest(invalid=invalid), self.assertRaises(ValueError):
-                    write_records(Municipality(), invalid, output, started)
+                    write_records(
+                        DATASETS["amsterdam"],
+                        mapped_collection(invalid),
+                        output,
+                        started,
+                    )
                 self.assertEqual(output.read_bytes(), original)
             for target, value in (("MAX_BYTES", 1), ("MAX_RECORDS", 0)):
                 with (
                     patch(f"app.export.{target}", value),
                     self.assertRaises(ValueError),
                 ):
-                    write_records(Municipality(), result, output, started)
+                    write_records(
+                        DATASETS["amsterdam"],
+                        mapped_collection(result),
+                        output,
+                        started,
+                    )
             for target in ("os.fsync", "Path.replace"):
                 with (
                     patch(f"app.export.{target}", side_effect=OSError),
                     self.assertRaises(OSError),
                 ):
-                    write_records(Municipality(), result, output, started)
+                    write_records(
+                        DATASETS["amsterdam"],
+                        mapped_collection(result),
+                        output,
+                        started,
+                    )
                 self.assertEqual(output.read_bytes(), original)
                 self.assertEqual(list(Path(directory).iterdir()), [output])
 
@@ -199,7 +231,7 @@ class CliTests(unittest.TestCase):
                     ["export.py", "--city", "amsterdam", "--output", str(output)],
                 ),
                 patch(
-                    "app.export.Municipality.async_get_locations",
+                    "app.cities.netherlands.amsterdam.Municipality.async_get_locations",
                     new_callable=AsyncMock,
                     side_effect=TimeoutError("source deadline"),
                 ),
@@ -232,18 +264,19 @@ class CollectionTests(unittest.IsolatedAsyncioTestCase):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "export.json"
             with patch(
-                "app.export.Municipality.async_get_locations", new_callable=AsyncMock
+                "app.cities.netherlands.amsterdam.Municipality.async_get_locations",
+                new_callable=AsyncMock,
             ) as fetch:
                 fetch.return_value = result
                 before = datetime.now(UTC)
-                self.assertEqual(await export_amsterdam(output), 1)
+                self.assertEqual(await export_dataset("amsterdam", output), 1)
                 original = output.read_bytes()
                 retrieved = datetime.fromisoformat(json.loads(original)["retrieved_at"])
                 self.assertLessEqual(before, retrieved)
                 self.assertLessEqual(retrieved, datetime.now(UTC))
                 fetch.side_effect = TimeoutError("source unavailable")
                 with self.assertRaises(TimeoutError):
-                    await export_amsterdam(output)
+                    await export_dataset("amsterdam", output)
                 self.assertEqual(output.read_bytes(), original)
 
 

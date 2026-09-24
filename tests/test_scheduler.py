@@ -54,7 +54,7 @@ class SchedulerTests(unittest.TestCase):
             patch.object(stopped, "wait") as wait,
             self.assertNoLogs("scheduler", level="WARNING"),
         ):
-            schedule(["collector"], 600, 10, stopped)
+            schedule({"example": ["collector"]}, 600, 10, stopped)
             wait.assert_not_called()
 
     def test_stopping_child_does_not_warn(self) -> None:
@@ -78,19 +78,54 @@ class SchedulerTests(unittest.TestCase):
             patch.object(stopped, "wait") as wait,
         ):
             calls = 0
+            clock = 0.0
 
-            def wait_and_stop(_seconds: int) -> bool:
-                nonlocal calls
+            def wait_and_stop(seconds: float) -> bool:
+                nonlocal calls, clock
                 calls += 1
+                clock += seconds
                 if calls == 2:
                     stopped.set()
                 return stopped.is_set()
 
             wait.side_effect = wait_and_stop
-            schedule(["collector"], 600, 10, stopped)
+            with patch("scheduler.monotonic", side_effect=lambda: clock):
+                schedule({"example": ["collector"]}, 600, 10, stopped)
             self.assertEqual(command.call_count, 2)
             self.assertEqual(wait.call_count, 2)
             self.assertEqual([call.args[0] for call in wait.call_args_list], [300, 600])
+
+    def test_failed_city_does_not_skip_or_refetch_the_successful_city(self) -> None:
+        """One process schedules independent retries without another container."""
+        stopped = Event()
+        clock = 0.0
+        waits = []
+
+        def advance(seconds: float) -> bool:
+            nonlocal clock
+            waits.append(seconds)
+            clock += seconds
+            if len(waits) == 2:
+                stopped.set()
+            return stopped.is_set()
+
+        with (
+            patch("scheduler.monotonic", side_effect=lambda: clock),
+            patch("scheduler.run_command", side_effect=[False, True, True]) as run,
+            patch.object(stopped, "wait", side_effect=advance),
+        ):
+            schedule(
+                {"a": ["collector", "a"], "b": ["collector", "b"]}, 600, 10, stopped
+            )
+        self.assertEqual(
+            [call.args[0] for call in run.call_args_list],
+            [
+                ["collector", "a"],
+                ["collector", "b"],
+                ["collector", "a"],
+            ],
+        )
+        self.assertEqual(waits, [300, 300])
 
     def test_shared_volume_rejects_second_scheduler(self) -> None:
         """A second container using the same volume cannot start another collector."""
