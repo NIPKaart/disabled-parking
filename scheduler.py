@@ -9,7 +9,10 @@ import signal
 import subprocess
 from pathlib import Path
 from threading import Event
+from time import monotonic
 from typing import TYPE_CHECKING
+
+from app.datasets import DATASETS
 
 if TYPE_CHECKING:
     from types import FrameType
@@ -40,17 +43,24 @@ def run_command(command: list[str], timeout: int, stopped: Event) -> bool:
                     process.wait()
 
 
-def schedule(command: list[str], interval: int, timeout: int, stopped: Event) -> None:
-    """Start immediately, then wait after each attempt; never overlap runs."""
+def schedule(
+    commands: dict[str, list[str]], interval: int, timeout: int, stopped: Event
+) -> None:
+    """Run sources serially, retaining an independent retry deadline per dataset."""
+    next_runs = dict.fromkeys(commands, 0.0)
     while not stopped.is_set():
-        successful = run_command(command, timeout, stopped)
-        if stopped.is_set():
-            break
-        if not successful:
-            LOGGER.error(
-                "Collector run failed; next attempt follows the configured wait"
+        for city, command in commands.items():
+            if next_runs[city] > monotonic():
+                continue
+            successful = run_command(command, timeout, stopped)
+            if stopped.is_set():
+                return
+            if not successful:
+                LOGGER.error("Collector failed for %s; other datasets continue", city)
+            next_runs[city] = monotonic() + (
+                interval if successful else min(interval, 300)
             )
-        stopped.wait(interval if successful else min(interval, 300))
+        stopped.wait(max(0, min(next_runs.values()) - monotonic()))
 
 
 def positive_seconds(value: str) -> int:
@@ -88,7 +98,8 @@ def main() -> None:
     try:
         with args.lock.open("a") as lock:
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-            schedule(command, args.interval, args.timeout, stopped)
+            commands = {city: [*command, "--city", city] for city in DATASETS}
+            schedule(commands, args.interval, args.timeout, stopped)
     except OSError as error:
         parser.exit(1, f"Scheduler unavailable: {error}\n")
 

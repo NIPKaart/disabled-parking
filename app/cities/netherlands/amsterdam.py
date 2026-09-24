@@ -6,9 +6,10 @@ import math
 from typing import TYPE_CHECKING, Any
 
 from odp_amsterdam import ODPAmsterdam
+from odp_amsterdam.exceptions import ODPAmsterdamError
 
 from app.cities import City
-from app.records import capacity
+from app.records import Collection, SourceError, capacity
 
 if TYPE_CHECKING:
     from odp_amsterdam.models import ParkingLocations, ParkingSpot
@@ -59,6 +60,20 @@ class Municipality(City):
         """Let the universal package retrieve and verify the bounded selection."""
         async with ODPAmsterdam() as client:
             return await client.locations(limit=MAX_RECORDS + 1, parking_type="E6a")
+
+    async def collect(self) -> Collection:
+        """Adapt the package response to the shared normalized delivery model."""
+        try:
+            result = await self.async_get_locations()
+        except ODPAmsterdamError as error:
+            msg = "Amsterdam source request failed"
+            raise SourceError(msg) from error
+        return Collection(
+            records=[self.normalize(item) for item in result.records],
+            total_count=result.total_count,
+            pages_fetched=result.pages_fetched,
+            complete=result.complete,
+        )
 
     def normalize(self, item: ParkingSpot) -> dict[str, Any]:
         """Preserve source claims and fail if any regime leaves the agreed scope."""
