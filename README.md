@@ -35,7 +35,7 @@ Each dataset runs daily and retries failures independently. Set `COLLECTOR_INTER
 
 ## Local export
 
-Requires Python 3.12+ and [uv](https://docs.astral.sh/uv/). No R2 credentials needed.
+Requires Python 3.14+ and [uv](https://docs.astral.sh/uv/). No R2 credentials needed.
 
 ```bash
 uv sync --locked
