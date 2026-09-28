@@ -14,7 +14,7 @@ from unittest.mock import patch
 import boto3
 from botocore.stub import ANY, Stubber
 
-from app.datasets import DATASETS, Dataset
+from app.datasets import DATASETS, Dataset, SourceDescription
 from app.records import Collection
 from collector import run_once
 from export import main
@@ -43,7 +43,22 @@ class DatasetTests(unittest.TestCase):
 
     def test_registered_source_reaches_cli_and_its_own_bucket_prefix(self) -> None:
         """No exporter, CLI or collector city branch is needed for another source."""
-        dataset = Dataset("nl-example", "all", ExampleSource)
+        description = SourceDescription(
+            name="Example",
+            publisher="Example municipality",
+            source_url="https://example.test/data",
+            licence=None,
+            terms_url="https://example.test/terms",
+            attribution="Example municipality",
+            country="NL",
+            subdivision="NL-NB",
+            municipality_scheme="nl-cbs",
+            municipality_code="GM9999",
+            municipality_name="Example",
+            bounds=(4.5, 50.5, 5.5, 51.5),
+            expected_interval_hours=24,
+        )
+        dataset = Dataset("nl-example", "all", ExampleSource, description)
         client = boto3.client(
             "s3",
             region_name="auto",
@@ -63,6 +78,7 @@ class DatasetTests(unittest.TestCase):
             payload = json.loads(output.read_bytes())
             self.assertEqual(payload["dataset"], "nl-example")
             self.assertEqual(payload["selection"], "all")
+            self.assertEqual(payload["source"], description.as_dict())
             with Stubber(client) as stub:
                 stub.add_response(
                     "put_object",

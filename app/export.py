@@ -8,18 +8,45 @@ import os
 import tempfile
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 from uuid import uuid4
 
 from app.datasets import DATASETS
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
+
     from app.datasets import Dataset
     from app.records import Collection
 
+FORMAT = "nipkaart-municipal-2"
 MAX_RECORDS = 10000
 MAX_BYTES = 32 * 1024 * 1024
 FETCH_TIMEOUT = 180
+
+
+def points(geometry: dict[str, Any]) -> Iterator[list[float]]:
+    """Yield every position of a Point, Polygon or MultiPolygon."""
+    coordinates = geometry["coordinates"]
+    if geometry["type"] == "Point":
+        yield coordinates
+    elif geometry["type"] == "Polygon":
+        for ring in coordinates:
+            yield from ring
+    else:
+        for polygon in coordinates:
+            for ring in polygon:
+                yield from ring
+
+
+def within(dataset: Dataset, records: list[dict[str, Any]]) -> bool:
+    """Every position must lie inside the bounds core approves for the source."""
+    west, south, east, north = dataset.description.bounds
+    return all(
+        west <= longitude <= east and south <= latitude <= north
+        for record in records
+        for longitude, latitude in points(record["geometry"])
+    )
 
 
 def write_records(
@@ -46,12 +73,16 @@ def write_records(
     if retrieved_at.tzinfo is None:
         msg = "Retrieval start must include a timezone"
         raise ValueError(msg)
+    if not within(dataset, records):
+        msg = "A location lies outside the dataset bounds"
+        raise ValueError(msg)
     payload = {
-        "format": "nipkaart-municipal-pilot-1",
+        "format": FORMAT,
         "dataset": dataset.code,
         "delivery_id": str(uuid4()),
         "retrieved_at": retrieved_at.astimezone(UTC).isoformat().replace("+00:00", "Z"),
         "selection": dataset.selection,
+        "source": dataset.description.as_dict(),
         "complete": True,
         "source_count": result.total_count,
         "records": records,
