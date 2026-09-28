@@ -146,6 +146,7 @@ class Municipality(City):
             "number": capacity(item["aantal"]),
             "street": street,
             "access_category": "unknown",
+            "orientation": None,
             "source_attributes": {
                 "objectid": object_id,
                 "type_en_merk": item["type_en_merk"],

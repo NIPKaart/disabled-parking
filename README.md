@@ -75,6 +75,12 @@ uv run pre-commit run --all-files
 
 See the [delivery contract](https://github.com/NIPKaart/core/blob/main/docs/development/data-import-contract.md) for source mappings, core registration and review requirements.
 
+### Delivery format
+
+Deliveries use `nipkaart-municipal-2`. Each file carries a `source` block from the dataset registry in `app/datasets.py`, so core can discover the dataset and an administrator can approve it once ([core ADR 0013](https://github.com/NIPKaart/core/blob/main/docs/adr/0013-discover-dataset-sources-from-deliveries-with-one-time-approval.md)): name, publisher, source URL, SPDX licence (`null` when the source publishes none), terms URL, attribution, ISO country and subdivision with the CBS municipality code, bounds and the expected delivery interval. Every position of every record must lie within the bounds. Changing any of these values makes core ask for approval again, except `expected_interval_hours`.
+
+Records keep the source's own claims in `source_attributes`. Source-specific rules stay in the adapters: Amsterdam delivers only general E6a bays and maps its bay orientation to the neutral `orientation` values `perpendicular`, `parallel` and `angle`; Eindhoven delivers points with `access_category` `unknown` and no orientation.
+
 ## Contributing
 
 Would you like to contribute to the development of this project? Then read the prepared [contribution guidelines](CONTRIBUTING.md) and go ahead!

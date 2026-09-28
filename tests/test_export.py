@@ -87,6 +87,25 @@ class MappingTests(unittest.TestCase):
         self.assertIsNone(record["source_attributes"]["version_date"])
         self.assertIsNone(record["street"])
 
+    def test_orientation_uses_the_format_values_and_keeps_the_source_claim(
+        self,
+    ) -> None:
+        """Core no longer needs to know Amsterdam's orientation terms."""
+        item = source_record()
+        for source, expected in (
+            ("Haaks", "perpendicular"),
+            ("Dwars", "perpendicular"),
+            ("Langs", "parallel"),
+            ("Schuin", "angle"),
+            ("Visgraat", "angle"),
+            (None, None),
+            ("Onbekend", None),
+        ):
+            with self.subTest(source=source):
+                record = Municipality().normalize(replace(item, orientation=source))
+                self.assertEqual(record["orientation"], expected)
+                self.assertEqual(record["source_attributes"]["orientation"], source)
+
     def test_rejects_non_list_rings(self) -> None:
         """Malformed ring types produce a useful validation error."""
         for ring in (None, 42, "invalid", {}):
@@ -157,7 +176,11 @@ class WriterTests(unittest.TestCase):
             original = output.read_bytes()
             payload = json.loads(original)
             UUID(payload["delivery_id"])
-            self.assertEqual(payload["format"], "nipkaart-municipal-pilot-1")
+            self.assertEqual(payload["format"], "nipkaart-municipal-2")
+            self.assertEqual(
+                payload["source"], DATASETS["amsterdam"].description.as_dict()
+            )
+            self.assertEqual(payload["records"][0]["orientation"], "perpendicular")
             self.assertEqual(payload["dataset"], "nl-amsterdam")
             self.assertEqual(payload["selection"], "e6a-all")
             self.assertEqual(payload["retrieved_at"], "2026-09-14T00:00:00Z")
@@ -214,6 +237,29 @@ class WriterTests(unittest.TestCase):
                     )
                 self.assertEqual(output.read_bytes(), original)
                 self.assertEqual(list(Path(directory).iterdir()), [output])
+
+
+class BoundsTests(unittest.TestCase):
+    """Deliveries stay inside the area core approves for the source."""
+
+    def test_location_outside_the_dataset_bounds_keeps_the_previous_file(
+        self,
+    ) -> None:
+        """One polygon position outside the bounds rejects the whole delivery."""
+        item = source_record()
+        outside = [[5.2, 52.3], [5.21, 52.3], [5.21, 52.31], [5.2, 52.3]]
+        moved = replace(item, geometry={"type": "Polygon", "coordinates": [outside]})
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "export.json"
+            output.write_bytes(b"last good")
+            with self.assertRaises(ValueError):
+                write_records(
+                    DATASETS["amsterdam"],
+                    mapped_collection(ParkingLocations([moved], 1, 1)),
+                    output,
+                    datetime(2026, 9, 14, tzinfo=UTC),
+                )
+            self.assertEqual(output.read_bytes(), b"last good")
 
 
 class CliTests(unittest.TestCase):

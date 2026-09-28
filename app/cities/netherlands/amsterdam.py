@@ -48,6 +48,17 @@ def validate_geometry(geometry: dict[str, Any]) -> None:
                     raise ValueError(msg)
 
 
+# Amsterdam's parking bay orientation mapped to the format's neutral values.
+ORIENTATIONS = {
+    "Haaks": "perpendicular",
+    "Dwars": "perpendicular",
+    "Langs": "parallel",
+    "Schuin": "angle",
+    "Visgraat": "angle",
+    "Vissengraat": "angle",
+}
+
+
 class Municipality(City):
     """One source selection; no publication or point derivation in the collector."""
 
@@ -104,6 +115,7 @@ class Municipality(City):
             "number": capacity(item.number),
             "street": item.street,
             "access_category": "general",
+            "orientation": ORIENTATIONS.get(item.orientation),
             "source_attributes": {
                 "regimes": item.regimes,
                 "orientation": item.orientation,
