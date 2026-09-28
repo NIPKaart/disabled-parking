@@ -33,6 +33,25 @@ docker compose logs --tail 100 -f collector
 
 Each dataset runs daily and retries failures independently. Set `COLLECTOR_INTERVAL_SECONDS` to change the interval. Keep the data volume during updates: **do not use `docker compose down -v`**, which deletes pending deliveries.
 
+## Retention
+
+Deliveries go to the private EU bucket `nipkaart-imports` under `municipal/<dataset>/`. Core also archives manual uploads there. Set one lifecycle rule on the bucket, once:
+
+| Rule name | Prefix | Delete after | Why |
+| --- | --- | --- | --- |
+| `expire-municipal` | `municipal/` | 30 days | Well beyond the 7-day core outage window; covers every dataset |
+
+Never add a rule without a prefix: the bucket also holds offstreet deliveries with their own rules (see [offstreet-parking](https://github.com/NIPKaart/offstreet-parking#retention)).
+
+**Dashboard:** R2 → `nipkaart-imports` → Settings → Object lifecycle rules → Add rule. Enter the name and prefix, choose to delete objects after 30 days, and save. If an older rule only covers `municipal/nl-amsterdam/`, replace it with this one.
+
+**Or with Wrangler** (after `npx wrangler login`; the bucket is in the EU jurisdiction):
+
+```bash
+npx wrangler r2 bucket lifecycle add nipkaart-imports expire-municipal municipal/ --expire-days 30 --jurisdiction eu
+npx wrangler r2 bucket lifecycle list nipkaart-imports --jurisdiction eu
+```
+
 ## Local export
 
 Requires Python 3.14+ and [uv](https://docs.astral.sh/uv/). No R2 credentials needed.
