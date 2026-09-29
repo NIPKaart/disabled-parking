@@ -31,7 +31,7 @@ cities = [
   "koeln>=0.3.1,<0.4.0",
   "liege>=1.0.0,<2.0.0",
   "namur>=1.0.0,<2.0.0",
-  "odp-amsterdam==7.0.2",
+  "odp-amsterdam==7.1.0",
   "async-timeout>=4,<6",
 ]
 dev = [
