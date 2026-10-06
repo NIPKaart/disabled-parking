@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol
 
+from app.cities.belgium import namur
 from app.cities.netherlands import amsterdam, eindhoven
 
 if TYPE_CHECKING:
@@ -115,6 +116,33 @@ DATASETS = {
             municipality_code="GM0772",
             municipality_name="Eindhoven",
             bounds=(5.32, 51.35, 5.62, 51.52),
+            expected_interval_hours=24,
+        ),
+    ),
+    "namur": Dataset(
+        code="be-namur",
+        selection="pmr-all",
+        source=namur.Municipality,
+        # Source licence, official PMR selection and INS code checked 2026-10-07.
+        description=SourceDescription(
+            name="Namur stationnement PMR en voirie",
+            publisher="Ville de Namur",
+            source_url="https://data.namur.be/explore/dataset/namur-parking-emplacements/",
+            licence="CC-BY-4.0",
+            terms_url="https://data.namur.be/terms/terms-and-conditions/",
+            attribution=(
+                "Ville de Namur; Namur - Parking - Emplacements (points); "
+                "sélection PMR, normalisée par NIPKaart; "
+                "CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). "
+                "Couverture de l'agglomération; liste indicative, "
+                "la signalisation sur place fait foi."
+            ),
+            country="BE",
+            subdivision="BE-WNA",
+            municipality_scheme="be-ins",
+            municipality_code="92094",
+            municipality_name="Namur",
+            bounds=(4.70, 50.35, 5.05, 50.60),
             expected_interval_hours=24,
         ),
     ),

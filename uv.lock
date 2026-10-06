@@ -1,5 +1,5 @@
 version = 1
-revision = 5
+revision = 3
 requires-python = ">=3.14, <4.0"
 
 [[package]]
@@ -311,7 +311,6 @@ wheels = [
 name = "disabled-parking"
 version = "0.0.0"
 source = { virtual = "." }
-default-groups = ["cities", "dev"]
 dependencies = [
     { name = "boto3" },
     { name = "python-dotenv" },
@@ -360,7 +359,7 @@ cities = [
     { name = "hamburg", specifier = ">=3.0.0,<4.0.0" },
     { name = "koeln", specifier = ">=0.3.1,<0.4.0" },
     { name = "liege", specifier = ">=1.0.0,<2.0.0" },
-    { name = "namur", specifier = ">=1.0.0,<2.0.0" },
+    { name = "namur", git = "https://github.com/klaasnicolaas/python-namur?rev=de709a7152c42235d4741c67626da852ef4b9c83" },
     { name = "odp-amsterdam", specifier = "==7.1.0" },
 ]
 dev = [
@@ -654,16 +653,11 @@ wheels = [
 
 [[package]]
 name = "namur"
-version = "1.0.0"
-source = { registry = "https://pypi.org/simple" }
+version = "0.0.0"
+source = { git = "https://github.com/klaasnicolaas/python-namur?rev=de709a7152c42235d4741c67626da852ef4b9c83#de709a7152c42235d4741c67626da852ef4b9c83" }
 dependencies = [
     { name = "aiohttp" },
-    { name = "pytz" },
     { name = "yarl" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/50/03/c41f7cd0f9ae97bbb4b016293da6cb4a9b66f49d06dcf103241095105bb7/namur-1.0.0.tar.gz", hash = "sha256:2e68198fb3ec012c856fa1263338ffc689fd0a41fecd1b0305f9b26478c6d450", size = 8053, upload-time = "2023-12-18T01:04:18.159Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/45/91/b4156a53136db62fc9d65e37b379c2e5a30c200e649a2f58734d92afe533/namur-1.0.0-py3-none-any.whl", hash = "sha256:6a26ce76e03c1c38ee046208219b68104a1935bcb5f83ee096279bac19e156d8", size = 8799, upload-time = "2023-12-18T01:04:16.641Z" },
 ]
 
 [[package]]

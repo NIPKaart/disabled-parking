@@ -30,7 +30,7 @@ cities = [
   "hamburg>=3.0.0,<4.0.0",
   "koeln>=0.3.1,<0.4.0",
   "liege>=1.0.0,<2.0.0",
-  "namur>=1.0.0,<2.0.0",
+  "namur",
   "odp-amsterdam==7.1.0",
   "async-timeout>=4,<6",
 ]
@@ -45,6 +45,10 @@ dev = [
 [tool.uv]
 package = false
 default-groups = ["cities", "dev"]
+
+[tool.uv.sources]
+# Stack prerequisite; replace with a registry constraint after the package release.
+namur = { git = "https://github.com/klaasnicolaas/python-namur", rev = "de709a7152c42235d4741c67626da852ef4b9c83" }
 
 [tool.pylint.BASIC]
 good-names = [

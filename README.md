@@ -19,7 +19,7 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 
-Collect municipal accessible-parking data for [NIPKaart](https://nipkaart.nl). One container collects Amsterdam (`nl-amsterdam`) and Eindhoven (`nl-eindhoven`) and uploads complete deliveries to private Cloudflare R2 for review in core.
+Collect municipal accessible-parking data for [NIPKaart](https://nipkaart.nl). One container collects Amsterdam (`nl-amsterdam`), Eindhoven (`nl-eindhoven`) and Namur (`be-namur`) and uploads complete deliveries to private Cloudflare R2 for review in core.
 
 ## Run
 
@@ -54,12 +54,15 @@ npx wrangler r2 bucket lifecycle list nipkaart-imports --jurisdiction eu
 
 ## Local export
 
+The draft Namur stack pins the prerequisite Python package to an immutable Git commit. Replace that pin with the published registry version before merging this collector PR.
+
 Requires Python 3.14+ and [uv](https://docs.astral.sh/uv/). No R2 credentials needed.
 
 ```bash
 uv sync --locked
 uv run python export.py --city amsterdam --output /tmp/amsterdam.json
 uv run python export.py --city eindhoven --output /tmp/eindhoven.json
+uv run python export.py --city namur --output /tmp/namur.json
 ```
 
 Eindhoven is available for source review only. Publication remains blocked until general access, source-ID stability and data currency are confirmed. Dataset IDs have no legacy aliases or automatic migration.
@@ -77,7 +80,9 @@ See the [delivery contract](https://github.com/NIPKaart/core/blob/main/docs/deve
 
 ### Delivery format
 
-Deliveries use `nipkaart-municipal-2`. Each file carries a `source` block from the dataset registry in `app/datasets.py`, so core can discover the dataset and an administrator can approve it once ([core ADR 0013](https://github.com/NIPKaart/core/blob/main/docs/adr/0013-discover-dataset-sources-from-deliveries-with-one-time-approval.md)): name, publisher, source URL, SPDX licence (`null` when the source publishes none), terms URL, attribution, ISO country and subdivision with the CBS municipality code, bounds and the expected delivery interval. Every position of every record must lie within the bounds. Changing any of these values makes core ask for approval again, except `expected_interval_hours`.
+Deliveries use `nipkaart-municipal-2`. Each file carries a `source` block from the dataset registry in `app/datasets.py`, so core can discover the dataset and an administrator can approve it once ([core ADR 0013](https://github.com/NIPKaart/core/blob/main/docs/adr/0013-discover-dataset-sources-from-deliveries-with-one-time-approval.md)): name, publisher, source URL, SPDX licence (`null` when the source publishes none), terms URL, attribution, ISO country and subdivision with the official municipality code (CBS for the Netherlands, INS for Belgium), bounds and the expected delivery interval. Every position of every record must lie within the bounds. Changing any of these values makes core ask for approval again, except `expected_interval_hours`.
+
+Namur selects the public-road `PMR` records from the city's point dataset. The complete selection covers the published agglomeration, not the entire municipality. Original `identifiant` values are kept; long-term ID stability is not guaranteed by the publisher. General PMR access requires the appropriate parking card and does not imply current availability. Capacity and orientation remain unknown. Original parking-zone hours, dimensions and other claims are preserved in `source_attributes`; they are context, not automatically interpreted as PMR restrictions. `source_updated_at` uses `date_modif`, not portal processing time. The list is indicative and on-site signs remain authoritative.
 
 Records keep the source's own claims in `source_attributes`. Source-specific rules stay in the adapters: Amsterdam delivers only general E6a bays and maps its bay orientation to the neutral `orientation` values `perpendicular`, `parallel` and `angle`; Eindhoven delivers points with `access_category` `unknown` and no orientation.
 
