@@ -102,4 +102,4 @@ mark-parentheses = false
 fixture-parentheses = false
 
 [tool.uv.sources]
-arnhem = { git = "https://github.com/klaasnicolaas/python-arnhem", rev = "fbf57a3e491bc4da133dfa03a953d610a56f690c" }
+arnhem = { git = "https://github.com/klaasnicolaas/python-arnhem", rev = "d5fe31abbafa62b53e7bf6e5d93f9130ba4ee193" }

@@ -11,7 +11,7 @@ from pathlib import Path
 from unittest.mock import AsyncMock, patch
 
 import boto3
-from arnhem import ParkingCollection, ParkingRecord
+from arnhem import ParkingCollection, ParkingSpot
 from arnhem.exceptions import ODPArnhemConnectionError
 from botocore.stub import ANY, Stubber
 
@@ -21,11 +21,20 @@ from app.records import SourceError
 from collector import run_once
 
 
-def source_record(asset_id: int = 1001, sign: str | None = None) -> ParkingRecord:
+def source_record(asset_id: int = 1001, sign: str | None = None) -> ParkingSpot:
     """Use package objects with original asset and ArcGIS object identities."""
-    return ParkingRecord(
-        spot_id=asset_id,
-        object_id=asset_id + 10,
+    return ParkingSpot(
+        spot_id=asset_id + 10,
+        asset_id=asset_id,
+        parking_type="bijzonder",
+        street="Willem van Noortstraat",
+        traffic_sign="E6a",
+        neighborhood=None,
+        neighborhood_code=None,
+        district=None,
+        district_code=None,
+        area=None,
+        coordinates=[[5.9, 52], [5.91, 52], [5.91, 52.01], [5.9, 52]],
         geometry={
             "type": "Polygon",
             "coordinates": [
@@ -45,7 +54,7 @@ def source_record(asset_id: int = 1001, sign: str | None = None) -> ParkingRecor
     )
 
 
-def collection(*records: ParkingRecord) -> ParkingCollection:
+def collection(*records: ParkingSpot) -> ParkingCollection:
     """Represent a verified package collection."""
     return ParkingCollection(list(records), len(records), 1)
 
@@ -138,7 +147,9 @@ class ArnhemTests(unittest.IsolatedAsyncioTestCase):
                 Municipality().normalize(source)
         for value in (0, True, "1001", None):
             with self.subTest(value=value), self.assertRaises(ValueError):
-                Municipality().normalize(replace(source_record(), spot_id=value))
+                Municipality().normalize(replace(source_record(), asset_id=value))
+        with self.assertRaises(TypeError):
+            Municipality().normalize(replace(source_record(), geometry=None))
 
 
 class ArnhemCollectorTests(unittest.TestCase):

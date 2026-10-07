@@ -11,7 +11,7 @@ from app.cities import City
 from app.records import Collection, SourceError
 
 if TYPE_CHECKING:
-    from arnhem import ParkingRecord
+    from arnhem import ParkingSpot
 
 SELECTION_FILTER = "RVV_SOORT='E6a'"
 
@@ -38,21 +38,24 @@ class Municipality(City):
             records, result.total_count, result.pages_fetched, result.complete
         )
 
-    def normalize(self, item: ParkingRecord) -> dict[str, Any]:
+    def normalize(self, item: ParkingSpot) -> dict[str, Any]:
         """Keep asset IDs, source geometry and unknown capacity and source dates."""
         attributes = item.source_attributes
         if (
-            isinstance(item.spot_id, bool)
-            or not isinstance(item.spot_id, int)
-            or item.spot_id <= 0
-            or attributes.get("ID") != item.spot_id
-            or attributes.get("OBJECTID") != item.object_id
+            isinstance(item.asset_id, bool)
+            or not isinstance(item.asset_id, int)
+            or item.asset_id <= 0
+            or attributes.get("ID") != item.asset_id
+            or attributes.get("OBJECTID") != item.spot_id
         ):
             msg = "Invalid Arnhem source identity"
             raise ValueError(msg)
         if attributes.get("RVV_SOORT") != "E6a":
             msg = "Unexpected Arnhem parking category"
             raise ValueError(msg)
+        if not isinstance(item.geometry, dict):
+            msg = "Missing Arnhem collection geometry"
+            raise TypeError(msg)
         street, sign = attributes.get("STRAAT"), attributes.get("BORD")
         if street is not None and (not isinstance(street, str) or len(street) > 255):
             msg = "Invalid Arnhem street"
@@ -61,7 +64,7 @@ class Municipality(City):
             msg = "Invalid Arnhem additional signage"
             raise TypeError(msg)
         return {
-            "external_id": str(item.spot_id),
+            "external_id": str(item.asset_id),
             "geometry": item.geometry,
             "number": None,
             "street": street,

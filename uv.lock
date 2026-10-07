@@ -98,7 +98,7 @@ wheels = [
 [[package]]
 name = "arnhem"
 version = "0.0.0"
-source = { git = "https://github.com/klaasnicolaas/python-arnhem?rev=fbf57a3e491bc4da133dfa03a953d610a56f690c#fbf57a3e491bc4da133dfa03a953d610a56f690c" }
+source = { git = "https://github.com/klaasnicolaas/python-arnhem?rev=d5fe31abbafa62b53e7bf6e5d93f9130ba4ee193#d5fe31abbafa62b53e7bf6e5d93f9130ba4ee193" }
 dependencies = [
     { name = "aiohttp" },
     { name = "yarl" },
@@ -346,7 +346,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 cities = [
     { name = "antwerpen", specifier = ">=1.0.0,<2.0.0" },
-    { name = "arnhem", git = "https://github.com/klaasnicolaas/python-arnhem?rev=fbf57a3e491bc4da133dfa03a953d610a56f690c" },
+    { name = "arnhem", git = "https://github.com/klaasnicolaas/python-arnhem?rev=d5fe31abbafa62b53e7bf6e5d93f9130ba4ee193" },
     { name = "async-timeout", specifier = ">=4,<6" },
     { name = "brussel", specifier = ">=0.2.1,<0.3.0" },
     { name = "dresden", specifier = ">=0.2.1,<0.3.0" },
