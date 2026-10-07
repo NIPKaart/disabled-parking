@@ -5,7 +5,7 @@ from __future__ import annotations
 import math
 from typing import Any
 
-from eindhoven import ODPEindhoven, ParkingCollectionRecord, ParkingType
+from eindhoven import ODPEindhoven, ParkingSpot, ParkingType
 from eindhoven.exceptions import ODPEindhovenError
 
 from app.cities import City
@@ -50,9 +50,7 @@ class Municipality(City):
             collection.complete,
         )
 
-    def normalize_collection_record(
-        self, item: ParkingCollectionRecord
-    ) -> dict[str, Any]:
+    def normalize_collection_record(self, item: ParkingSpot) -> dict[str, Any]:
         """Check source identity while mapping a package record to NIPKaart."""
         record = self.normalize(item.source_attributes)
         if item.spot_id != record["external_id"]:

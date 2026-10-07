@@ -84,7 +84,7 @@ All connected municipal adapters call `parking_collection(parking_type=..., max_
 
 `max_records` is a safety ceiling, never a request to truncate. Source errors and observed count/version inconsistencies return no collection; the collector keeps its last valid delivery. A package may prove a complete empty selection, but the exporter still rejects empty deliveries. `source_version` is an opaque dataset-wide revision or `None`; Amsterdam has no verified dataset-wide revision, while Eindhoven and Namur compare Opendatasoft processing metadata before and after collection. This does not guarantee a transactional snapshot or current availability.
 
-The draft stack temporarily pins exact commits for Amsterdam, Eindhoven and Namur. Merge and publish the package releases first, then replace all three Git pins with published version constraints and refresh the lockfile before merging this collector change. Existing capped/inspection package APIs stay available.
+The draft stack temporarily pins exact commits for Amsterdam, Eindhoven and Namur. Merge and publish the package releases first, then replace all three Git pins with published version constraints and refresh the lockfile before merging this collector change. Capped/inspection methods stay available, but Eindhoven now uses only the v2.1 source endpoint and one `ParkingSpot` model. Its `spot_id` is the original `objectid`; consumers of the old portal `recordid` and nested v1 response model must migrate with the major package release.
 
 ### Delivery format
 
