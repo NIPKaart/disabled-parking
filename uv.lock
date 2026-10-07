@@ -355,11 +355,11 @@ cities = [
     { name = "brussel", specifier = ">=0.2.1,<0.3.0" },
     { name = "dresden", specifier = ">=0.2.1,<0.3.0" },
     { name = "dusseldorf", specifier = ">=1.0.0,<2.0.0" },
-    { name = "eindhoven", specifier = ">=6.0.0,<7.0.0" },
+    { name = "eindhoven", specifier = "==6.0.0" },
     { name = "hamburg", specifier = ">=3.0.0,<4.0.0" },
     { name = "koeln", specifier = ">=0.3.1,<0.4.0" },
     { name = "liege", specifier = ">=1.0.0,<2.0.0" },
-    { name = "namur", specifier = ">=2.0.0,<3.0.0" },
+    { name = "namur", specifier = "==2.0.0" },
     { name = "odp-amsterdam", specifier = "==7.2.0" },
 ]
 dev = [
