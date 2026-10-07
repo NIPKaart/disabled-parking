@@ -54,7 +54,7 @@ npx wrangler r2 bucket lifecycle list nipkaart-imports --jurisdiction eu
 
 ## Local export
 
-The draft Namur stack pins the prerequisite Python package to an immutable Git commit. Replace that pin with the published registry version before merging this collector PR.
+The draft stack pins the three prerequisite Python packages to immutable Git commits. Replace those pins with published registry versions before merging this collector PR.
 
 Requires Python 3.14+ and [uv](https://docs.astral.sh/uv/). No R2 credentials needed.
 
@@ -77,6 +77,14 @@ uv run pre-commit run --all-files
 ```
 
 See the [delivery contract](https://github.com/NIPKaart/core/blob/main/docs/development/data-import-contract.md) for source mappings, core registration and review requirements.
+
+### Package snapshot contract
+
+All connected municipal adapters call `parking_snapshot(parking_type=..., max_records=...)` and receive `ParkingSnapshot(records, total_count, pages_fetched, source_version, complete=True)`. The package owns source requests, pagination, parsing, original IDs, raw source attributes and completeness checks. The collector owns the approved selection, NIPKaart mapping, bounds checks, atomic file output and R2 delivery. See the [shared package contract](https://github.com/NIPKaart/core/blob/main/docs/development/data-import-contract.md#reusable-package-snapshot-contract) for the fields, errors and release order.
+
+`max_records` is a safety ceiling, never a request to truncate. Source errors and observed count/version inconsistencies return no snapshot; the collector keeps its last valid delivery. A package may prove a complete empty selection, but the exporter still rejects empty deliveries. `source_version` is an opaque dataset-wide revision or `None`; Amsterdam has no verified dataset-wide revision, while Eindhoven and Namur compare Opendatasoft processing metadata before and after collection. This does not guarantee a transactional snapshot or current availability.
+
+The draft stack temporarily pins exact commits for Amsterdam, Eindhoven and Namur. Merge and publish the package releases first, then replace all three Git pins with published version constraints and refresh the lockfile before merging this collector change. Existing capped/inspection package APIs stay available.
 
 ### Delivery format
 

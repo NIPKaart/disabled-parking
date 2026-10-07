@@ -2,45 +2,17 @@
 
 from __future__ import annotations
 
-import json
 import math
 from typing import Any
 
-from aiohttp import ClientError, ClientSession, ClientTimeout
+from eindhoven import ODPEindhoven, ParkingSnapshotRecord, ParkingType
+from eindhoven.exceptions import ODPEindhovenError
 
 from app.cities import City
 from app.records import Collection, SourceError, capacity
 
 PARKING_TYPE = "Parkeerplaats Gehandicapten"
-SOURCE_URL = (
-    "https://data.eindhoven.nl/api/explore/v2.1/catalog/datasets/parkeerplaatsen"
-)
 MAX_RECORDS = 9900
-MAX_RESPONSE_BYTES = 2 * 1024 * 1024
-PAGE_SIZE = 100
-
-
-async def request(
-    client: ClientSession, path: str = "", params: dict[str, Any] | None = None
-) -> dict[str, Any]:
-    """Read a bounded public response with the session's connection/read deadline."""
-    try:
-        async with client.get(SOURCE_URL + path, params=params) as response:
-            response.raise_for_status()
-            body = bytearray()
-            async for chunk in response.content.iter_chunked(65536):
-                body.extend(chunk)
-                if len(body) > MAX_RESPONSE_BYTES:
-                    msg = "Eindhoven response exceeds the size limit"
-                    raise ValueError(msg)
-            result = json.loads(body)
-            if not isinstance(result, dict):
-                msg = "Expected an Eindhoven response object"
-                raise TypeError(msg)
-            return result
-    except ClientError as error:
-        msg = "Eindhoven source request failed"
-        raise SourceError(msg) from error
 
 
 class Municipality(City):
@@ -52,55 +24,39 @@ class Municipality(City):
         self.cbs_code = "0772"
 
     async def collect(self) -> Collection:
-        """Page in source-ID order and reject changed totals or portal versions."""
-        async with ClientSession(timeout=ClientTimeout(total=30, connect=10)) as client:
-            before = await request(client)
-            version = before["metas"]["default"]["data_processed"]
-            if not isinstance(version, str) or not version:
-                msg = "Eindhoven portal version is missing"
-                raise ValueError(msg)
-            records: list[dict[str, Any]] = []
-            total = None
-            pages = 0
-            while total is None or len(records) < total:
-                page = await request(
-                    client,
-                    "/records",
-                    {
-                        "where": f"type_en_merk='{PARKING_TYPE}'",
-                        "order_by": "objectid asc",
-                        "limit": PAGE_SIZE,
-                        "offset": len(records),
-                    },
+        """Map a complete selection retrieved and verified by the source package."""
+        try:
+            async with ODPEindhoven() as client:
+                snapshot = await client.parking_snapshot(
+                    parking_type=ParkingType.DISABLED_PARKING,
+                    max_records=MAX_RECORDS,
                 )
-                count = page["total_count"]
-                if (
-                    not isinstance(count, int)
-                    or isinstance(count, bool)
-                    or not 0 < count <= MAX_RECORDS
-                    or (total is not None and total != count)
-                ):
-                    msg = "Invalid or changing Eindhoven source count"
-                    raise ValueError(msg)
-                total = count
-                batch = page["results"]
-                if not isinstance(batch, list) or len(batch) != min(
-                    PAGE_SIZE, total - len(records)
-                ):
-                    msg = "Eindhoven returned an incomplete page"
-                    raise ValueError(msg)
-                records.extend(batch)
-                pages += 1
-            after = await request(client)
-            if after["metas"]["default"]["data_processed"] != version:
-                msg = "Eindhoven dataset changed during collection"
-                raise ValueError(msg)
-        normalized = [self.normalize(record) for record in records]
-        ids = [record["external_id"] for record in normalized]
-        if len(set(ids)) != total:
-            msg = "Eindhoven returned duplicate source IDs"
+            normalized = [
+                self.normalize_snapshot_record(item) for item in snapshot.records
+            ]
+        except (
+            ODPEindhovenError,
+            TimeoutError,
+            ValueError,
+            TypeError,
+            KeyError,
+        ) as error:
+            msg = "Eindhoven source retrieval or mapping failed"
+            raise SourceError(msg) from error
+        return Collection(
+            normalized,
+            snapshot.total_count,
+            snapshot.pages_fetched,
+            snapshot.complete,
+        )
+
+    def normalize_snapshot_record(self, item: ParkingSnapshotRecord) -> dict[str, Any]:
+        """Check source identity while mapping a package record to NIPKaart."""
+        record = self.normalize(item.source_attributes)
+        if item.spot_id != record["external_id"]:
+            msg = "Eindhoven package ID differs from the original objectid"
             raise ValueError(msg)
-        return Collection(normalized, total, pages, complete=True)
+        return record
 
     def normalize(self, item: dict[str, Any]) -> dict[str, Any]:
         """Retain original object IDs and Points; unknown access stays unknown."""
@@ -147,9 +103,6 @@ class Municipality(City):
             "street": street,
             "access_category": "unknown",
             "orientation": None,
-            "source_attributes": {
-                "objectid": object_id,
-                "type_en_merk": item["type_en_merk"],
-            },
+            "source_attributes": item.copy(),
             "source_updated_at": None,
         }

@@ -26,12 +26,12 @@ cities = [
   "brussel>=0.2.1,<0.3.0",
   "dresden>=0.2.1,<0.3.0",
   "dusseldorf>=1.0.0,<2.0.0",
-  "eindhoven>=4.0.0,<5.0.0",
+  "eindhoven",
   "hamburg>=3.0.0,<4.0.0",
   "koeln>=0.3.1,<0.4.0",
   "liege>=1.0.0,<2.0.0",
   "namur",
-  "odp-amsterdam==7.1.0",
+  "odp-amsterdam",
   "async-timeout>=4,<6",
 ]
 dev = [
@@ -47,8 +47,10 @@ package = false
 default-groups = ["cities", "dev"]
 
 [tool.uv.sources]
+eindhoven = { git = "https://github.com/klaasnicolaas/python-eindhoven", rev = "86c2c2e047d802166919bfd9e21f8cf377027470" }
+odp-amsterdam = { git = "https://github.com/klaasnicolaas/python-odp-amsterdam", rev = "dbb24b542244249f8edf4027d3e1cfe22bc77579" }
 # Stack prerequisite; replace with a registry constraint after the package release.
-namur = { git = "https://github.com/klaasnicolaas/python-namur", rev = "de709a7152c42235d4741c67626da852ef4b9c83" }
+namur = { git = "https://github.com/klaasnicolaas/python-namur", rev = "6f4a40ede4d7d30c6272cc745b794a7b7f8c99c9" }
 
 [tool.pylint.BASIC]
 good-names = [

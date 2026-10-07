@@ -8,10 +8,14 @@ import tempfile
 import unittest
 from copy import deepcopy
 from pathlib import Path
-from unittest.mock import AsyncMock, patch
+from unittest.mock import patch
+
+from eindhoven import ParkingSnapshot, ParkingSnapshotRecord, ParkingType
+from eindhoven.exceptions import ODPEindhovenResultsError
 
 from app.cities.netherlands.eindhoven import Municipality
 from app.export import export_dataset
+from app.records import SourceError
 
 
 def source_record(object_id: int = 15626) -> dict:
@@ -30,85 +34,86 @@ def source_record(object_id: int = 15626) -> dict:
     }
 
 
-def metadata(version: str = "2026-09-15T13:42:49+00:00") -> dict:
-    """Provide a portal version for detecting changes during retrieval."""
-    return {"metas": {"default": {"data_processed": version}}}
+def snapshot(*records: dict) -> ParkingSnapshot:
+    """Make small package results without duplicating source pagination tests."""
+    return ParkingSnapshot(
+        [
+            ParkingSnapshotRecord(
+                str(row["objectid"]), row, row["geo_shape"]["geometry"]
+            )
+            for row in records
+        ],
+        len(records),
+        1,
+        "2026-09-15T13:42:49+00:00",
+    )
 
 
 class EindhovenTests(unittest.IsolatedAsyncioTestCase):
-    """Use the real exporter and mapper with bounded fake source responses."""
+    """Use the real exporter and mapper with source-package objects."""
 
     async def test_complete_export_preserves_source_without_claiming_general_access(
         self,
     ) -> None:
-        """Every page is fetched, IDs are source IDs and unknown remains unknown."""
+        """The package owns retrieval; the collector keeps raw claims and unknowns."""
         first, second = source_record(), source_record(15627)
         second["aantal"] = None
         second["straat"] = None
         with (
             tempfile.TemporaryDirectory() as directory,
-            patch("app.cities.netherlands.eindhoven.PAGE_SIZE", 1),
-            patch(
-                "app.cities.netherlands.eindhoven.request",
-                new_callable=AsyncMock,
-                side_effect=[
-                    metadata(),
-                    {"total_count": 2, "results": [first]},
-                    {"total_count": 2, "results": [second]},
-                    metadata(),
-                ],
-            ) as request,
+            patch("app.cities.netherlands.eindhoven.ODPEindhoven") as factory,
         ):
+            client = factory.return_value.__aenter__.return_value
+            client.parking_snapshot.return_value = snapshot(first, second)
             output = Path(directory) / "eindhoven.json"
             self.assertEqual(await export_dataset("eindhoven", output), 2)
             data = json.loads(output.read_bytes())
+            client.parking_snapshot.assert_awaited_once_with(
+                parking_type=ParkingType.DISABLED_PARKING, max_records=9900
+            )
         self.assertEqual(data["dataset"], "nl-eindhoven")
         self.assertEqual(data["selection"], "gehandicapten-all")
         self.assertEqual(data["source_count"], 2)
         self.assertTrue(data["complete"])
         self.assertEqual(data["records"][0]["external_id"], "15626")
         self.assertEqual(data["records"][0]["geometry"], first["geo_shape"]["geometry"])
+        self.assertEqual(data["records"][0]["source_attributes"], first)
         self.assertEqual(data["records"][0]["number"], 1)
         self.assertEqual(data["records"][0]["access_category"], "unknown")
         self.assertIsNone(data["records"][0]["source_updated_at"])
         self.assertIsNone(data["records"][1]["number"])
         self.assertIsNone(data["records"][1]["street"])
-        self.assertEqual(request.await_args_list[2].args[2]["offset"], 1)
-        self.assertEqual(request.await_args_list[1].args[2]["order_by"], "objectid asc")
 
-    async def test_incomplete_or_changing_source_preserves_last_good_file(self) -> None:
-        """No empty, truncated, duplicate or changing selection becomes complete."""
-        first = {"total_count": 2, "results": [source_record()]}
-        cases = [
-            [metadata(), {"total_count": 0, "results": []}],
-            [metadata(), {"total_count": True, "results": [source_record()]}],
-            [metadata(), {"total_count": 10001, "results": []}],
-            [metadata(), first, {"total_count": 3, "results": [source_record(15627)]}],
-            [metadata(), first, {"total_count": 2, "results": []}],
-            [metadata(), first, first, metadata()],
-            [
-                metadata(),
-                {"total_count": 1, "results": [source_record()]},
-                metadata("changed"),
-            ],
-            [metadata(), TimeoutError("source deadline")],
-            [
-                metadata(),
-                {"total_count": 1, "results": [source_record(), source_record(15627)]},
-            ],
-        ]
-        for responses in cases:
+    async def test_package_failures_and_invalid_snapshots_preserve_last_good_file(
+        self,
+    ) -> None:
+        """Source errors and invalid mappings never replace the last valid export."""
+        duplicate = snapshot(source_record(), source_record())
+        incomplete = snapshot(source_record())
+        incomplete.complete = False
+        mismatched = snapshot(source_record())
+        mismatched.records[0].spot_id = "wrong"
+        for result in [
+            snapshot(),
+            duplicate,
+            incomplete,
+            mismatched,
+            ODPEindhovenResultsError("incomplete source"),
+            TimeoutError("source deadline"),
+        ]:
             with (
-                self.subTest(responses=responses),
+                self.subTest(result=result),
                 tempfile.TemporaryDirectory() as directory,
-                patch("app.cities.netherlands.eindhoven.PAGE_SIZE", 1),
-                patch(
-                    "app.cities.netherlands.eindhoven.request", side_effect=responses
-                ),
+                patch("app.cities.netherlands.eindhoven.ODPEindhoven") as factory,
             ):
+                client = factory.return_value.__aenter__.return_value
+                if isinstance(result, Exception):
+                    client.parking_snapshot.side_effect = result
+                else:
+                    client.parking_snapshot.return_value = result
                 output = Path(directory) / "eindhoven.json"
                 output.write_bytes(b"last good")
-                with self.assertRaises((ValueError, TimeoutError)):
+                with self.assertRaises((SourceError, ValueError)):
                     await export_dataset("eindhoven", output)
                 self.assertEqual(output.read_bytes(), b"last good")
 
