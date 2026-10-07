@@ -22,7 +22,7 @@ Documentation = "https://github.com/nipkaart/disabled-parking"
 [dependency-groups]
 cities = [
   "antwerpen>=1.0.0,<2.0.0",
-  "arnhem>=0.1.0,<0.2.0",
+  "arnhem>=1.0.0,<1.1.0",
   "brussel>=0.2.1,<0.3.0",
   "dresden>=0.2.1,<0.3.0",
   "dusseldorf>=1.0.0,<2.0.0",
