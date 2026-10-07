@@ -47,4 +47,4 @@ The Amsterdam, Eindhoven and Namur package releases are pinned exactly in [`pypr
 
 ## Source review
 
-Eindhoven is available for source review only. Publication remains blocked until general access, source-ID stability and data currency are confirmed. Dataset IDs have no legacy aliases or automatic migration.
+Eindhoven remains recommended for source review: its public-domain reuse statement is verified, but general access, source-ID continuity and content currency remain unverified. See the [dated source assessment](eindhoven-source-review.md) for evidence and the questions requiring publisher confirmation. Core retains its normal one-time source approval; this recommendation does not introduce a dataset-specific runtime block. Dataset IDs have no legacy aliases or automatic migration.
