@@ -14,7 +14,7 @@ from pathlib import Path
 from unittest.mock import AsyncMock, patch
 from uuid import UUID
 
-from odp_amsterdam.models import ParkingLocations, ParkingSpot
+from odp_amsterdam.models import ParkingCollection, ParkingLocations, ParkingSpot
 
 from app.cities.netherlands.amsterdam import Municipality
 from app.datasets import DATASETS
@@ -297,16 +297,18 @@ class CollectionTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_package_selection(self) -> None:
         """Use the released package for the bounded E6a selection."""
-        result = ParkingLocations([source_record()], 1, 1)
+        result = ParkingCollection([source_record()], 1, 1)
         with patch("app.cities.netherlands.amsterdam.ODPAmsterdam") as factory:
             client = factory.return_value.__aenter__.return_value
-            client.locations.return_value = result
+            client.parking_collection.return_value = result
             self.assertIs(await Municipality().async_get_locations(), result)
-            client.locations.assert_awaited_once_with(limit=10001, parking_type="E6a")
+            client.parking_collection.assert_awaited_once_with(
+                max_records=10000, parking_type="E6a"
+            )
 
     async def test_collection_success_and_failure(self) -> None:
         """Verified package metadata reaches the writer; fetch errors do not."""
-        result = ParkingLocations([source_record()], 1, 1)
+        result = ParkingCollection([source_record()], 1, 1)
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "export.json"
             with patch(
