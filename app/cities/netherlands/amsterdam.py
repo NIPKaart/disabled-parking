@@ -12,7 +12,7 @@ from app.cities import City
 from app.records import Collection, SourceError, capacity
 
 if TYPE_CHECKING:
-    from odp_amsterdam.models import ParkingSnapshot, ParkingSpot
+    from odp_amsterdam.models import ParkingCollection, ParkingSpot
 
 MAX_RECORDS = 10000
 
@@ -67,10 +67,10 @@ class Municipality(City):
         super().__init__(name="Amsterdam", country="Netherlands", geo_code="NL-NH")
         self.cbs_code = "0363"
 
-    async def async_get_locations(self) -> ParkingSnapshot:
+    async def async_get_locations(self) -> ParkingCollection:
         """Let the universal package retrieve and verify the bounded selection."""
         async with ODPAmsterdam() as client:
-            return await client.parking_snapshot(
+            return await client.parking_collection(
                 parking_type="E6a", max_records=MAX_RECORDS
             )
 

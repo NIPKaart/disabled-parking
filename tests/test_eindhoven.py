@@ -10,7 +10,7 @@ from copy import deepcopy
 from pathlib import Path
 from unittest.mock import patch
 
-from eindhoven import ParkingSnapshot, ParkingSnapshotRecord, ParkingType
+from eindhoven import ParkingCollection, ParkingCollectionRecord, ParkingType
 from eindhoven.exceptions import ODPEindhovenResultsError
 
 from app.cities.netherlands.eindhoven import Municipality
@@ -34,11 +34,11 @@ def source_record(object_id: int = 15626) -> dict:
     }
 
 
-def snapshot(*records: dict) -> ParkingSnapshot:
+def collection(*records: dict) -> ParkingCollection:
     """Make small package results without duplicating source pagination tests."""
-    return ParkingSnapshot(
+    return ParkingCollection(
         [
-            ParkingSnapshotRecord(
+            ParkingCollectionRecord(
                 str(row["objectid"]), row, row["geo_shape"]["geometry"]
             )
             for row in records
@@ -64,11 +64,11 @@ class EindhovenTests(unittest.IsolatedAsyncioTestCase):
             patch("app.cities.netherlands.eindhoven.ODPEindhoven") as factory,
         ):
             client = factory.return_value.__aenter__.return_value
-            client.parking_snapshot.return_value = snapshot(first, second)
+            client.parking_collection.return_value = collection(first, second)
             output = Path(directory) / "eindhoven.json"
             self.assertEqual(await export_dataset("eindhoven", output), 2)
             data = json.loads(output.read_bytes())
-            client.parking_snapshot.assert_awaited_once_with(
+            client.parking_collection.assert_awaited_once_with(
                 parking_type=ParkingType.DISABLED_PARKING, max_records=9900
             )
         self.assertEqual(data["dataset"], "nl-eindhoven")
@@ -84,17 +84,17 @@ class EindhovenTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(data["records"][1]["number"])
         self.assertIsNone(data["records"][1]["street"])
 
-    async def test_package_failures_and_invalid_snapshots_preserve_last_good_file(
+    async def test_package_failures_and_invalid_collections_preserve_last_good_file(
         self,
     ) -> None:
         """Source errors and invalid mappings never replace the last valid export."""
-        duplicate = snapshot(source_record(), source_record())
-        incomplete = snapshot(source_record())
+        duplicate = collection(source_record(), source_record())
+        incomplete = collection(source_record())
         incomplete.complete = False
-        mismatched = snapshot(source_record())
+        mismatched = collection(source_record())
         mismatched.records[0].spot_id = "wrong"
         for result in [
-            snapshot(),
+            collection(),
             duplicate,
             incomplete,
             mismatched,
@@ -108,9 +108,9 @@ class EindhovenTests(unittest.IsolatedAsyncioTestCase):
             ):
                 client = factory.return_value.__aenter__.return_value
                 if isinstance(result, Exception):
-                    client.parking_snapshot.side_effect = result
+                    client.parking_collection.side_effect = result
                 else:
-                    client.parking_snapshot.return_value = result
+                    client.parking_collection.return_value = result
                 output = Path(directory) / "eindhoven.json"
                 output.write_bytes(b"last good")
                 with self.assertRaises((SourceError, ValueError)):

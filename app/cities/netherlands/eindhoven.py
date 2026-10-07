@@ -5,7 +5,7 @@ from __future__ import annotations
 import math
 from typing import Any
 
-from eindhoven import ODPEindhoven, ParkingSnapshotRecord, ParkingType
+from eindhoven import ODPEindhoven, ParkingCollectionRecord, ParkingType
 from eindhoven.exceptions import ODPEindhovenError
 
 from app.cities import City
@@ -27,12 +27,12 @@ class Municipality(City):
         """Map a complete selection retrieved and verified by the source package."""
         try:
             async with ODPEindhoven() as client:
-                snapshot = await client.parking_snapshot(
+                collection = await client.parking_collection(
                     parking_type=ParkingType.DISABLED_PARKING,
                     max_records=MAX_RECORDS,
                 )
             normalized = [
-                self.normalize_snapshot_record(item) for item in snapshot.records
+                self.normalize_collection_record(item) for item in collection.records
             ]
         except (
             ODPEindhovenError,
@@ -45,12 +45,14 @@ class Municipality(City):
             raise SourceError(msg) from error
         return Collection(
             normalized,
-            snapshot.total_count,
-            snapshot.pages_fetched,
-            snapshot.complete,
+            collection.total_count,
+            collection.pages_fetched,
+            collection.complete,
         )
 
-    def normalize_snapshot_record(self, item: ParkingSnapshotRecord) -> dict[str, Any]:
+    def normalize_collection_record(
+        self, item: ParkingCollectionRecord
+    ) -> dict[str, Any]:
         """Check source identity while mapping a package record to NIPKaart."""
         record = self.normalize(item.source_attributes)
         if item.spot_id != record["external_id"]:

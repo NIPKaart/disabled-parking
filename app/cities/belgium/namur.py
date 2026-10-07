@@ -25,20 +25,22 @@ class Municipality(City):
             return await client.parking_spaces(limit=1000, parking_type=ParkingType.PMR)
 
     async def collect(self) -> Collection:
-        """Use the public package snapshot API for pagination and completeness."""
+        """Use the public package collection API for pagination and completeness."""
         try:
             async with ODPNamur() as client:
-                snapshot = await client.parking_snapshot(parking_type=ParkingType.PMR)
-            records = [self.normalize(item) for item in snapshot.records]
+                collection = await client.parking_collection(
+                    parking_type=ParkingType.PMR
+                )
+            records = [self.normalize(item) for item in collection.records]
         except (ODPNamurError, TimeoutError, ValueError, TypeError, KeyError) as error:
             message = "Namur source retrieval or mapping failed"
             raise SourceError(message) from error
         records.sort(key=lambda record: record["external_id"])
         return Collection(
             records,
-            total_count=snapshot.total_count,
-            pages_fetched=snapshot.pages_fetched,
-            complete=snapshot.complete,
+            total_count=collection.total_count,
+            pages_fetched=collection.pages_fetched,
+            complete=collection.complete,
         )
 
     def normalize(self, item: ParkingSpot) -> dict[str, Any]:

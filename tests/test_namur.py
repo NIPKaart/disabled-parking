@@ -12,7 +12,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import AsyncMock, patch
 
-from namur import ParkingSnapshot, ParkingSpot, ParkingType
+from namur import ParkingCollection, ParkingSpot, ParkingType
 from namur.exceptions import ODPNamurConnectionError
 
 from app.cities.belgium.namur import Municipality
@@ -45,9 +45,9 @@ def source_spot(spot_id: str = "00040") -> ParkingSpot:
     )
 
 
-def snapshot(*records: ParkingSpot) -> ParkingSnapshot:
+def collection(*records: ParkingSpot) -> ParkingCollection:
     """Represent the package's verified full source selection."""
-    return ParkingSnapshot(list(records), len(records), 1, "2026-10-06T05:03:23Z")
+    return ParkingCollection(list(records), len(records), 1, "2026-10-06T05:03:23Z")
 
 
 class NamurTests(unittest.IsolatedAsyncioTestCase):
@@ -68,11 +68,13 @@ class NamurTests(unittest.IsolatedAsyncioTestCase):
             patch("app.cities.belgium.namur.ODPNamur") as factory,
         ):
             client = factory.return_value.__aenter__.return_value
-            client.parking_snapshot = AsyncMock(return_value=snapshot(second, first))
+            client.parking_collection = AsyncMock(
+                return_value=collection(second, first)
+            )
             output = Path(directory) / "namur.json"
             self.assertEqual(await export_dataset("namur", output), 2)
             data = json.loads(output.read_bytes())
-        client.parking_snapshot.assert_awaited_once_with(parking_type=ParkingType.PMR)
+        client.parking_collection.assert_awaited_once_with(parking_type=ParkingType.PMR)
         self.assertEqual(data["format"], "nipkaart-municipal-2")
         self.assertEqual(data["dataset"], "be-namur")
         self.assertEqual(data["selection"], "pmr-all")
@@ -104,19 +106,19 @@ class NamurTests(unittest.IsolatedAsyncioTestCase):
             data["records"][1]["source_attributes"]["horaire"], "max. 30 minutes"
         )
 
-    async def test_failed_incomplete_or_invalid_snapshot_keeps_previous_export(
+    async def test_failed_incomplete_or_invalid_collection_keeps_previous_export(
         self,
     ) -> None:
-        """Reject failed, truncated, duplicate and out-of-area snapshots."""
+        """Reject failed, truncated, duplicate and out-of-area collections."""
         outside = source_spot()
         outside.source_attributes["geo_shape"]["coordinates"] = [4.2, 50.46]
         cases = [
-            snapshot(),
-            snapshot(source_spot(), source_spot()),
-            replace(snapshot(source_spot()), complete=False),
-            replace(snapshot(source_spot()), total_count=2),
-            replace(snapshot(source_spot()), pages_fetched=0),
-            snapshot(outside),
+            collection(),
+            collection(source_spot(), source_spot()),
+            replace(collection(source_spot()), complete=False),
+            replace(collection(source_spot()), total_count=2),
+            replace(collection(source_spot()), pages_fetched=0),
+            collection(outside),
             ODPNamurConnectionError("Source unavailable"),
             TimeoutError("Deadline exceeded"),
         ]
@@ -127,7 +129,7 @@ class NamurTests(unittest.IsolatedAsyncioTestCase):
                 patch("app.cities.belgium.namur.ODPNamur") as factory,
             ):
                 client = factory.return_value.__aenter__.return_value
-                client.parking_snapshot = AsyncMock(
+                client.parking_collection = AsyncMock(
                     side_effect=result if isinstance(result, Exception) else None,
                     return_value=result,
                 )
