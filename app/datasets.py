@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol
 
 from app.cities.belgium import namur
-from app.cities.netherlands import amsterdam, eindhoven
+from app.cities.netherlands import amsterdam, arnhem, eindhoven
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -93,6 +93,32 @@ DATASETS = {
             municipality_code="GM0363",
             municipality_name="Amsterdam",
             bounds=(4.65, 52.2, 5.15, 52.5),
+            expected_interval_hours=24,
+        ),
+    ),
+    "arnhem": Dataset(
+        code="nl-arnhem",
+        selection="e6a-all",
+        source=arnhem.Municipality,
+        # Publisher, licence and daily cadence checked on 2026-10-07.
+        description=SourceDescription(
+            name="Arnhem gehandicaptenparkeervakken E6a",
+            publisher="Gemeente Arnhem",
+            source_url="https://geo.arnhem.nl/arcgis/rest/services/OpenData/Parkeervakken/MapServer/0",
+            licence="CC-BY-4.0",
+            terms_url="https://data.overheid.nl/dataset/parkeervakken-arnhem",
+            attribution=(
+                "Gemeente Arnhem; Parkeervakken, selectie RVV_SOORT=E6a; "
+                "genormaliseerd door NIPKaart; "
+                "CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). "
+                "Aanvullende bordtekst behouden; bebording ter plaatse is leidend."
+            ),
+            country="NL",
+            subdivision="NL-GE",
+            municipality_scheme="nl-cbs",
+            municipality_code="GM0202",
+            municipality_name="Arnhem",
+            bounds=(5.80, 51.93, 6.02, 52.09),
             expected_interval_hours=24,
         ),
     ),
