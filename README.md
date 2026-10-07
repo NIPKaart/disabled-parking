@@ -54,7 +54,7 @@ npx wrangler r2 bucket lifecycle list nipkaart-imports --jurisdiction eu
 
 ## Local export
 
-The draft stack pins the three prerequisite Python packages to immutable Git commits. Replace those pins with published registry versions before merging this collector PR.
+The collector uses the published PyPI packages: `odp-amsterdam` 7.2.0, `eindhoven` 6.0.0 and `namur` 2.0.0. The lockfile records the exact resolved versions and distribution hashes.
 
 Requires Python 3.14+ and [uv](https://docs.astral.sh/uv/). No R2 credentials needed.
 
@@ -84,7 +84,7 @@ All connected municipal adapters call `parking_collection(parking_type=..., max_
 
 `max_records` is a safety ceiling, never a request to truncate. Source errors and observed count/version inconsistencies return no collection; the collector keeps its last valid delivery. A package may prove a complete empty selection, but the exporter still rejects empty deliveries. `source_version` is an opaque dataset-wide revision or `None`; Amsterdam has no verified dataset-wide revision, while Eindhoven and Namur compare Opendatasoft processing metadata before and after collection. This does not guarantee a transactional snapshot or current availability.
 
-The draft stack temporarily pins exact commits for Amsterdam, Eindhoven and Namur. Merge and publish the package releases first, then replace all three Git pins with published version constraints and refresh the lockfile before merging this collector change. Capped/inspection methods stay available, but Eindhoven now uses only the v2.1 source endpoint and one `ParkingSpot` model. Its `spot_id` is the original `objectid`; consumers of the old portal `recordid` and `record_timestamp` must migrate with the major package release. Typed `ParkingData` and `Geometry` retain convenient source-field and coordinate access alongside complete `source_attributes`.
+Capped/inspection methods stay available, but Eindhoven now uses only the v2.1 source endpoint and one `ParkingSpot` model. Its `spot_id` is the original `objectid`; consumers of the old portal `recordid` and `record_timestamp` must migrate with the major package release. Typed `ParkingData` and `Geometry` retain convenient source-field and coordinate access alongside complete `source_attributes`.
 
 ### Delivery format
 
