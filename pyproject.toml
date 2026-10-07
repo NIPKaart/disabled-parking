@@ -47,7 +47,7 @@ package = false
 default-groups = ["cities", "dev"]
 
 [tool.uv.sources]
-eindhoven = { git = "https://github.com/klaasnicolaas/python-eindhoven", rev = "7b57db2b345c05f223842d3e7f79f405b3fb6cb8" }
+eindhoven = { git = "https://github.com/klaasnicolaas/python-eindhoven", rev = "ec13204f73822a26bc085367c0dbf1f5cb48d9c8" }
 odp-amsterdam = { git = "https://github.com/klaasnicolaas/python-odp-amsterdam", rev = "2a134f1c3efbbeecfe2e273fc6fc6f7956289117" }
 # Stack prerequisite; replace with a registry constraint after the package release.
 namur = { git = "https://github.com/klaasnicolaas/python-namur", rev = "744ae9121de0c4b473b6be13d974ae7f62630df8" }
