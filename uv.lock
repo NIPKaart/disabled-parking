@@ -355,7 +355,7 @@ cities = [
     { name = "brussel", specifier = ">=0.2.1,<0.3.0" },
     { name = "dresden", specifier = ">=0.2.1,<0.3.0" },
     { name = "dusseldorf", specifier = ">=1.0.0,<2.0.0" },
-    { name = "eindhoven", git = "https://github.com/klaasnicolaas/python-eindhoven?rev=f1e78bc2c9a091c49a93742e2fe00d0329c0b9b4" },
+    { name = "eindhoven", git = "https://github.com/klaasnicolaas/python-eindhoven?rev=7b57db2b345c05f223842d3e7f79f405b3fb6cb8" },
     { name = "hamburg", specifier = ">=3.0.0,<4.0.0" },
     { name = "koeln", specifier = ">=0.3.1,<0.4.0" },
     { name = "liege", specifier = ">=1.0.0,<2.0.0" },
@@ -409,7 +409,7 @@ wheels = [
 [[package]]
 name = "eindhoven"
 version = "0.0.0"
-source = { git = "https://github.com/klaasnicolaas/python-eindhoven?rev=f1e78bc2c9a091c49a93742e2fe00d0329c0b9b4#f1e78bc2c9a091c49a93742e2fe00d0329c0b9b4" }
+source = { git = "https://github.com/klaasnicolaas/python-eindhoven?rev=7b57db2b345c05f223842d3e7f79f405b3fb6cb8#7b57db2b345c05f223842d3e7f79f405b3fb6cb8" }
 dependencies = [
     { name = "aiohttp" },
     { name = "mashumaro" },

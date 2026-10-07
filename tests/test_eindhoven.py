@@ -10,7 +10,7 @@ from copy import deepcopy
 from pathlib import Path
 from unittest.mock import patch
 
-from eindhoven import ParkingCollection, ParkingSpot, ParkingType
+from eindhoven import Geometry, ParkingCollection, ParkingData, ParkingSpot, ParkingType
 from eindhoven.exceptions import ODPEindhovenResultsError
 
 from app.cities.netherlands.eindhoven import Municipality
@@ -38,7 +38,15 @@ def collection(*records: dict) -> ParkingCollection:
     """Make small package results without duplicating source pagination tests."""
     return ParkingCollection(
         [
-            ParkingSpot(str(row["objectid"]), row, row["geo_shape"]["geometry"])
+            ParkingSpot(
+                str(row["objectid"]),
+                row,
+                Geometry(
+                    coordinates=row["geo_shape"]["geometry"]["coordinates"],
+                    type=row["geo_shape"]["geometry"]["type"],
+                ),
+                ParkingData(row["type_en_merk"], row["straat"], row["aantal"]),
+            )
             for row in records
         ],
         len(records),
