@@ -97,11 +97,15 @@ wheels = [
 
 [[package]]
 name = "arnhem"
-version = "0.0.0"
-source = { git = "https://github.com/klaasnicolaas/python-arnhem?rev=d5fe31abbafa62b53e7bf6e5d93f9130ba4ee193#d5fe31abbafa62b53e7bf6e5d93f9130ba4ee193" }
+version = "2.0.0"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "yarl" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f0/9d/1a6e13221798d9107925fa26fe24d9ca9f3954b279f0079c15830d276211/arnhem-2.0.0.tar.gz", hash = "sha256:824ba4fd6a0cbaffc6a59664854d466f31dfa99a574c5286a9e5495e334e6646", size = 9203, upload-time = "2026-10-07T14:33:51.791Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/3c/5f/9ac12661f9871585dc90fb822769e964524a7547bb8c222772d8cc45e05a/arnhem-2.0.0-py3-none-any.whl", hash = "sha256:7cfb3bdd7e12cc4c0bdf9975cf431dc4edb4332605688a056298789e87c734a6", size = 10813, upload-time = "2026-10-07T14:33:50.554Z" },
 ]
 
 [[package]]
@@ -346,7 +350,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 cities = [
     { name = "antwerpen", specifier = ">=1.0.0,<2.0.0" },
-    { name = "arnhem", git = "https://github.com/klaasnicolaas/python-arnhem?rev=d5fe31abbafa62b53e7bf6e5d93f9130ba4ee193" },
+    { name = "arnhem", specifier = "==2.0.0" },
     { name = "async-timeout", specifier = ">=4,<6" },
     { name = "brussel", specifier = ">=0.2.1,<0.3.0" },
     { name = "dresden", specifier = ">=0.2.1,<0.3.0" },
