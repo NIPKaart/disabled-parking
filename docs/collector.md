@@ -47,4 +47,6 @@ The Amsterdam, Eindhoven and Namur package releases are pinned exactly in [`pypr
 
 ## Source review
 
-Eindhoven is available for source review only. Publication remains blocked until general access, source-ID stability and data currency are confirmed. Dataset IDs have no legacy aliases or automatic migration.
+Use one compact assessment per source: dataset and check date, then a table with **topic, conclusion, mapping/handling and evidence**, followed by the decision. Cover reuse, access, identity, currency and completeness. Keep evidence in one place and link to it from collector and core documentation. Unknown source values are recorded as unknown; additional publisher confirmation is needed only when the intended mapping or publication claim requires it.
+
+[Eindhoven's assessment](eindhoven-source-review.md) records accepted public-domain reuse, original IDs and unknown access/currency. Intake and publication use core's existing source approval and review. Dataset IDs have no legacy aliases or automatic migration.

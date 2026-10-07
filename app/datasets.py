@@ -100,7 +100,7 @@ DATASETS = {
         code="nl-eindhoven",
         selection="gehandicapten-all",
         source=eindhoven.Municipality,
-        # The portal page shows no licence, so it stays unknown.
+        # The source says public domain but identifies no verified SPDX licence.
         description=SourceDescription(
             name="Eindhoven gehandicaptenparkeerplaatsen",
             publisher="Gemeente Eindhoven",
