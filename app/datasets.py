@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol
 
 from app.cities.belgium import namur
-from app.cities.netherlands import amsterdam, arnhem, eindhoven
+from app.cities.netherlands import amsterdam, arnhem, den_haag, eindhoven
 from app.cities.sweden import stockholm
 
 if TYPE_CHECKING:
@@ -75,6 +75,38 @@ class Dataset:
 
 # Licences and terms verified on the publication pages on 2026-09-28.
 DATASETS = {
+    "den-haag": Dataset(
+        code="nl-den-haag",
+        selection="algemeen-wfs-all",
+        source=den_haag.Municipality,
+        # Official map WFS and access constraints checked on 2026-10-13.
+        description=SourceDescription(
+            name="Den Haag algemene gehandicaptenparkeerplaatsen",
+            publisher="Gemeente Den Haag",
+            source_url=(
+                f"{den_haag.SOURCE_URL}?service=WFS&version=2.0.0&request=GetFeature"
+                f"&typeName={den_haag.FEATURE_TYPE}&outputFormat=application/json"
+            ),
+            licence=None,
+            terms_url=(
+                f"{den_haag.SOURCE_URL}?service=WFS&version=2.0.0"
+                "&request=GetCapabilities"
+            ),
+            attribution=(
+                "Gemeente Den Haag; algemene gehandicaptenparkeerplaatsen, "
+                "gemeentelijke centroiden; genormaliseerd door NIPKaart. "
+                "Werkingstijden en beperkingen behouden in bronclaims; "
+                "bebording ter plaatse is leidend."
+            ),
+            country="NL",
+            subdivision="NL-ZH",
+            municipality_scheme="nl-cbs",
+            municipality_code="GM0518",
+            municipality_name="'s-Gravenhage",
+            bounds=(4.20, 52.00, 4.43, 52.13),
+            expected_interval_hours=24,
+        ),
+    ),
     "stockholm": Dataset(
         code="se-stockholm",
         selection="prorelsehindrad-all",
