@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol
 
 from app.cities.belgium import namur
-from app.cities.netherlands import amsterdam, arnhem, den_haag, eindhoven
+from app.cities.netherlands import amsterdam, arnhem, den_haag, eindhoven, groningen
 from app.cities.sweden import stockholm
 
 if TYPE_CHECKING:
@@ -75,6 +75,34 @@ class Dataset:
 
 # Licences and terms verified on the publication pages on 2026-09-28.
 DATASETS = {
+    "groningen": Dataset(
+        code="nl-groningen",
+        selection="gehandicapten-algemeen-e06-all",
+        source=groningen.Municipality,
+        # Publisher, licence and monthly source revision checked 2026-10-13.
+        description=SourceDescription(
+            name="Groningen algemene gehandicaptenparkeervakken",
+            publisher="Gemeente Groningen",
+            source_url="https://data.groningen.nl/dataset/parkeervakken-gemeente-groningen",
+            licence="CC-BY-4.0",
+            terms_url="https://data.groningen.nl/dataset/parkeervakken-gemeente-groningen",
+            attribution=(
+                "Gemeente Groningen; Parkeervakken gemeente Groningen; "
+                "TYPE=gehandicapten algemeen en ETYPE=E06; "
+                "CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/); "
+                "genormaliseerd door NIPKaart. Dekking volgens bron: schilwijken. "
+                "Bron-ID's wisselen; core beoordeelt locatiekoppelingen. "
+                "Bebording ter plaatse is leidend."
+            ),
+            country="NL",
+            subdivision="NL-GR",
+            municipality_scheme="nl-cbs",
+            municipality_code="GM0014",
+            municipality_name="Groningen",
+            bounds=(6.40, 53.05, 6.85, 53.45),
+            expected_interval_hours=24,
+        ),
+    ),
     "den-haag": Dataset(
         code="nl-den-haag",
         selection="algemeen-wfs-all",
