@@ -1,0 +1,1 @@
+"""Swedish municipal source adapters."""

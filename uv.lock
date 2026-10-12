@@ -1,5 +1,5 @@
 version = 1
-revision = 5
+revision = 3
 requires-python = ">=3.14, <4.0"
 
 [[package]]
@@ -311,7 +311,6 @@ wheels = [
 name = "disabled-parking"
 version = "0.0.0"
 source = { virtual = "." }
-default-groups = ["cities", "dev"]
 dependencies = [
     { name = "boto3" },
     { name = "python-dotenv" },
@@ -332,6 +331,7 @@ cities = [
     { name = "liege" },
     { name = "namur" },
     { name = "odp-amsterdam" },
+    { name = "odp-stockholm" },
 ]
 dev = [
     { name = "pre-commit" },
@@ -362,6 +362,7 @@ cities = [
     { name = "liege", specifier = ">=1.0.0,<2.0.0" },
     { name = "namur", specifier = "==2.0.0" },
     { name = "odp-amsterdam", specifier = "==7.2.0" },
+    { name = "odp-stockholm", specifier = "==2.0.0" },
 ]
 dev = [
     { name = "pre-commit", specifier = "==3.8.0" },
@@ -698,6 +699,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/b9/d1/e19a5f36896619c2f7f2c20e15812169c6a75b58de8da2a23226037862ad/odp_amsterdam-7.2.0.tar.gz", hash = "sha256:054a0cf2f1e40d25ea9aaf3445c66142485868f3736034400986e7a419295f51", size = 13291, upload-time = "2026-10-07T11:55:30.439Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/fa/55/95c731bce5079e145f333662bd8c879a35902111673f20d25fa33edf51a4/odp_amsterdam-7.2.0-py3-none-any.whl", hash = "sha256:24e03c2f940450b0367254b76d2b7b751361060df7cbef38d833db98add9d61a", size = 15454, upload-time = "2026-10-07T11:55:29.057Z" },
+]
+
+[[package]]
+name = "odp-stockholm"
+version = "2.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "aiohttp" },
+    { name = "yarl" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8f/12/f4e3c5fc25a208f5bfec7b01002c4ac810da9661022c369212dc2b3dfde8/odp_stockholm-2.0.0.tar.gz", hash = "sha256:2e7930d0f31454a904d8b6658c83db425f09084f614b8702003bdec0313b5a5a", size = 9569, upload-time = "2026-10-12T21:04:55.258Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1c/55/8c071f6a2bfd003d39313a7b011097c948c698bc49422550de9aec36db54/odp_stockholm-2.0.0-py3-none-any.whl", hash = "sha256:45bcc4b66743594242585744898e22d5096eab8d5b90646fc22b9b9651f03d2d", size = 10790, upload-time = "2026-10-12T21:04:54.21Z" },
 ]
 
 [[package]]

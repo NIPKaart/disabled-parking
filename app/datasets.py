@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Protocol
 
 from app.cities.belgium import namur
 from app.cities.netherlands import amsterdam, arnhem, eindhoven
+from app.cities.sweden import stockholm
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -74,6 +75,31 @@ class Dataset:
 
 # Licences and terms verified on the publication pages on 2026-09-28.
 DATASETS = {
+    "stockholm": Dataset(
+        code="se-stockholm",
+        selection="prorelsehindrad-all",
+        source=stockholm.Municipality,
+        description=SourceDescription(
+            name="Stockholm parkeringsföreskrifter för rörelsehindrade",
+            publisher="Stockholms stad, Trafikkontoret",
+            source_url="https://openparking.stockholm.se/LTF-Tolken/v1/prorelsehindrad/all",
+            licence=None,
+            terms_url="https://openstreetws.stockholm.se/home/",
+            attribution=(
+                "Stockholms stad, Trafikkontoret; prorelsehindrad. "
+                "Lokala trafikföreskrifter, inte enskilt verifierade "
+                "parkeringsplatser. "
+                "Skyltningen på plats gäller; giltighet och villkor bevaras i källdata."
+            ),
+            country="SE",
+            subdivision="SE-AB",
+            municipality_scheme="se-scb",
+            municipality_code="0180",
+            municipality_name="Stockholm",
+            bounds=(17.70, 59.20, 18.30, 59.50),
+            expected_interval_hours=24,
+        ),
+    ),
     "amsterdam": Dataset(
         code="nl-amsterdam",
         selection="e6a-all",

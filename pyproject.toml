@@ -33,6 +33,7 @@ cities = [
   "namur==2.0.0",
   "odp-amsterdam==7.2.0",
   "async-timeout>=4,<6",
+  "odp-stockholm==2.0.0",
 ]
 dev = [
   "pre-commit==3.8.0",
