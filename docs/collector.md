@@ -43,7 +43,7 @@ npx wrangler r2 bucket lifecycle list nipkaart-imports --jurisdiction eu
 
 ## Dependencies
 
-The Amsterdam, Eindhoven and Namur package releases are pinned exactly in [`pyproject.toml`](../pyproject.toml). [`uv.lock`](../uv.lock) records the resolved versions and distribution hashes. Update both files together and verify the collector tests and a local export for each changed source.
+The Amsterdam, Arnhem, Eindhoven, Namur and Stockholm package releases are pinned exactly in [`pyproject.toml`](../pyproject.toml). [`uv.lock`](../uv.lock) records the resolved versions and distribution hashes. Update both files together and verify the collector tests and a local export for each changed source.
 
 ## Source review
 
@@ -51,4 +51,4 @@ Use one compact assessment per source: dataset and check date, then a table with
 
 [Eindhoven's assessment](eindhoven-source-review.md) records accepted public-domain reuse, original IDs and unknown access/currency. Intake and publication use core's existing source approval and review. Dataset IDs have no legacy aliases or automatic migration.
 
-[Stockholm's assessment](stockholm-source-review.md) records the complete 2,294-record source check, real private-R2 delivery and isolated core acceptance. Stockholm retains original regulation lines and unknown access/capacity/currency; one collapsed component requires explicit geometry review in core. Configure `STOCKHOLM_API_KEY` for collection. The package release and core companion must land before merging/deploying this collector integration.
+[Stockholm's assessment](stockholm-source-review.md) records the complete 2,294-record source check, real private-R2 delivery and isolated core acceptance. Stockholm retains original regulation lines and unknown access/capacity/currency; one collapsed component requires explicit geometry review in core. Configure `STOCKHOLM_API_KEY` for collection. Stockholm uses the published package release v2.0.0; the core companion must land before merging/deploying this collector integration.

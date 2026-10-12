@@ -362,7 +362,7 @@ cities = [
     { name = "liege", specifier = ">=1.0.0,<2.0.0" },
     { name = "namur", specifier = "==2.0.0" },
     { name = "odp-amsterdam", specifier = "==7.2.0" },
-    { name = "odp-stockholm", git = "https://github.com/klaasnicolaas/python-odp-stockholm.git?rev=cea88e7198369fe0bc60e127dc062286c80624ff" },
+    { name = "odp-stockholm", specifier = "==2.0.0" },
 ]
 dev = [
     { name = "pre-commit", specifier = "==3.8.0" },
@@ -703,11 +703,15 @@ wheels = [
 
 [[package]]
 name = "odp-stockholm"
-version = "0.0.0"
-source = { git = "https://github.com/klaasnicolaas/python-odp-stockholm.git?rev=cea88e7198369fe0bc60e127dc062286c80624ff#cea88e7198369fe0bc60e127dc062286c80624ff" }
+version = "2.0.0"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "yarl" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8f/12/f4e3c5fc25a208f5bfec7b01002c4ac810da9661022c369212dc2b3dfde8/odp_stockholm-2.0.0.tar.gz", hash = "sha256:2e7930d0f31454a904d8b6658c83db425f09084f614b8702003bdec0313b5a5a", size = 9569, upload-time = "2026-10-12T21:04:55.258Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1c/55/8c071f6a2bfd003d39313a7b011097c948c698bc49422550de9aec36db54/odp_stockholm-2.0.0-py3-none-any.whl", hash = "sha256:45bcc4b66743594242585744898e22d5096eab8d5b90646fc22b9b9651f03d2d", size = 10790, upload-time = "2026-10-12T21:04:54.21Z" },
 ]
 
 [[package]]

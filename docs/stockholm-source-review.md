@@ -2,7 +2,7 @@
 
 Checked: **2026-10-12** · Dataset: `se-stockholm` / `prorelsehindrad-all` · [Issue #822](https://github.com/NIPKaart/disabled-parking/issues/822)
 
-**Decision: usable for intake and review with the limitations below, after the package and core prerequisites are released/merged.** Authentication, live completeness and original feature identity have been verified. The collector retains original line geometry and source context; core derives map markers and requires explicit review for one invalid source component. Source approval and production activation remain separate decisions.
+**Decision: usable for intake and review with the limitations below, after the core prerequisite is merged/deployed.** Authentication, live completeness and original feature identity have been verified. The collector retains original line geometry and source context; core derives map markers and requires explicit review for one invalid source component. Source approval and production activation remain separate decisions.
 
 | Topic | Conclusion | Mapping / handling | Evidence |
 | --- | --- | --- | --- |
@@ -29,7 +29,7 @@ The exact delivered bytes passed isolated core discovery, source approval, first
 
 Local coverage includes malformed/count/duplicate/CRS/authentication package failures, mapping and bounds failures, last-valid export retention and unchanged pending-byte retries, Swedish identity validation, line markers, geometry derivation approval and rejection of collapsed components outside the remaining linework.
 
-The collector currently pins the immutable package commit behind [package PR #852](https://github.com/klaasnicolaas/python-odp-stockholm/pull/852) for review and acceptance. Replace it with an exact published release and rerun checks before merging the collector. Merge [core PR #1375](https://github.com/NIPKaart/core/pull/1375) first; the previous core contract rejects line geometry and Swedish codes.
+The collector pins the published [odp-stockholm v2.0.0 release](https://github.com/klaasnicolaas/python-odp-stockholm/releases/tag/v2.0.0) exactly, with PyPI distribution hashes in `uv.lock`. All 41 collector tests and a fresh 2,294-record live export passed with this installed release. Merge [core PR #1375](https://github.com/NIPKaart/core/pull/1375) first; the previous core contract rejects line geometry and Swedish codes.
 
 Legacy [PR #416](https://github.com/NIPKaart/disabled-parking/pull/416) is closed as replaced by [PR #833](https://github.com/NIPKaart/disabled-parking/pull/833). [#412](https://github.com/NIPKaart/disabled-parking/issues/412) stays closed. [#822](https://github.com/NIPKaart/disabled-parking/issues/822) stays open until its release/merge gates are complete. This assessment does not approve or activate production; deployed cadence, reference data, source/geometry approval and operational acceptance remain in [core #1303](https://github.com/NIPKaart/core/issues/1303).
 
