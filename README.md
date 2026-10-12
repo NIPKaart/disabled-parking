@@ -13,11 +13,11 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 
-Collect municipal accessible-parking data for [NIPKaart](https://nipkaart.nl). One container collects Amsterdam (`nl-amsterdam`), Eindhoven (`nl-eindhoven`) and Namur (`be-namur`) and uploads complete deliveries to private Cloudflare R2 for review in core.
+Collect municipal accessible-parking data for [NIPKaart](https://nipkaart.nl). One container collects Amsterdam (`nl-amsterdam`), Arnhem (`nl-arnhem`), Eindhoven (`nl-eindhoven`), Namur (`be-namur`) and Stockholm (`se-stockholm`) and uploads complete deliveries to private Cloudflare R2 for review in core.
 
 ## Run
 
-Copy `.env.example` to `.env`, fill in the private R2 bucket endpoint and credentials, then start:
+Copy `.env.example` to `.env`, fill in the private R2 bucket endpoint and credentials, set `STOCKHOLM_API_KEY` from [Stockholm key registration](https://openparking.stockholm.se/Home/Key), then start:
 
 ```bash
 chmod 600 .env
@@ -36,6 +36,8 @@ uv sync --locked
 uv run python export.py --city amsterdam --output /tmp/amsterdam.json
 uv run python export.py --city eindhoven --output /tmp/eindhoven.json
 uv run python export.py --city namur --output /tmp/namur.json
+# With STOCKHOLM_API_KEY set in the process environment:
+uv run python export.py --city stockholm --output /tmp/stockholm.json
 ```
 
 Exports are for source review; publication requires approval in core. See the [collector documentation](docs/collector.md) for source selections and limitations.

@@ -26,10 +26,15 @@ FETCH_TIMEOUT = 180
 
 
 def points(geometry: dict[str, Any]) -> Iterator[list[float]]:
-    """Yield every position of a Point, Polygon or MultiPolygon."""
+    """Yield every position of supported original point, line or area geometry."""
     coordinates = geometry["coordinates"]
     if geometry["type"] == "Point":
         yield coordinates
+    elif geometry["type"] == "LineString":
+        yield from coordinates
+    elif geometry["type"] == "MultiLineString":
+        for line in coordinates:
+            yield from line
     elif geometry["type"] == "Polygon":
         for ring in coordinates:
             yield from ring

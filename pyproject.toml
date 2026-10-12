@@ -33,6 +33,7 @@ cities = [
   "namur==2.0.0",
   "odp-amsterdam==7.2.0",
   "async-timeout>=4,<6",
+  "odp-stockholm",
 ]
 dev = [
   "pre-commit==3.8.0",
@@ -45,6 +46,9 @@ dev = [
 [tool.uv]
 package = false
 default-groups = ["cities", "dev"]
+
+[tool.uv.sources]
+odp-stockholm = { git = "https://github.com/klaasnicolaas/python-odp-stockholm.git", rev = "cea88e7198369fe0bc60e127dc062286c80624ff" }
 
 [tool.pylint.BASIC]
 good-names = [
