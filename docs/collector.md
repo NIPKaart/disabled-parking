@@ -28,7 +28,7 @@ Antwerpen selects all published disabled-parking polygons with `GISID IS NOT NUL
 
 Full WGS84 polygons and all rings remain intact. Capacity distinguishes unknown from zero, source orientation maps to neutral values, and access remains `unknown`: every inspected row says `toegang=Beperkt`, with 25 time-window claims despite the layer description saying no time-window regime. Personally reserved access cannot be distinguished from this field. Core review must assess signage and preserved restrictions before publication. Street and record-update time remain unknown; `EBDD` is not a verified modification timestamp. The publisher describes daily maintenance of a 2018 paid-parking-area inventory, not current observations or full municipal coverage.
 
-Evidence checked 2026-10-13: [municipal GIS layer](https://geodata.antwerpen.be/arcgissql/rest/services/P_Portal/portal_publiek6/MapServer/585), [publisher item and daily cadence](https://www.arcgis.com/sharing/rest/content/items/3b69e4d15fc14fbb86a00d6c636da475?f=json), [Gratis Open Data Licentie](https://www.antwerpen.be/info/gratis-open-data-licentie), and [municipal parking information](https://www.antwerpen.be/parkeren-voor-personen-met-een-handicap). The city's reuse terms require `bron stad Antwerpen`; no verified SPDX identifier is assigned to this licence, so `licence` stays `null`. Delivery/intake evidence belongs to the PR for [#813](https://github.com/NIPKaart/disabled-parking/issues/813). The collector currently pins the exact commit of [package PR #1259](https://github.com/klaasnicolaas/python-antwerpen/pull/1259); merge/release that package and replace the Git pin with an exact published version before merging this collector. Production activation stays at core #1303.
+Evidence checked 2026-10-13: [municipal GIS layer](https://geodata.antwerpen.be/arcgissql/rest/services/P_Portal/portal_publiek6/MapServer/585), [publisher item and daily cadence](https://www.arcgis.com/sharing/rest/content/items/3b69e4d15fc14fbb86a00d6c636da475?f=json), [Gratis Open Data Licentie](https://www.antwerpen.be/info/gratis-open-data-licentie), and [municipal parking information](https://www.antwerpen.be/parkeren-voor-personen-met-een-handicap). The city's reuse terms require `bron stad Antwerpen`; no verified SPDX identifier is assigned to this licence, so `licence` stays `null`. Delivery/intake evidence belongs to the PR for [#813](https://github.com/NIPKaart/disabled-parking/issues/813). The collector uses the published `antwerpen==2.0.0` release from [package PR #1259](https://github.com/klaasnicolaas/python-antwerpen/pull/1259), pinned exactly with distribution hashes in the lockfile. Production activation stays at core #1303.
 
 ## Retention
 
@@ -51,7 +51,7 @@ npx wrangler r2 bucket lifecycle list nipkaart-imports --jurisdiction eu
 
 ## Dependencies
 
-The Amsterdam, Arnhem, Eindhoven, Namur and Stockholm package releases are pinned exactly in [`pyproject.toml`](../pyproject.toml). [`uv.lock`](../uv.lock) records the resolved versions and distribution hashes. Update both files together and verify the collector tests and a local export for each changed source.
+The Amsterdam, Antwerpen, Arnhem, Eindhoven, Namur and Stockholm package releases are pinned exactly in [`pyproject.toml`](../pyproject.toml). [`uv.lock`](../uv.lock) records the resolved versions and distribution hashes. Update both files together and verify the collector tests and a local export for each changed source.
 
 ## Source review
 

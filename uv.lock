@@ -83,11 +83,15 @@ wheels = [
 
 [[package]]
 name = "antwerpen"
-version = "0.0.0"
-source = { git = "https://github.com/klaasnicolaas/python-antwerpen.git?rev=da016de6a600f8a666a7507bd6b85212df0ed2fa#da016de6a600f8a666a7507bd6b85212df0ed2fa" }
+version = "2.0.0"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "yarl" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/36/c0/d1294986486725e4154f0e8c025e8f9f510f402b0d5e2bdd4d447a3bc516/antwerpen-2.0.0.tar.gz", hash = "sha256:135c7b0cb464e572fcc2ab0251e0faceee8c91a483716005788bf174ecaed304", size = 10300, upload-time = "2026-10-13T21:44:20.866Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1b/c3/5f0c4c6e5ac3b3ade5efcbd76b8c4c0c4d80a8afcb1e57fe6d51169e775e/antwerpen-2.0.0-py3-none-any.whl", hash = "sha256:961e2bd5720719afac38b6d46b7e1572811f9dccb851ea5d7192f4b54f73c65a", size = 11411, upload-time = "2026-10-13T21:44:19.674Z" },
 ]
 
 [[package]]
@@ -345,7 +349,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 cities = [
-    { name = "antwerpen", git = "https://github.com/klaasnicolaas/python-antwerpen.git?rev=da016de6a600f8a666a7507bd6b85212df0ed2fa" },
+    { name = "antwerpen", specifier = "==2.0.0" },
     { name = "arnhem", specifier = "==2.0.0" },
     { name = "async-timeout", specifier = ">=4,<6" },
     { name = "brussel", specifier = ">=0.2.1,<0.3.0" },
