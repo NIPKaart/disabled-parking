@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol
 
-from app.cities.belgium import namur
+from app.cities.belgium import antwerpen, namur
 from app.cities.netherlands import amsterdam, arnhem, den_haag, eindhoven, groningen
 from app.cities.sweden import stockholm
 
@@ -75,6 +75,33 @@ class Dataset:
 
 # Licences and terms verified on the publication pages on 2026-09-28.
 DATASETS = {
+    "antwerpen": Dataset(
+        code="be-antwerpen",
+        selection="identified-disabled-all",
+        source=antwerpen.Municipality,
+        # Layer, source claims and reuse terms checked on 2026-10-13.
+        description=SourceDescription(
+            name="Antwerpen parkeerplaatsen voor personen met een handicap",
+            publisher="Stad Antwerpen",
+            source_url="https://geodata.antwerpen.be/arcgissql/rest/services/P_Portal/portal_publiek6/MapServer/585",
+            licence=None,
+            terms_url="https://www.antwerpen.be/info/gratis-open-data-licentie",
+            attribution=(
+                "bron stad Antwerpen; parkeerplaatsen voor personen met een handicap; "
+                "Gratis Open Data Licentie Vlaanderen v. 1.0; "
+                "genormaliseerd door NIPKaart. Alleen records met GISID. "
+                "Broninventarisatie betaald parkeerareaal; geen gemeentebrede dekking. "
+                "Toegang en venstertijden behouden; bebording ter plaatse is leidend."
+            ),
+            country="BE",
+            subdivision="BE-VAN",
+            municipality_scheme="be-ins",
+            municipality_code="11002",
+            municipality_name="Antwerpen",
+            bounds=(4.25, 51.10, 4.60, 51.40),
+            expected_interval_hours=24,
+        ),
+    ),
     "groningen": Dataset(
         code="nl-groningen",
         selection="gehandicapten-algemeen-e06-all",

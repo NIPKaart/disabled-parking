@@ -21,7 +21,7 @@ Documentation = "https://github.com/nipkaart/disabled-parking"
 
 [dependency-groups]
 cities = [
-  "antwerpen>=1.0.0,<2.0.0",
+  "antwerpen @ git+https://github.com/klaasnicolaas/python-antwerpen.git@d458ac9fd850ab7a3f4c8fadfa1afed21c8fde8b",
   "arnhem==2.0.0",
   "brussel>=0.2.1,<0.3.0",
   "dresden>=0.2.1,<0.3.0",
