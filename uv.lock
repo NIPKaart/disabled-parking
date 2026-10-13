@@ -84,7 +84,7 @@ wheels = [
 [[package]]
 name = "antwerpen"
 version = "0.0.0"
-source = { git = "https://github.com/klaasnicolaas/python-antwerpen.git?rev=d458ac9fd850ab7a3f4c8fadfa1afed21c8fde8b#d458ac9fd850ab7a3f4c8fadfa1afed21c8fde8b" }
+source = { git = "https://github.com/klaasnicolaas/python-antwerpen.git?rev=d76d530fb853fc70b9d743d760c0e7477b5060d0#d76d530fb853fc70b9d743d760c0e7477b5060d0" }
 dependencies = [
     { name = "aiohttp" },
     { name = "pytz" },
@@ -346,7 +346,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 cities = [
-    { name = "antwerpen", git = "https://github.com/klaasnicolaas/python-antwerpen.git?rev=d458ac9fd850ab7a3f4c8fadfa1afed21c8fde8b" },
+    { name = "antwerpen", git = "https://github.com/klaasnicolaas/python-antwerpen.git?rev=d76d530fb853fc70b9d743d760c0e7477b5060d0" },
     { name = "arnhem", specifier = "==2.0.0" },
     { name = "async-timeout", specifier = ">=4,<6" },
     { name = "brussel", specifier = ">=0.2.1,<0.3.0" },
