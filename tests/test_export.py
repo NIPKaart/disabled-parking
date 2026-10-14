@@ -30,7 +30,7 @@ def source_record() -> ParkingSpot:
         [[4.905, 52.301], [4.908, 52.302], [4.907, 52.304], [4.905, 52.301]],
     ]
     return ParkingSpot(
-        spot_id="00017460",
+        id="00017460",
         spot_type="E6a",
         spot_description="Gehandicaptenparkeerplaats algemeen",
         street="Teststraat",
@@ -130,8 +130,8 @@ class MappingTests(unittest.TestCase):
         """No lossy capacity, guessed identity, out-of-scope regime or bad geometry."""
         item = source_record()
         invalid = [
-            replace(item, spot_id=""),
-            replace(item, spot_id=" 1"),
+            replace(item, id=""),
+            replace(item, id=" 1"),
             replace(item, number=1.5),
             replace(item, number=-1),
             replace(item, number=True),

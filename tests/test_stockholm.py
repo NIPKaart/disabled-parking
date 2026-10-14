@@ -76,7 +76,7 @@ class StockholmTests(unittest.IsolatedAsyncioTestCase):
             {"scheme": "se-scb", "code": "0180", "name": "Stockholm"},
         )
         self.assertIsNone(data["source"]["licence"])
-        self.assertEqual(data["records"][0]["external_id"], first.spot_id)
+        self.assertEqual(data["records"][0]["external_id"], first.id)
         self.assertEqual(data["records"][0]["geometry"], first.geometry)
         self.assertEqual(
             data["records"][0]["source_attributes"], first.source_attributes
@@ -152,7 +152,7 @@ class StockholmTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(ValueError):
             Municipality().normalize(item)
         with self.assertRaises(ValueError):
-            Municipality().normalize(replace(source_spot(), spot_id="wrong"))
+            Municipality().normalize(replace(source_spot(), id="wrong"))
         item = source_spot()
         item.source_attributes["properties"]["VF_PLATS_TYP"] = "other parking"
         with self.assertRaises(ValueError):

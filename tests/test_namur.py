@@ -20,10 +20,10 @@ from app.export import export_dataset
 from app.records import SourceError
 
 
-def source_spot(spot_id: str = "00040") -> ParkingSpot:
+def source_spot(record_id: str = "00040") -> ParkingSpot:
     """Use small package objects, retaining real source-field semantics."""
     return ParkingSpot(
-        spot_id=spot_id,
+        id=record_id,
         parking_type="PMR",
         street="Rue Julie Billiart",
         longitude=4.86873,
@@ -31,7 +31,7 @@ def source_spot(spot_id: str = "00040") -> ParkingSpot:
         created_at=datetime(2020, 9, 16, tzinfo=UTC),
         updated_at=datetime(2026, 10, 6, tzinfo=UTC),
         source_attributes={
-            "identifiant": spot_id,
+            "identifiant": record_id,
             "type_parking": "PMR",
             "rue_nom": "Rue Julie Billiart",
             "geo_shape": {"type": "Point", "coordinates": [4.86873, 50.46370]},
@@ -144,10 +144,10 @@ class NamurTests(unittest.IsolatedAsyncioTestCase):
     ) -> None:
         """Reject invalid identity, scope, dates and geometry."""
         for changed in [
-            {"spot_id": ""},
-            {"spot_id": "a" * 256},
-            {"spot_id": " 40"},
-            {"spot_id": 40},
+            {"id": ""},
+            {"id": "a" * 256},
+            {"id": " 40"},
+            {"id": 40},
             {"parking_type": "Réservé"},
             {"street": 3},
             {"street": "a" * 256},

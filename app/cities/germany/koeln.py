@@ -40,10 +40,10 @@ class Municipality(City):
         """Keep original IDs, nullable capacity and literal source claims."""
         attributes = item.source_attributes
         if (
-            isinstance(item.entry_id, bool)
-            or not isinstance(item.entry_id, int)
-            or item.entry_id < 1
-            or attributes.get("id") != item.entry_id
+            isinstance(item.id, bool)
+            or not isinstance(item.id, int)
+            or item.id < 1
+            or attributes.get("id") != item.id
         ):
             message = "Invalid Köln source identity"
             raise ValueError(message)
@@ -54,7 +54,7 @@ class Municipality(City):
             message = "Invalid Köln capacity"
             raise ValueError(message)
         return {
-            "external_id": str(item.entry_id),
+            "external_id": str(item.id),
             "geometry": item.geometry,
             "number": capacity(number),
             "street": None,

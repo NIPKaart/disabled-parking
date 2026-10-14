@@ -90,11 +90,7 @@ class Municipality(City):
 
     def normalize(self, item: ParkingSpot) -> dict[str, Any]:
         """Preserve source claims and fail if any regime leaves the agreed scope."""
-        if (
-            not isinstance(item.spot_id, str)
-            or not item.spot_id
-            or item.spot_id != item.spot_id.strip()
-        ):
+        if not isinstance(item.id, str) or not item.id or item.id != item.id.strip():
             msg = "Missing or invalid source ID"
             raise ValueError(msg)
         if (
@@ -108,11 +104,11 @@ class Municipality(City):
                 for regime in item.regimes
             )
         ):
-            msg = f"Unexpected parking scope for {item.spot_id}"
+            msg = f"Unexpected parking scope for {item.id}"
             raise ValueError(msg)
         validate_geometry(item.geometry)
         return {
-            "external_id": item.spot_id,
+            "external_id": item.id,
             "geometry": item.geometry,
             "number": capacity(item.number),
             "street": item.street,

@@ -60,7 +60,7 @@ class KoelnTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(data["source"]["licence"], "DL-DE-ZERO-2.0")
         self.assertEqual([item["number"] for item in data["records"]], [2, None, 0])
         for item, original in zip(data["records"], items, strict=True):
-            self.assertEqual(item["external_id"], str(original.entry_id))
+            self.assertEqual(item["external_id"], str(original.id))
             self.assertEqual(item["source_attributes"], original.source_attributes)
             self.assertEqual(item["geometry"], original.geometry)
             self.assertEqual(item["access_category"], "general")

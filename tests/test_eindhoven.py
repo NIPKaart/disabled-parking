@@ -98,7 +98,7 @@ class EindhovenTests(unittest.IsolatedAsyncioTestCase):
         incomplete = collection(source_record())
         incomplete.complete = False
         mismatched = collection(source_record())
-        mismatched.records[0].spot_id = "wrong"
+        mismatched.records[0].id = "wrong"
         for result in [
             collection(),
             duplicate,

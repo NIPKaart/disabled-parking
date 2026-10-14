@@ -53,7 +53,7 @@ class Municipality(City):
     def normalize_collection_record(self, item: ParkingSpot) -> dict[str, Any]:
         """Check source identity while mapping a package record to NIPKaart."""
         record = self.normalize(item.source_attributes)
-        if item.spot_id != record["external_id"]:
+        if item.id != record["external_id"]:
             msg = "Eindhoven package ID differs from the original objectid"
             raise ValueError(msg)
         return record
