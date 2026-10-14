@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol
 
 from app.cities.belgium import antwerpen, namur
+from app.cities.germany import koeln
 from app.cities.netherlands import amsterdam, arnhem, den_haag, eindhoven, groningen
 from app.cities.sweden import stockholm
 
@@ -75,6 +76,33 @@ class Dataset:
 
 # Licences and terms verified on the publication pages on 2026-09-28.
 DATASETS = {
+    "koeln": Dataset(
+        code="de-koeln",
+        selection="general-disabled-all",
+        source=koeln.Municipality,
+        # Current layer, publisher response and reuse terms checked 2026-10-14.
+        description=SourceDescription(
+            name="Köln allgemeine Behindertenparkplätze",
+            publisher="Stadt Köln, Amt für Verkehrsmanagement",
+            source_url="https://www.offenedaten-koeln.de/api/1/metastore/schemas/dataset/items/b69bcbd9-f6b2-4bc2-a763-118a471f59c9",
+            licence="DL-DE-ZERO-2.0",
+            terms_url="https://www.govdata.de/dl-de/zero-2-0",
+            attribution=(
+                "Stadt Köln, Amt für Verkehrsmanagement; allgemeine "
+                "Behindertenparkplätze; Datenlizenz Deutschland - Zero 2.0; "
+                "genormaliseerd door NIPKaart. Bronpunten kunnen meerdere plaatsen "
+                "omvatten. Bron-ID-continuïteit en waarnemingsdatum onbekend; "
+                "bebording ter plaatse is leidend."
+            ),
+            country="DE",
+            subdivision="DE-NW",
+            municipality_scheme="de-ags",
+            municipality_code="05315000",
+            municipality_name="Köln",
+            bounds=(6.75, 50.80, 7.20, 51.10),
+            expected_interval_hours=24,
+        ),
+    ),
     "antwerpen": Dataset(
         code="be-antwerpen",
         selection="identified-disabled-all",

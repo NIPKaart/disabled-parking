@@ -83,28 +83,28 @@ wheels = [
 
 [[package]]
 name = "antwerpen"
-version = "2.0.0"
+version = "2.0.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "yarl" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/36/c0/d1294986486725e4154f0e8c025e8f9f510f402b0d5e2bdd4d447a3bc516/antwerpen-2.0.0.tar.gz", hash = "sha256:135c7b0cb464e572fcc2ab0251e0faceee8c91a483716005788bf174ecaed304", size = 10300, upload-time = "2026-10-13T21:44:20.866Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d1/ce/2a73e9aa1661b7074d62d2a66f0ad58ff19be0ac264276b3837d42bfe85a/antwerpen-2.0.1.tar.gz", hash = "sha256:ed32163683f16c56480f9d3a8e98c8f26285b71ad67b7f5246a01e5ce5f4fb32", size = 9466, upload-time = "2026-10-14T11:11:19.535Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1b/c3/5f0c4c6e5ac3b3ade5efcbd76b8c4c0c4d80a8afcb1e57fe6d51169e775e/antwerpen-2.0.0-py3-none-any.whl", hash = "sha256:961e2bd5720719afac38b6d46b7e1572811f9dccb851ea5d7192f4b54f73c65a", size = 11411, upload-time = "2026-10-13T21:44:19.674Z" },
+    { url = "https://files.pythonhosted.org/packages/2c/6f/725a55cd2f6134c13fbc006324c7afcabae6cafef12aad65dad5c70e903f/antwerpen-2.0.1-py3-none-any.whl", hash = "sha256:4f60c3116eab3a849942946050149a8cd7056cdd42cb6b7033d46e070d9ba1ad", size = 10603, upload-time = "2026-10-14T11:11:18.389Z" },
 ]
 
 [[package]]
 name = "arnhem"
-version = "2.0.0"
+version = "2.0.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "yarl" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f0/9d/1a6e13221798d9107925fa26fe24d9ca9f3954b279f0079c15830d276211/arnhem-2.0.0.tar.gz", hash = "sha256:824ba4fd6a0cbaffc6a59664854d466f31dfa99a574c5286a9e5495e334e6646", size = 9203, upload-time = "2026-10-07T14:33:51.791Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/02/66/7618c8082166a19e23c491d5c01da4e3b3c64ba6f76aee6c8301980782e3/arnhem-2.0.1.tar.gz", hash = "sha256:60abaaef3f9cd6b890bf8905df6b98e12351538bf4b256dd4f47bbcce8d9cfd0", size = 9848, upload-time = "2026-10-14T11:17:34.351Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3c/5f/9ac12661f9871585dc90fb822769e964524a7547bb8c222772d8cc45e05a/arnhem-2.0.0-py3-none-any.whl", hash = "sha256:7cfb3bdd7e12cc4c0bdf9975cf431dc4edb4332605688a056298789e87c734a6", size = 10813, upload-time = "2026-10-07T14:33:50.554Z" },
+    { url = "https://files.pythonhosted.org/packages/06/78/1af014d73fd0864ccc4322153900a0fd425d12ad351f0dba5e23e84f8a97/arnhem-2.0.1-py3-none-any.whl", hash = "sha256:4ce3c1c9672083820e02ecd15fe761c4ef8cd5dfb930855b41f4c242b4ef24a5", size = 10951, upload-time = "2026-10-14T11:17:33.246Z" },
 ]
 
 [[package]]
@@ -349,19 +349,19 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 cities = [
-    { name = "antwerpen", specifier = "==2.0.0" },
-    { name = "arnhem", specifier = "==2.0.0" },
+    { name = "antwerpen", specifier = "==2.0.1" },
+    { name = "arnhem", specifier = "==2.0.1" },
     { name = "async-timeout", specifier = ">=4,<6" },
     { name = "brussel", specifier = ">=0.2.1,<0.3.0" },
     { name = "dresden", specifier = ">=0.2.1,<0.3.0" },
     { name = "dusseldorf", specifier = ">=1.0.0,<2.0.0" },
-    { name = "eindhoven", specifier = "==6.0.0" },
+    { name = "eindhoven", specifier = "==6.0.1" },
     { name = "hamburg", specifier = ">=3.0.0,<4.0.0" },
-    { name = "koeln", specifier = ">=0.3.1,<0.4.0" },
+    { name = "koeln", specifier = "==1.0.0" },
     { name = "liege", specifier = ">=1.0.0,<2.0.0" },
-    { name = "namur", specifier = "==2.0.0" },
-    { name = "odp-amsterdam", specifier = "==7.2.0" },
-    { name = "odp-stockholm", specifier = "==2.0.0" },
+    { name = "namur", specifier = "==2.0.1" },
+    { name = "odp-amsterdam", specifier = "==7.2.1" },
+    { name = "odp-stockholm", specifier = "==2.0.1" },
 ]
 dev = [
     { name = "pre-commit", specifier = "==3.8.0" },
@@ -409,7 +409,7 @@ wheels = [
 
 [[package]]
 name = "eindhoven"
-version = "6.0.0"
+version = "6.0.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
@@ -417,9 +417,9 @@ dependencies = [
     { name = "orjson" },
     { name = "yarl" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/2d/19/4e4ba9d3a76b25cf378513b9ee2669f97f05d6683fd40868ffc4ebdcc3db/eindhoven-6.0.0.tar.gz", hash = "sha256:b2b9a53f20bd96c566940727905c4b98d8f54b05dd873658d4d2a0b90a121612", size = 10339, upload-time = "2026-10-07T11:58:02.91Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/29/04/d0e8ad802d717fabd250b687b55a2287c13788b49422fb0c43ed775cdeba/eindhoven-6.0.1.tar.gz", hash = "sha256:b071439d52c142859fde7b1fb8f77d1e93448e87d11004bfea4809fb2dfa7fe4", size = 9615, upload-time = "2026-10-14T11:19:06.406Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/48/2e/95b3ba491b2c6fde6d52eda86ed52be4e728a67e50db82698f3d711a2010/eindhoven-6.0.0-py3-none-any.whl", hash = "sha256:68629fe7b8d44de13af0666162ca6e9b341b0328d924d58e4b0205bbef79508f", size = 11923, upload-time = "2026-10-07T11:58:01.862Z" },
+    { url = "https://files.pythonhosted.org/packages/b6/ad/afa0d0701461f74c9e8162a2a49797e7d6afe95c362f8782903517913300/eindhoven-6.0.1-py3-none-any.whl", hash = "sha256:352d8a29253f06081ec8a0263e3d5a6b9b1c1a60b553bf4448109e4bcce63939", size = 10701, upload-time = "2026-10-14T11:19:05.238Z" },
 ]
 
 [[package]]
@@ -524,15 +524,15 @@ wheels = [
 
 [[package]]
 name = "koeln"
-version = "0.3.1"
+version = "1.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "yarl" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/df/86/4b017868f7febd26caf715613b3f8f7a6c949d784306b27609f43766df78/koeln-0.3.1.tar.gz", hash = "sha256:35362ff27c7f13526c2e75e24e747afac73885d851a5d1a4c291bc705629bc2f", size = 9525, upload-time = "2023-07-05T10:30:47.089Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/2c/bf/bbe4899f29c4242c6c5dc401981db7ce6931aad217aebe69a1984ebccc7a/koeln-1.0.0.tar.gz", hash = "sha256:1f6c3ccb1d18aa0b80e4376becb41b94841c68dd0e669ca3e52ecc7c0c48657a", size = 9066, upload-time = "2026-10-14T11:29:36.749Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/65/f2/892d5ccea5c6dad9debadc20c10db1c63eb7815cf533ce09577668817154/koeln-0.3.1-py3-none-any.whl", hash = "sha256:51051587c751a0119f2fe91a3e762a99c075accf4df50e420142880f4288a797", size = 7886, upload-time = "2023-07-05T10:30:45.808Z" },
+    { url = "https://files.pythonhosted.org/packages/ef/0c/0a22facc5109b53d412269f5da6a54dd6fb7a3607d65ad23491236ad8119/koeln-1.0.0-py3-none-any.whl", hash = "sha256:551dca7408c3e33e35d2dc9ad1603dd659e1396d247409f75467b5a9adc09a5f", size = 10103, upload-time = "2026-10-14T11:29:35.306Z" },
 ]
 
 [[package]]
@@ -667,15 +667,15 @@ wheels = [
 
 [[package]]
 name = "namur"
-version = "2.0.0"
+version = "2.0.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "yarl" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/39/02/e19346df8534a4198bd273937f52bb77ad0826fd62188046b952f8e5d947/namur-2.0.0.tar.gz", hash = "sha256:c325c417265ffac3fd9004f4b2342c8bd26fe6824990b7d4b49ebb61724fd387", size = 9639, upload-time = "2026-10-07T12:46:36.213Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/92/09/9c29536d491f3099e874c0d107467e3d7d1585cc824a360a12b142ff58fa/namur-2.0.1.tar.gz", hash = "sha256:1a75e783b2a3ecfe80515b3cff0f791231baf3577c3a5110dd11a9aa523f0d12", size = 9395, upload-time = "2026-10-14T11:20:14.686Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2e/ba/b83ae1e2eea6d778ea4ec242680bfc5f4942ab53014ec1997403e41c4072/namur-2.0.0-py3-none-any.whl", hash = "sha256:c8227e72def87484166421b5e496f80b30843248b7aca2f97b7ccc0c4970341e", size = 11134, upload-time = "2026-10-07T12:46:35.102Z" },
+    { url = "https://files.pythonhosted.org/packages/5d/38/4cd7d1ad72babb16eecf6aeb25ab941fa8c0fad6e2620b0d96ec23fd35da/namur-2.0.1-py3-none-any.whl", hash = "sha256:1ea5f2b88dec875a97ba7dcb47b0e5faf0421aadf71e8b61bcd564cbbc2c0a31", size = 10396, upload-time = "2026-10-14T11:20:13.553Z" },
 ]
 
 [[package]]
@@ -689,28 +689,28 @@ wheels = [
 
 [[package]]
 name = "odp-amsterdam"
-version = "7.2.0"
+version = "7.2.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "yarl" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b9/d1/e19a5f36896619c2f7f2c20e15812169c6a75b58de8da2a23226037862ad/odp_amsterdam-7.2.0.tar.gz", hash = "sha256:054a0cf2f1e40d25ea9aaf3445c66142485868f3736034400986e7a419295f51", size = 13291, upload-time = "2026-10-07T11:55:30.439Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/1f/30/17fc3404dfc997e5a0ae89e3725238770a995d6e89db7e2bbc79378827c1/odp_amsterdam-7.2.1.tar.gz", hash = "sha256:b08f606a3d0d51e01039e88fb9b1b598008267eefa0b2379c2de4d760807f2d3", size = 13191, upload-time = "2026-10-14T11:26:48.833Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/fa/55/95c731bce5079e145f333662bd8c879a35902111673f20d25fa33edf51a4/odp_amsterdam-7.2.0-py3-none-any.whl", hash = "sha256:24e03c2f940450b0367254b76d2b7b751361060df7cbef38d833db98add9d61a", size = 15454, upload-time = "2026-10-07T11:55:29.057Z" },
+    { url = "https://files.pythonhosted.org/packages/61/82/27c4829a8cf62b25fac4cff4518951992467cfcdad0e21659a96c8e60446/odp_amsterdam-7.2.1-py3-none-any.whl", hash = "sha256:0ae57a286d261a34a74a527cc0f81c1fdfb74b0b0a971c86e71afbe66f4d270e", size = 14830, upload-time = "2026-10-14T11:26:47.563Z" },
 ]
 
 [[package]]
 name = "odp-stockholm"
-version = "2.0.0"
+version = "2.0.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "yarl" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/8f/12/f4e3c5fc25a208f5bfec7b01002c4ac810da9661022c369212dc2b3dfde8/odp_stockholm-2.0.0.tar.gz", hash = "sha256:2e7930d0f31454a904d8b6658c83db425f09084f614b8702003bdec0313b5a5a", size = 9569, upload-time = "2026-10-12T21:04:55.258Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/64/6e/d7a0d634454c61dfcc8f42a66fe60bcc912ca85c12236b2d75caf221c1cf/odp_stockholm-2.0.1.tar.gz", hash = "sha256:db47b41b6c1a0bbb09c467edf2ebbcf72c2f2203a2b400e014082eaf45788145", size = 8981, upload-time = "2026-10-14T11:25:23.239Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1c/55/8c071f6a2bfd003d39313a7b011097c948c698bc49422550de9aec36db54/odp_stockholm-2.0.0-py3-none-any.whl", hash = "sha256:45bcc4b66743594242585744898e22d5096eab8d5b90646fc22b9b9651f03d2d", size = 10790, upload-time = "2026-10-12T21:04:54.21Z" },
+    { url = "https://files.pythonhosted.org/packages/05/32/59f1150c1f955d481ab54fb379c2750c43cbe76129a1454e7a47afe19220/odp_stockholm-2.0.1-py3-none-any.whl", hash = "sha256:a31587b1d83cab091b776441e945888976b873e7f806d973c4d290b9ce2f2840", size = 10226, upload-time = "2026-10-14T11:25:22.051Z" },
 ]
 
 [[package]]

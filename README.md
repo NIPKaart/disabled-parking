@@ -13,7 +13,7 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 
-Collect municipal accessible-parking data for [NIPKaart](https://nipkaart.nl). One container collects Amsterdam (`nl-amsterdam`), Arnhem (`nl-arnhem`), Eindhoven (`nl-eindhoven`), Namur (`be-namur`), Antwerpen (`be-antwerpen`), Stockholm (`se-stockholm`) and Groningen (`nl-groningen`) and uploads complete deliveries to private Cloudflare R2 for review in core.
+Collect municipal accessible-parking data for [NIPKaart](https://nipkaart.nl). One container collects Amsterdam (`nl-amsterdam`), Arnhem (`nl-arnhem`), Eindhoven (`nl-eindhoven`), Namur (`be-namur`), Antwerpen (`be-antwerpen`), Stockholm (`se-stockholm`) Groningen (`nl-groningen`) and Köln (`de-koeln`) and uploads complete deliveries to private Cloudflare R2 for review in core.
 
 ## Run
 
@@ -38,6 +38,7 @@ uv run python export.py --city eindhoven --output /tmp/eindhoven.json
 uv run python export.py --city namur --output /tmp/namur.json
 uv run python export.py --city antwerpen --output /tmp/antwerpen.json
 uv run python export.py --city groningen --output /tmp/groningen.json
+uv run python export.py --city koeln --output /tmp/koeln.json
 # With STOCKHOLM_API_KEY set in the process environment:
 uv run python export.py --city stockholm --output /tmp/stockholm.json
 ```

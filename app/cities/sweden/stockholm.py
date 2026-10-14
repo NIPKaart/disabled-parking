@@ -62,11 +62,11 @@ class Municipality:
         """Keep feature IDs, original lines, validity and rule context unchanged."""
         source = item.source_attributes
         if (
-            not isinstance(item.spot_id, str)
-            or not item.spot_id.startswith("LTFR_P_RORELSEHINDRADE.")
-            or len(item.spot_id) > 255
-            or item.spot_id != item.spot_id.strip()
-            or source.get("id") != item.spot_id
+            not isinstance(item.id, str)
+            or not item.id.startswith("LTFR_P_RORELSEHINDRADE.")
+            or len(item.id) > 255
+            or item.id != item.id.strip()
+            or source.get("id") != item.id
         ):
             message = "Invalid Stockholm source identity"
             raise ValueError(message)
@@ -78,7 +78,7 @@ class Municipality:
             not isinstance(fid, int)
             or isinstance(fid, bool)
             or fid < 1
-            or item.spot_id != f"LTFR_P_RORELSEHINDRADE.{fid}"
+            or item.id != f"LTFR_P_RORELSEHINDRADE.{fid}"
         ):
             message = "Inconsistent Stockholm source identity"
             raise ValueError(message)
@@ -102,7 +102,7 @@ class Municipality:
             message = "Invalid Stockholm street"
             raise ValueError(message)
         return {
-            "external_id": item.spot_id,
+            "external_id": item.id,
             "geometry": geometry,
             "number": None,
             "street": item.street,

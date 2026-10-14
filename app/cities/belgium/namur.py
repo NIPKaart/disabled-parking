@@ -47,11 +47,11 @@ class Municipality(City):
         """Preserve original IDs, Points, source dates and parking-zone context."""
         source = item.source_attributes
         if (
-            not isinstance(item.spot_id, str)
-            or not item.spot_id
-            or len(item.spot_id) > 255
-            or item.spot_id != item.spot_id.strip()
-            or source.get("identifiant") != item.spot_id
+            not isinstance(item.id, str)
+            or not item.id
+            or len(item.id) > 255
+            or item.id != item.id.strip()
+            or source.get("identifiant") != item.id
         ):
             message = "Invalid Namur source ID"
             raise ValueError(message)
@@ -92,7 +92,7 @@ class Municipality(City):
             message = "Invalid Namur source modification date"
             raise ValueError(message)
         return {
-            "external_id": item.spot_id,
+            "external_id": item.id,
             "geometry": geometry,
             "number": None,
             "street": street,

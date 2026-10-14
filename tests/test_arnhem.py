@@ -24,8 +24,7 @@ from collector import run_once
 def source_record(asset_id: int = 1001, sign: str | None = None) -> ParkingSpot:
     """Use package objects with original asset and ArcGIS object identities."""
     return ParkingSpot(
-        spot_id=asset_id + 10,
-        asset_id=asset_id,
+        id=asset_id,
         parking_type="bijzonder",
         street="Willem van Noortstraat",
         traffic_sign="E6a",
@@ -135,7 +134,6 @@ class ArnhemTests(unittest.IsolatedAsyncioTestCase):
         """Personal E6b records cannot enter the agreed E6a selection."""
         for field, value in [
             ("ID", 7),
-            ("OBJECTID", 7),
             ("RVV_SOORT", "E6b"),
             ("RVV_SOORT", None),
             ("BORD", 7),
@@ -145,9 +143,12 @@ class ArnhemTests(unittest.IsolatedAsyncioTestCase):
             source.source_attributes[field] = value
             with self.subTest(field=field), self.assertRaises((ValueError, TypeError)):
                 Municipality().normalize(source)
+        source = source_record()
+        source.source_attributes["OBJECTID"] = 7
+        self.assertEqual(Municipality().normalize(source)["external_id"], "1001")
         for value in (0, True, "1001", None):
             with self.subTest(value=value), self.assertRaises(ValueError):
-                Municipality().normalize(replace(source_record(), asset_id=value))
+                Municipality().normalize(replace(source_record(), id=value))
         with self.assertRaises(TypeError):
             Municipality().normalize(replace(source_record(), geometry=None))
 

@@ -48,11 +48,11 @@ class Municipality(City):
         """Retain GIS IDs, all polygon rings, capacity and restricted-access claims."""
         attributes = item.source_attributes
         if (
-            not isinstance(item.gis_id, str)
-            or not item.gis_id
-            or len(item.gis_id) > 255
-            or item.gis_id != item.gis_id.strip()
-            or attributes.get("GISID") != item.gis_id
+            not isinstance(item.id, str)
+            or not item.id
+            or len(item.id) > 255
+            or item.id != item.id.strip()
+            or attributes.get("GISID") != item.id
         ):
             message = "Invalid Antwerpen GIS identity"
             raise ValueError(message)
@@ -80,7 +80,7 @@ class Municipality(City):
             message = "Invalid Antwerpen capacity"
             raise ValueError(message)
         return {
-            "external_id": item.gis_id,
+            "external_id": item.id,
             "geometry": geometry,
             "number": number,
             "street": None,

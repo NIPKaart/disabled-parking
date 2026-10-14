@@ -80,7 +80,7 @@ class AntwerpenTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(data["source"]["licence"])
         self.assertIn("bron stad Antwerpen", data["source"]["attribution"])
         records = data["records"]
-        self.assertEqual(records[0]["external_id"], first.gis_id)
+        self.assertEqual(records[0]["external_id"], first.id)
         self.assertEqual(records[0]["geometry"], first.geometry)
         self.assertEqual(records[0]["source_attributes"], first.source_attributes)
         self.assertEqual(records[0]["orientation"], "parallel")
@@ -114,7 +114,7 @@ class AntwerpenTests(unittest.IsolatedAsyncioTestCase):
         ]:
             with self.subTest(geometry=geometry), self.assertRaises(ValueError):
                 Municipality().normalize(
-                    ParkingRecord(original.gis_id, geometry, original.source_attributes)
+                    ParkingRecord(original.id, geometry, original.source_attributes)
                 )
 
     def test_orientations_and_uncertain_access(self) -> None:

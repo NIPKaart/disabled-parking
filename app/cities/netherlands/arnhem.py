@@ -42,11 +42,10 @@ class Municipality(City):
         """Keep asset IDs, source geometry and unknown capacity and source dates."""
         attributes = item.source_attributes
         if (
-            isinstance(item.asset_id, bool)
-            or not isinstance(item.asset_id, int)
-            or item.asset_id <= 0
-            or attributes.get("ID") != item.asset_id
-            or attributes.get("OBJECTID") != item.spot_id
+            isinstance(item.id, bool)
+            or not isinstance(item.id, int)
+            or item.id <= 0
+            or attributes.get("ID") != item.id
         ):
             msg = "Invalid Arnhem source identity"
             raise ValueError(msg)
@@ -64,7 +63,7 @@ class Municipality(City):
             msg = "Invalid Arnhem additional signage"
             raise TypeError(msg)
         return {
-            "external_id": str(item.asset_id),
+            "external_id": str(item.id),
             "geometry": item.geometry,
             "number": None,
             "street": street,
