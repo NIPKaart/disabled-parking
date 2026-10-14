@@ -357,7 +357,7 @@ cities = [
     { name = "dusseldorf", specifier = ">=1.0.0,<2.0.0" },
     { name = "eindhoven", specifier = "==6.0.0" },
     { name = "hamburg", specifier = ">=3.0.0,<4.0.0" },
-    { name = "koeln", specifier = ">=0.3.1,<0.4.0" },
+    { name = "koeln", git = "https://github.com/klaasnicolaas/python-koeln.git?rev=9fca5b6356ef992cc89a679010e0d70a35dcec2f" },
     { name = "liege", specifier = ">=1.0.0,<2.0.0" },
     { name = "namur", specifier = "==2.0.0" },
     { name = "odp-amsterdam", specifier = "==7.2.0" },
@@ -524,15 +524,11 @@ wheels = [
 
 [[package]]
 name = "koeln"
-version = "0.3.1"
-source = { registry = "https://pypi.org/simple" }
+version = "0.0.0"
+source = { git = "https://github.com/klaasnicolaas/python-koeln.git?rev=9fca5b6356ef992cc89a679010e0d70a35dcec2f#9fca5b6356ef992cc89a679010e0d70a35dcec2f" }
 dependencies = [
     { name = "aiohttp" },
     { name = "yarl" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/df/86/4b017868f7febd26caf715613b3f8f7a6c949d784306b27609f43766df78/koeln-0.3.1.tar.gz", hash = "sha256:35362ff27c7f13526c2e75e24e747afac73885d851a5d1a4c291bc705629bc2f", size = 9525, upload-time = "2023-07-05T10:30:47.089Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/65/f2/892d5ccea5c6dad9debadc20c10db1c63eb7815cf533ce09577668817154/koeln-0.3.1-py3-none-any.whl", hash = "sha256:51051587c751a0119f2fe91a3e762a99c075accf4df50e420142880f4288a797", size = 7886, upload-time = "2023-07-05T10:30:45.808Z" },
 ]
 
 [[package]]
