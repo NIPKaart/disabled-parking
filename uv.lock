@@ -357,7 +357,7 @@ cities = [
     { name = "dusseldorf", specifier = ">=1.0.0,<2.0.0" },
     { name = "eindhoven", specifier = "==6.0.0" },
     { name = "hamburg", specifier = ">=3.0.0,<4.0.0" },
-    { name = "koeln", git = "https://github.com/klaasnicolaas/python-koeln.git?rev=9fca5b6356ef992cc89a679010e0d70a35dcec2f" },
+    { name = "koeln", git = "https://github.com/klaasnicolaas/python-koeln.git?rev=59431f77f5b04ec2a09183c15ab68e1d2629bb11" },
     { name = "liege", specifier = ">=1.0.0,<2.0.0" },
     { name = "namur", specifier = "==2.0.0" },
     { name = "odp-amsterdam", specifier = "==7.2.0" },
@@ -525,7 +525,7 @@ wheels = [
 [[package]]
 name = "koeln"
 version = "0.0.0"
-source = { git = "https://github.com/klaasnicolaas/python-koeln.git?rev=9fca5b6356ef992cc89a679010e0d70a35dcec2f#9fca5b6356ef992cc89a679010e0d70a35dcec2f" }
+source = { git = "https://github.com/klaasnicolaas/python-koeln.git?rev=59431f77f5b04ec2a09183c15ab68e1d2629bb11#59431f77f5b04ec2a09183c15ab68e1d2629bb11" }
 dependencies = [
     { name = "aiohttp" },
     { name = "yarl" },
