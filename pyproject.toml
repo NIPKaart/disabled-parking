@@ -21,19 +21,19 @@ Documentation = "https://github.com/nipkaart/disabled-parking"
 
 [dependency-groups]
 cities = [
-  "antwerpen @ git+https://github.com/klaasnicolaas/python-antwerpen.git@ea4f1283d85c6a3a1c2251ad48fd7f2967181fb4",
-  "arnhem @ git+https://github.com/klaasnicolaas/python-arnhem.git@eacfbe3130c0dfbd2bc04e515286656cf13317ea",
+  "antwerpen==2.0.1",
+  "arnhem==2.0.1",
   "brussel>=0.2.1,<0.3.0",
   "dresden>=0.2.1,<0.3.0",
   "dusseldorf>=1.0.0,<2.0.0",
-  "eindhoven @ git+https://github.com/klaasnicolaas/python-eindhoven.git@f7f5ba3f596aa611ca738c8bee7f479447bdcf79",
+  "eindhoven==6.0.1",
   "hamburg>=3.0.0,<4.0.0",
-  "koeln @ git+https://github.com/klaasnicolaas/python-koeln.git@a7c7ae8b531c4669ce3ea05021adec1716ef6be5",
+  "koeln==1.0.0",
   "liege>=1.0.0,<2.0.0",
-  "namur @ git+https://github.com/klaasnicolaas/python-namur.git@c29565c3dee5762a4f09002c06df09499617ca02",
-  "odp-amsterdam @ git+https://github.com/klaasnicolaas/python-odp-amsterdam.git@7441659dba02366eecbbb2c5a674acee4aede239",
+  "namur==2.0.1",
+  "odp-amsterdam==7.2.1",
   "async-timeout>=4,<6",
-  "odp-stockholm @ git+https://github.com/klaasnicolaas/python-odp-stockholm.git@f14518f5a4edc2ea8b995681013fe3a57ff933fe",
+  "odp-stockholm==2.0.1",
 ]
 dev = [
   "pre-commit==3.8.0",

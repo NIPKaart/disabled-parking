@@ -28,7 +28,7 @@ Antwerpen selects all published disabled-parking polygons with `GISID IS NOT NUL
 
 Full WGS84 polygons and all rings remain intact. Capacity distinguishes unknown from zero, source orientation maps to neutral values, and access remains `unknown`: every inspected row says `toegang=Beperkt`, with 25 time-window claims despite the layer description saying no time-window regime. Personally reserved access cannot be distinguished from this field. Core review must assess signage and preserved restrictions before publication. Street and record-update time remain unknown; `EBDD` is not a verified modification timestamp. The publisher describes daily maintenance of a 2018 paid-parking-area inventory, not current observations or full municipal coverage.
 
-Evidence checked 2026-10-13: [municipal GIS layer](https://geodata.antwerpen.be/arcgissql/rest/services/P_Portal/portal_publiek6/MapServer/585), [publisher item and daily cadence](https://www.arcgis.com/sharing/rest/content/items/3b69e4d15fc14fbb86a00d6c636da475?f=json), [Gratis Open Data Licentie](https://www.antwerpen.be/info/gratis-open-data-licentie), and [municipal parking information](https://www.antwerpen.be/parkeren-voor-personen-met-een-handicap). The city's reuse terms require `bron stad Antwerpen`; no verified SPDX identifier is assigned to this licence, so `licence` stays `null`. Delivery/intake evidence belongs to the PR for [#813](https://github.com/NIPKaart/disabled-parking/issues/813). The collector uses the published `antwerpen==2.0.0` release from [package PR #1259](https://github.com/klaasnicolaas/python-antwerpen/pull/1259), pinned exactly with distribution hashes in the lockfile. Production activation stays at core #1303.
+Evidence checked 2026-10-13: [municipal GIS layer](https://geodata.antwerpen.be/arcgissql/rest/services/P_Portal/portal_publiek6/MapServer/585), [publisher item and daily cadence](https://www.arcgis.com/sharing/rest/content/items/3b69e4d15fc14fbb86a00d6c636da475?f=json), [Gratis Open Data Licentie](https://www.antwerpen.be/info/gratis-open-data-licentie), and [municipal parking information](https://www.antwerpen.be/parkeren-voor-personen-met-een-handicap). The city's reuse terms require `bron stad Antwerpen`; no verified SPDX identifier is assigned to this licence, so `licence` stays `null`. Delivery/intake evidence belongs to the PR for [#813](https://github.com/NIPKaart/disabled-parking/issues/813). The collector uses the published `antwerpen==2.0.1` release, including the uniform record ID from [package PR #1263](https://github.com/klaasnicolaas/python-antwerpen/pull/1263); the complete collection was introduced in [#1259](https://github.com/klaasnicolaas/python-antwerpen/pull/1259). It is pinned exactly with distribution hashes in the lockfile. Production activation stays at core #1303.
 
 ## Retention
 
@@ -51,7 +51,7 @@ npx wrangler r2 bucket lifecycle list nipkaart-imports --jurisdiction eu
 
 ## Dependencies
 
-The Amsterdam, Antwerpen, Arnhem, Eindhoven, Namur and Stockholm package releases are pinned exactly in [`pyproject.toml`](../pyproject.toml). [`uv.lock`](../uv.lock) records the resolved versions and distribution hashes. Update both files together and verify the collector tests and a local export for each changed source.
+The Amsterdam, Antwerpen, Arnhem, Eindhoven, Köln, Namur and Stockholm package releases are pinned exactly in [`pyproject.toml`](../pyproject.toml). [`uv.lock`](../uv.lock) records the resolved versions and distribution hashes. Update both files together and verify the collector tests and a local export for each changed source.
 
 ## Source review
 
@@ -59,7 +59,7 @@ Use one compact assessment per source: dataset and check date, then a table with
 
 [Eindhoven's assessment](eindhoven-source-review.md) records accepted public-domain reuse, original IDs and unknown access/currency. Intake and publication use core's existing source approval and review. Dataset IDs have no legacy aliases or automatic migration.
 
-[Stockholm's assessment](stockholm-source-review.md) records the complete 2,294-record source check, real private-R2 delivery and isolated core acceptance. Stockholm retains original regulation lines and unknown access/capacity/currency; one collapsed component requires explicit geometry review in core. Configure `STOCKHOLM_API_KEY` for collection. Stockholm uses the published package release v2.0.0; the core companion must land before merging/deploying this collector integration.
+[Stockholm's assessment](stockholm-source-review.md) records the complete 2,294-record source check, real private-R2 delivery and isolated core acceptance. Stockholm retains original regulation lines and unknown access/capacity/currency; one collapsed component requires explicit geometry review in core. Configure `STOCKHOLM_API_KEY` for collection. Stockholm uses the published package release v2.0.1; the core companion must land before merging/deploying this collector integration.
 
 ## Köln
 
@@ -71,4 +71,4 @@ The live selection contains 445 unique source points describing 605 bays, with c
 
 ## Uniform record identifiers
 
-The municipal packages expose `record.id` consistently: Amsterdam source `id`, Arnhem asset `ID`, Eindhoven `objectid`, Namur `identifiant`, Antwerpen `GISID`, Stockholm feature `id` and Köln `id`. These are field-name changes, not new ID values or a change to the `nipkaart-municipal-2` transport. Arnhem retains its auxiliary ArcGIS `OBJECTID` only in original source attributes and in retrieval checks; it never replaces the selected asset identity. Raw source fields and any source-specific legacy inspection models remain distinct from the shared collection interface. Publish the package updates and replace all temporary exact Git pins with their release versions before merge.
+The municipal packages expose `record.id` consistently: Amsterdam source `id`, Arnhem asset `ID`, Eindhoven `objectid`, Namur `identifiant`, Antwerpen `GISID`, Stockholm feature `id` and Köln `id`. These are field-name changes, not new ID values or a change to the `nipkaart-municipal-2` transport. Arnhem retains its auxiliary ArcGIS `OBJECTID` only in original source attributes and in retrieval checks; it never replaces the selected asset identity. Raw source fields and any source-specific legacy inspection models remain distinct from the shared collection interface. All seven adapters use published package releases, pinned exactly with distribution hashes in the lockfile.

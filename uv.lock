@@ -83,20 +83,28 @@ wheels = [
 
 [[package]]
 name = "antwerpen"
-version = "0.0.0"
-source = { git = "https://github.com/klaasnicolaas/python-antwerpen.git?rev=ea4f1283d85c6a3a1c2251ad48fd7f2967181fb4#ea4f1283d85c6a3a1c2251ad48fd7f2967181fb4" }
+version = "2.0.1"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "yarl" },
 ]
+sdist = { url = "https://files.pythonhosted.org/packages/d1/ce/2a73e9aa1661b7074d62d2a66f0ad58ff19be0ac264276b3837d42bfe85a/antwerpen-2.0.1.tar.gz", hash = "sha256:ed32163683f16c56480f9d3a8e98c8f26285b71ad67b7f5246a01e5ce5f4fb32", size = 9466, upload-time = "2026-10-14T11:11:19.535Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2c/6f/725a55cd2f6134c13fbc006324c7afcabae6cafef12aad65dad5c70e903f/antwerpen-2.0.1-py3-none-any.whl", hash = "sha256:4f60c3116eab3a849942946050149a8cd7056cdd42cb6b7033d46e070d9ba1ad", size = 10603, upload-time = "2026-10-14T11:11:18.389Z" },
+]
 
 [[package]]
 name = "arnhem"
-version = "0.0.0"
-source = { git = "https://github.com/klaasnicolaas/python-arnhem.git?rev=eacfbe3130c0dfbd2bc04e515286656cf13317ea#eacfbe3130c0dfbd2bc04e515286656cf13317ea" }
+version = "2.0.1"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "yarl" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/02/66/7618c8082166a19e23c491d5c01da4e3b3c64ba6f76aee6c8301980782e3/arnhem-2.0.1.tar.gz", hash = "sha256:60abaaef3f9cd6b890bf8905df6b98e12351538bf4b256dd4f47bbcce8d9cfd0", size = 9848, upload-time = "2026-10-14T11:17:34.351Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/06/78/1af014d73fd0864ccc4322153900a0fd425d12ad351f0dba5e23e84f8a97/arnhem-2.0.1-py3-none-any.whl", hash = "sha256:4ce3c1c9672083820e02ecd15fe761c4ef8cd5dfb930855b41f4c242b4ef24a5", size = 10951, upload-time = "2026-10-14T11:17:33.246Z" },
 ]
 
 [[package]]
@@ -341,19 +349,19 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 cities = [
-    { name = "antwerpen", git = "https://github.com/klaasnicolaas/python-antwerpen.git?rev=ea4f1283d85c6a3a1c2251ad48fd7f2967181fb4" },
-    { name = "arnhem", git = "https://github.com/klaasnicolaas/python-arnhem.git?rev=eacfbe3130c0dfbd2bc04e515286656cf13317ea" },
+    { name = "antwerpen", specifier = "==2.0.1" },
+    { name = "arnhem", specifier = "==2.0.1" },
     { name = "async-timeout", specifier = ">=4,<6" },
     { name = "brussel", specifier = ">=0.2.1,<0.3.0" },
     { name = "dresden", specifier = ">=0.2.1,<0.3.0" },
     { name = "dusseldorf", specifier = ">=1.0.0,<2.0.0" },
-    { name = "eindhoven", git = "https://github.com/klaasnicolaas/python-eindhoven.git?rev=f7f5ba3f596aa611ca738c8bee7f479447bdcf79" },
+    { name = "eindhoven", specifier = "==6.0.1" },
     { name = "hamburg", specifier = ">=3.0.0,<4.0.0" },
-    { name = "koeln", git = "https://github.com/klaasnicolaas/python-koeln.git?rev=a7c7ae8b531c4669ce3ea05021adec1716ef6be5" },
+    { name = "koeln", specifier = "==1.0.0" },
     { name = "liege", specifier = ">=1.0.0,<2.0.0" },
-    { name = "namur", git = "https://github.com/klaasnicolaas/python-namur.git?rev=c29565c3dee5762a4f09002c06df09499617ca02" },
-    { name = "odp-amsterdam", git = "https://github.com/klaasnicolaas/python-odp-amsterdam.git?rev=7441659dba02366eecbbb2c5a674acee4aede239" },
-    { name = "odp-stockholm", git = "https://github.com/klaasnicolaas/python-odp-stockholm.git?rev=f14518f5a4edc2ea8b995681013fe3a57ff933fe" },
+    { name = "namur", specifier = "==2.0.1" },
+    { name = "odp-amsterdam", specifier = "==7.2.1" },
+    { name = "odp-stockholm", specifier = "==2.0.1" },
 ]
 dev = [
     { name = "pre-commit", specifier = "==3.8.0" },
@@ -401,13 +409,17 @@ wheels = [
 
 [[package]]
 name = "eindhoven"
-version = "0.0.0"
-source = { git = "https://github.com/klaasnicolaas/python-eindhoven.git?rev=f7f5ba3f596aa611ca738c8bee7f479447bdcf79#f7f5ba3f596aa611ca738c8bee7f479447bdcf79" }
+version = "6.0.1"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "mashumaro" },
     { name = "orjson" },
     { name = "yarl" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/29/04/d0e8ad802d717fabd250b687b55a2287c13788b49422fb0c43ed775cdeba/eindhoven-6.0.1.tar.gz", hash = "sha256:b071439d52c142859fde7b1fb8f77d1e93448e87d11004bfea4809fb2dfa7fe4", size = 9615, upload-time = "2026-10-14T11:19:06.406Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b6/ad/afa0d0701461f74c9e8162a2a49797e7d6afe95c362f8782903517913300/eindhoven-6.0.1-py3-none-any.whl", hash = "sha256:352d8a29253f06081ec8a0263e3d5a6b9b1c1a60b553bf4448109e4bcce63939", size = 10701, upload-time = "2026-10-14T11:19:05.238Z" },
 ]
 
 [[package]]
@@ -512,11 +524,15 @@ wheels = [
 
 [[package]]
 name = "koeln"
-version = "0.0.0"
-source = { git = "https://github.com/klaasnicolaas/python-koeln.git?rev=a7c7ae8b531c4669ce3ea05021adec1716ef6be5#a7c7ae8b531c4669ce3ea05021adec1716ef6be5" }
+version = "1.0.0"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "yarl" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/2c/bf/bbe4899f29c4242c6c5dc401981db7ce6931aad217aebe69a1984ebccc7a/koeln-1.0.0.tar.gz", hash = "sha256:1f6c3ccb1d18aa0b80e4376becb41b94841c68dd0e669ca3e52ecc7c0c48657a", size = 9066, upload-time = "2026-10-14T11:29:36.749Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ef/0c/0a22facc5109b53d412269f5da6a54dd6fb7a3607d65ad23491236ad8119/koeln-1.0.0-py3-none-any.whl", hash = "sha256:551dca7408c3e33e35d2dc9ad1603dd659e1396d247409f75467b5a9adc09a5f", size = 10103, upload-time = "2026-10-14T11:29:35.306Z" },
 ]
 
 [[package]]
@@ -651,11 +667,15 @@ wheels = [
 
 [[package]]
 name = "namur"
-version = "0.0.0"
-source = { git = "https://github.com/klaasnicolaas/python-namur.git?rev=c29565c3dee5762a4f09002c06df09499617ca02#c29565c3dee5762a4f09002c06df09499617ca02" }
+version = "2.0.1"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "yarl" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/92/09/9c29536d491f3099e874c0d107467e3d7d1585cc824a360a12b142ff58fa/namur-2.0.1.tar.gz", hash = "sha256:1a75e783b2a3ecfe80515b3cff0f791231baf3577c3a5110dd11a9aa523f0d12", size = 9395, upload-time = "2026-10-14T11:20:14.686Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5d/38/4cd7d1ad72babb16eecf6aeb25ab941fa8c0fad6e2620b0d96ec23fd35da/namur-2.0.1-py3-none-any.whl", hash = "sha256:1ea5f2b88dec875a97ba7dcb47b0e5faf0421aadf71e8b61bcd564cbbc2c0a31", size = 10396, upload-time = "2026-10-14T11:20:13.553Z" },
 ]
 
 [[package]]
@@ -669,20 +689,28 @@ wheels = [
 
 [[package]]
 name = "odp-amsterdam"
-version = "0.0.0"
-source = { git = "https://github.com/klaasnicolaas/python-odp-amsterdam.git?rev=7441659dba02366eecbbb2c5a674acee4aede239#7441659dba02366eecbbb2c5a674acee4aede239" }
+version = "7.2.1"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "yarl" },
 ]
+sdist = { url = "https://files.pythonhosted.org/packages/1f/30/17fc3404dfc997e5a0ae89e3725238770a995d6e89db7e2bbc79378827c1/odp_amsterdam-7.2.1.tar.gz", hash = "sha256:b08f606a3d0d51e01039e88fb9b1b598008267eefa0b2379c2de4d760807f2d3", size = 13191, upload-time = "2026-10-14T11:26:48.833Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/61/82/27c4829a8cf62b25fac4cff4518951992467cfcdad0e21659a96c8e60446/odp_amsterdam-7.2.1-py3-none-any.whl", hash = "sha256:0ae57a286d261a34a74a527cc0f81c1fdfb74b0b0a971c86e71afbe66f4d270e", size = 14830, upload-time = "2026-10-14T11:26:47.563Z" },
+]
 
 [[package]]
 name = "odp-stockholm"
-version = "0.0.0"
-source = { git = "https://github.com/klaasnicolaas/python-odp-stockholm.git?rev=f14518f5a4edc2ea8b995681013fe3a57ff933fe#f14518f5a4edc2ea8b995681013fe3a57ff933fe" }
+version = "2.0.1"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "yarl" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/64/6e/d7a0d634454c61dfcc8f42a66fe60bcc912ca85c12236b2d75caf221c1cf/odp_stockholm-2.0.1.tar.gz", hash = "sha256:db47b41b6c1a0bbb09c467edf2ebbcf72c2f2203a2b400e014082eaf45788145", size = 8981, upload-time = "2026-10-14T11:25:23.239Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/05/32/59f1150c1f955d481ab54fb379c2750c43cbe76129a1454e7a47afe19220/odp_stockholm-2.0.1-py3-none-any.whl", hash = "sha256:a31587b1d83cab091b776441e945888976b873e7f806d973c4d290b9ce2f2840", size = 10226, upload-time = "2026-10-14T11:25:22.051Z" },
 ]
 
 [[package]]
