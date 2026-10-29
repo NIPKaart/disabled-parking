@@ -27,7 +27,7 @@ cities = [
   "dresden>=0.2.1,<0.3.0",
   "dusseldorf>=1.0.0,<2.0.0",
   "eindhoven==6.0.1",
-  "hamburg>=3.0.0,<4.0.0",
+  "hamburg>=4.0.0,<4.1.0",
   "koeln==1.0.0",
   "liege>=1.0.0,<2.0.0",
   "namur==2.0.1",
