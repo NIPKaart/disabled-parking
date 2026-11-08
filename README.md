@@ -39,15 +39,22 @@ uv run python export.py --city namur --output /tmp/namur.json
 uv run python export.py --city antwerpen --output /tmp/antwerpen.json
 uv run python export.py --city groningen --output /tmp/groningen.json
 uv run python export.py --city koeln --output /tmp/koeln.json
+uv run python export.py --city ndw --output /tmp/ndw-e6.json
 # With STOCKHOLM_API_KEY set in the process environment:
 uv run python export.py --city stockholm --output /tmp/stockholm.json
 ```
 
 Exports are for source review; publication requires approval in core. See the [collector documentation](docs/collector.md) for source selections and limitations.
 
+### NDW location proposal delivery
+
+NDW is an explicit run. In a configured collector environment, `uv run python collector.py --city ndw --directory /data` uses the private `proposals/` prefix and retains the exact pending file on upload failure. The default municipal schedule excludes NDW while [Core intake](https://github.com/NIPKaart/core/issues/1486) is being built.
+
+The NDW current-state API returns the national placed E6 selection in one response. It supplied no independent record total in the live check. The collector checks the complete response, unique IDs and the count before delivery, and holds drops over 20% against its last acknowledged snapshot. It retains typed under-sign evidence and omits all raw under-sign text. See [ADR 0015](https://github.com/NIPKaart/core/blob/main/docs/adr/0015-ingest-location-proposal-sources.md).
+
 ## Development
 
-Register datasets in [`app/datasets.py`](app/datasets.py). Each source returns a shared `Collection`; the exporter and scheduler use the registry automatically.
+Register municipal datasets in [`app/datasets.py`](app/datasets.py). Each source returns a shared `Collection`; the exporter and scheduler use the registry automatically. Register location proposal sources in [`app/proposals/__init__.py`](app/proposals/__init__.py) and keep their implementations in the corresponding country package.
 
 ```bash
 uv run python -m unittest discover -s tests -v
