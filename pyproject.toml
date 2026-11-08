@@ -29,7 +29,7 @@ cities = [
   "dusseldorf>=1.0.0,<2.0.0",
   "eindhoven==6.0.1",
   "hamburg>=3.0.0,<4.0.0",
-  "koeln==1.0.0",
+  "koeln @ git+https://github.com/klaasnicolaas/python-koeln.git@acb98824926a0cefc6198727004fb5a2f7fc7e23",
   "liege>=1.0.0,<2.0.0",
   "namur==2.0.1",
   "odp-amsterdam==7.2.1",

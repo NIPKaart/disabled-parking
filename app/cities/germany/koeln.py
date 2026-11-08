@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Any
 
 from koeln import StadtKoeln
 from koeln.exceptions import ODPKoelnError
+from koeln.koeln import NRW_PARKING_URL
 
 from app.cities import City
 from app.records import Collection, SourceError, capacity
@@ -26,7 +27,20 @@ class Municipality(City):
         try:
             async with StadtKoeln() as client:
                 result = await client.parking_collection()
-            records = [self.normalize(item) for item in result.records]
+            if result.source_url not in (None, NRW_PARKING_URL):
+                message = "Unrecognized Köln distribution"
+                raise SourceError(message)
+            records = [
+                self.normalize(item, nrw=result.source_url is not None)
+                for item in result.records
+            ]
+            if result.source_url is not None:
+                for record in records:
+                    record["source_attributes"] = {
+                        "distribution_url": result.source_url,
+                        "publication_time": result.source_version,
+                        "record": record["source_attributes"],
+                    }
         except (ODPKoelnError, TimeoutError, ValueError, TypeError, KeyError) as error:
             message = "Köln source retrieval or mapping failed"
             raise SourceError(message) from error
@@ -36,18 +50,19 @@ class Municipality(City):
         )
 
     @staticmethod
-    def normalize(item: ParkingRecord) -> dict[str, Any]:
+    def normalize(item: ParkingRecord, *, nrw: bool = False) -> dict[str, Any]:
         """Keep original IDs, nullable capacity and literal source claims."""
         attributes = item.source_attributes
         if (
             isinstance(item.id, bool)
             or not isinstance(item.id, int)
             or item.id < 1
-            or attributes.get("id") != item.id
+            or attributes.get("id")
+            != (f"parking-disabled-koeln-{item.id}" if nrw else item.id)
         ):
             message = "Invalid Köln source identity"
             raise ValueError(message)
-        number = attributes.get("anzahl")
+        number = attributes.get("numberOfSpaces" if nrw else "anzahl")
         if number is not None and (
             isinstance(number, bool) or not isinstance(number, int)
         ):
