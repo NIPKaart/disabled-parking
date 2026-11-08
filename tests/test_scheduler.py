@@ -13,11 +13,29 @@ from pathlib import Path
 from threading import Event
 from unittest.mock import patch
 
-from scheduler import positive_seconds, run_command, schedule
+from scheduler import main, positive_seconds, run_command, schedule
 
 
 class SchedulerTests(unittest.TestCase):
     """Verify process behavior rather than duplicating the source tests."""
+
+    def test_default_schedule_includes_ndw(self) -> None:
+        """Use the normal daily interval for municipal and proposal sources."""
+        with tempfile.TemporaryDirectory() as directory:
+            args = ["scheduler.py", "--lock", str(Path(directory) / "scheduler.lock")]
+            with (
+                patch.object(sys, "argv", [*args, "--", "python", "collector.py"]),
+                patch("scheduler.signal.signal"),
+                patch("scheduler.schedule") as start,
+            ):
+                main()
+
+        commands, interval, *_ = start.call_args.args
+        self.assertEqual(interval, 86400)
+        self.assertEqual(commands["ndw"], ["python", "collector.py", "--city", "ndw"])
+        self.assertEqual(
+            commands["amsterdam"], ["python", "collector.py", "--city", "amsterdam"]
+        )
 
     def test_child_exit_status(self) -> None:
         """A failed finite command is not reported as successful."""
