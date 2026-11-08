@@ -28,6 +28,8 @@ class CityProvider:
             city_class (class): The class of the city.
 
         """
+        # Each branch maps one city name to its adapter.
+        # pylint: disable=too-many-branches
         match city_name:
             case "antwerpen":
                 city_class = antwerpen.Municipality()
