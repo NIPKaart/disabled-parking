@@ -54,7 +54,7 @@ The NDW current-state API returns the national placed E6 selection in one respon
 
 ## Development
 
-Register municipal datasets in [`app/datasets.py`](app/datasets.py). Each source returns a shared `Collection`; the exporter and scheduler use the registry automatically.
+Register municipal datasets in [`app/datasets.py`](app/datasets.py). Each source returns a shared `Collection`; the exporter and scheduler use the registry automatically. Register location proposal sources in [`app/proposals/__init__.py`](app/proposals/__init__.py) and keep their implementations in the corresponding country package.
 
 ```bash
 uv run python -m unittest discover -s tests -v

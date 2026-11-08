@@ -17,9 +17,9 @@ import boto3
 from botocore.config import Config
 from botocore.exceptions import BotoCoreError, ClientError
 
-from app import ndw
 from app.datasets import DATASETS
 from app.export import MAX_BYTES, export_dataset
+from app.proposals import PROPOSAL_SOURCES
 from app.records import SourceError
 
 if TYPE_CHECKING:
@@ -30,7 +30,8 @@ def upload(
     client: BaseClient, bucket: str, pending: Path, city: str = "amsterdam"
 ) -> str:
     """Create an immutable delivery; verify matching bytes after an uncertain PUT."""
-    limit = ndw.MAX_BYTES if city == "ndw" else MAX_BYTES
+    proposal = PROPOSAL_SOURCES.get(city)
+    limit = proposal.MAX_BYTES if proposal is not None else MAX_BYTES
     with pending.open("rb") as stream:
         data = stream.read(limit + 1)
     if len(data) > limit:
@@ -66,14 +67,15 @@ def upload(
 def delivery_key(payload: dict[str, str], city: str) -> str:
     """Verify the pending envelope before selecting its private bucket path."""
     delivery_id = str(UUID(payload["delivery_id"]))
-    code = ndw.CODE if city == "ndw" else DATASETS[city].code
+    proposal = PROPOSAL_SOURCES.get(city)
+    code = proposal.CODE if proposal is not None else DATASETS[city].code
     if payload["dataset"] != code:
         message = "Pending delivery belongs to another dataset"
         raise ValueError(message)
-    if city == "ndw" and payload.get("format") != ndw.FORMAT:
-        message = "Pending NDW delivery uses the wrong format"
+    if proposal is not None and payload.get("format") != proposal.FORMAT:
+        message = "Pending proposal delivery uses the wrong format"
         raise ValueError(message)
-    prefix = "proposals" if city == "ndw" else "municipal"
+    prefix = "proposals" if proposal is not None else "municipal"
     return f"{prefix}/{code}/{delivery_id}.json"
 
 
@@ -81,7 +83,8 @@ def run_once(
     client: BaseClient, bucket: str, directory: Path, city: str = "amsterdam"
 ) -> str:
     """Keep the pending artifact until acknowledged; never fetch its replacement."""
-    code = ndw.CODE if city == "ndw" else DATASETS[city].code
+    proposal = PROPOSAL_SOURCES.get(city)
+    code = proposal.CODE if proposal is not None else DATASETS[city].code
     directory = directory / code
     directory.mkdir(parents=True, exist_ok=True)
     with (directory / "delivery.lock").open("a") as lock:
@@ -91,8 +94,10 @@ def run_once(
         if not pending.exists():
             for temporary in directory.glob(".parking-*.tmp"):
                 temporary.unlink()
-            if city == "ndw":
-                ndw.export_snapshot(pending, previous_count=ndw.last_count(last))
+            if proposal is not None:
+                proposal.export_snapshot(
+                    pending, previous_count=proposal.last_count(last)
+                )
             else:
                 asyncio.run(export_dataset(city, pending))
         sync_directory(directory)
@@ -116,7 +121,9 @@ def main() -> None:
     """Require R2 credentials and keep credential-bearing errors out of logs."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--directory", type=Path, default=Path("/data"))
-    parser.add_argument("--city", choices=(*DATASETS, "ndw"), default="amsterdam")
+    parser.add_argument(
+        "--city", choices=(*DATASETS, *PROPOSAL_SOURCES), default="amsterdam"
+    )
     args = parser.parse_args()
     try:
         endpoint = os.environ["R2_ENDPOINT"]

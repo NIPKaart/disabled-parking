@@ -16,7 +16,7 @@ import boto3
 import ijson
 from botocore.stub import ANY, Stubber
 
-from app import ndw
+from app.proposals.netherlands import ndw
 from app.records import SourceError
 from collector import run_once
 
@@ -166,7 +166,7 @@ class NdwTests(unittest.TestCase):
                 output.write_bytes(raw)
                 return 1
 
-            with patch("collector.ndw.export_snapshot", side_effect=fetch) as export:
+            with patch.object(ndw, "export_snapshot", side_effect=fetch) as export:
                 with self.assertRaises(client.exceptions.ClientError):
                     run_once(client, "test", root, "ndw")
                 self.assertEqual(run_once(client, "test", root, "ndw"), key)
