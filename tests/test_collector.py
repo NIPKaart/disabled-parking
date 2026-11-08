@@ -5,17 +5,23 @@ from __future__ import annotations
 
 import io
 import json
+import os
+import sys
 import tempfile
 import unittest
+from contextlib import redirect_stderr
 from pathlib import Path
 from unittest.mock import AsyncMock, patch
 from uuid import uuid4
 
 import boto3
+from aiohttp import ClientResponseError
+from arnhem.exceptions import ODPArnhemConnectionError
 from botocore.response import StreamingBody
 from botocore.stub import ANY, Stubber
 
-from collector import run_once, upload
+from app.records import SourceError
+from collector import main, run_once, upload
 
 DATASET = "nl-amsterdam"
 EINDHOVEN_DATASET = "nl-eindhoven"
@@ -215,3 +221,43 @@ class CollectorTests(unittest.TestCase):
             self.assertEqual(
                 (Path(directory) / "nl-eindhoven" / "last.json").read_bytes(), raw
             )
+
+
+class CollectorLoggingTests(unittest.TestCase):
+    """Exercise the scheduled collector's CLI failure boundary."""
+
+    def test_source_error_reports_safe_cause_chain(self) -> None:
+        """Keep HTTP status and error types without exposing request details."""
+        private_detail = "private-request-detail"
+        response_error = ClientResponseError(
+            request_info=None, history=(), status=503, message=private_detail
+        )
+        package_error = ODPArnhemConnectionError(private_detail)
+        package_error.__cause__ = response_error
+        error = SourceError(private_detail)
+        error.__cause__ = package_error
+        stderr = io.StringIO()
+        with (
+            patch.object(sys, "argv", ["collector.py", "--city", "arnhem"]),
+            patch.dict(
+                os.environ,
+                R2_ENDPOINT="https://example.invalid",
+                R2_BUCKET="test",
+                AWS_ACCESS_KEY_ID="test",
+                AWS_SECRET_ACCESS_KEY="test",  # noqa: S106 - dummy credentials
+            ),
+            patch("collector.boto3.client"),
+            patch("collector.run_once", side_effect=error),
+            redirect_stderr(stderr),
+            self.assertRaises(SystemExit) as exited,
+        ):
+            main()
+
+        self.assertEqual(exited.exception.code, 1)
+        output = stderr.getvalue()
+        self.assertIn("arnhem", output)
+        self.assertIn(
+            "SourceError -> ODPArnhemConnectionError -> ClientResponseError (HTTP 503)",
+            output,
+        )
+        self.assertNotIn(private_detail, output)
