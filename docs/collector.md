@@ -32,20 +32,22 @@ Evidence checked 2026-10-13: [municipal GIS layer](https://geodata.antwerpen.be/
 
 ## Retention
 
-Deliveries go to the private EU bucket `nipkaart-imports` under `municipal/<dataset>/`. Core also archives manual uploads there. Set one lifecycle rule on the bucket, once:
+Deliveries go to the private EU bucket `nipkaart-imports` under `municipal/<dataset>/`. Core also archives manual uploads there. NDW delivers separately under `proposals/nl-ndw-e6/`. Set one lifecycle rule per prefix:
 
 | Rule name | Prefix | Delete after | Why |
 | --- | --- | --- | --- |
-| `expire-municipal` | `municipal/` | 30 days | Well beyond the 7-day core outage window; covers every dataset |
+| `expire-municipal-catalog` | `municipal/` | 30 days | Well beyond the 7-day core outage window; covers every municipal dataset |
+| `expire-proposals` | `proposals/` | 14 days | Keeps proposal snapshots available for replay without unbounded accumulation |
 
 Never add a rule without a prefix: the bucket also holds offstreet deliveries with their own rules (see [offstreet-parking](https://github.com/NIPKaart/offstreet-parking#retention)).
 
-**Dashboard:** R2 → `nipkaart-imports` → Settings → Object lifecycle rules → Add rule. Enter the name and prefix, choose to delete objects after 30 days, and save. If an older rule only covers `municipal/nl-amsterdam/`, replace it with this one.
+**Dashboard:** R2 → `nipkaart-imports` → Settings → Object lifecycle rules. Add or edit the rule for each prefix. Enter the name and prefix, choose the expiry in the table, and save. If an older rule only covers `municipal/nl-amsterdam/`, replace it with this one.
 
-**Or with Wrangler** (after `npx wrangler login`; the bucket is in the EU jurisdiction):
+**To create missing rules with Wrangler** (after `npx wrangler login`; the bucket is in the EU jurisdiction):
 
 ```bash
-npx wrangler r2 bucket lifecycle add nipkaart-imports expire-municipal municipal/ --expire-days 30 --jurisdiction eu
+npx wrangler r2 bucket lifecycle add nipkaart-imports expire-municipal-catalog municipal/ --expire-days 30 --jurisdiction eu
+npx wrangler r2 bucket lifecycle add nipkaart-imports expire-proposals proposals/ --expire-days 14 --jurisdiction eu
 npx wrangler r2 bucket lifecycle list nipkaart-imports --jurisdiction eu
 ```
 

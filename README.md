@@ -48,7 +48,7 @@ Exports are for source review; publication requires approval in core. See the [c
 
 ### NDW location proposal delivery
 
-NDW is an explicit run. In a configured collector environment, `uv run python collector.py --city ndw --directory /data` uses the private `proposals/` prefix and retains the exact pending file on upload failure. The default municipal schedule excludes NDW while [Core intake](https://github.com/NIPKaart/core/issues/1486) is being built.
+The scheduler collects and delivers NDW daily using the same interval as municipal datasets. Run `uv run python collector.py --city ndw --directory /data` for a one-off delivery. NDW uses the private `proposals/` prefix and retains the exact pending file on upload failure. [Core intake](https://github.com/NIPKaart/core/issues/1486) tracks processing these deliveries into location proposals.
 
 The NDW current-state API returns the national placed E6 selection in one response. It supplied no independent record total in the live check. The collector checks the complete response, unique IDs and the count before delivery, and holds drops over 20% against its last acknowledged snapshot. It retains typed under-sign evidence and omits all raw under-sign text. See [ADR 0015](https://github.com/NIPKaart/core/blob/main/docs/adr/0015-ingest-location-proposal-sources.md).
 

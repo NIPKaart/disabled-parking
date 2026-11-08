@@ -13,6 +13,7 @@ from time import monotonic
 from typing import TYPE_CHECKING
 
 from app.datasets import DATASETS
+from app.proposals import PROPOSAL_SOURCES
 
 if TYPE_CHECKING:
     from types import FrameType
@@ -98,7 +99,10 @@ def main() -> None:
     try:
         with args.lock.open("a") as lock:
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-            commands = {city: [*command, "--city", city] for city in DATASETS}
+            commands = {
+                source: [*command, "--city", source]
+                for source in (*DATASETS, *PROPOSAL_SOURCES)
+            }
             schedule(commands, args.interval, args.timeout, stopped)
     except OSError as error:
         parser.exit(1, f"Scheduler unavailable: {error}\n")

@@ -1,4 +1,4 @@
-"""Register location proposal sources available for explicit delivery."""
+"""Register location proposal sources."""
 
 from app.proposals.netherlands import ndw
 
