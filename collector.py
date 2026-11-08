@@ -1,4 +1,4 @@
-"""Deliver a complete, retryable municipal JSON object to private R2."""
+"""Deliver a complete, retryable source JSON object to private R2."""
 
 from __future__ import annotations
 
@@ -17,6 +17,7 @@ import boto3
 from botocore.config import Config
 from botocore.exceptions import BotoCoreError, ClientError
 
+from app import ndw
 from app.datasets import DATASETS
 from app.export import MAX_BYTES, export_dataset
 from app.records import SourceError
@@ -29,17 +30,13 @@ def upload(
     client: BaseClient, bucket: str, pending: Path, city: str = "amsterdam"
 ) -> str:
     """Create an immutable delivery; verify matching bytes after an uncertain PUT."""
+    limit = ndw.MAX_BYTES if city == "ndw" else MAX_BYTES
     with pending.open("rb") as stream:
-        data = stream.read(MAX_BYTES + 1)
-    if len(data) > MAX_BYTES:
-        message = "Pending delivery exceeds 32 MiB"
+        data = stream.read(limit + 1)
+    if len(data) > limit:
+        message = "Pending delivery exceeds its byte limit"
         raise ValueError(message)
-    payload = json.loads(data)
-    delivery_id = str(UUID(payload["delivery_id"]))
-    if payload["dataset"] != DATASETS[city].code:
-        message = "Pending delivery belongs to another dataset"
-        raise ValueError(message)
-    key = f"municipal/{payload['dataset']}/{delivery_id}.json"
+    key = delivery_key(json.loads(data), city)
     digest = hashlib.sha256(data).hexdigest()
     print(f"Uploading {key} sha256={digest}", flush=True)
     try:
@@ -59,30 +56,48 @@ def upload(
             raise
         response = client.get_object(Bucket=bucket, Key=key)
         with response["Body"] as stream:
-            existing = stream.read(MAX_BYTES + 1)
+            existing = stream.read(limit + 1)
         if existing != data:
             message = "Remote delivery identity already exists with different bytes"
             raise ValueError(message) from error
     return key
 
 
+def delivery_key(payload: dict[str, str], city: str) -> str:
+    """Verify the pending envelope before selecting its private bucket path."""
+    delivery_id = str(UUID(payload["delivery_id"]))
+    code = ndw.CODE if city == "ndw" else DATASETS[city].code
+    if payload["dataset"] != code:
+        message = "Pending delivery belongs to another dataset"
+        raise ValueError(message)
+    if city == "ndw" and payload.get("format") != ndw.FORMAT:
+        message = "Pending NDW delivery uses the wrong format"
+        raise ValueError(message)
+    prefix = "proposals" if city == "ndw" else "municipal"
+    return f"{prefix}/{code}/{delivery_id}.json"
+
+
 def run_once(
     client: BaseClient, bucket: str, directory: Path, city: str = "amsterdam"
 ) -> str:
     """Keep the pending artifact until acknowledged; never fetch its replacement."""
-    dataset = DATASETS[city]
-    directory = directory / dataset.code
+    code = ndw.CODE if city == "ndw" else DATASETS[city].code
+    directory = directory / code
     directory.mkdir(parents=True, exist_ok=True)
     with (directory / "delivery.lock").open("a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         pending = directory / "pending.json"
+        last = directory / "last.json"
         if not pending.exists():
             for temporary in directory.glob(".parking-*.tmp"):
                 temporary.unlink()
-            asyncio.run(export_dataset(city, pending))
+            if city == "ndw":
+                ndw.export_snapshot(pending, previous_count=ndw.last_count(last))
+            else:
+                asyncio.run(export_dataset(city, pending))
         sync_directory(directory)
         key = upload(client, bucket, pending, city)
-        pending.replace(directory / "last.json")
+        pending.replace(last)
         sync_directory(directory)
         print(f"Delivered {key}", flush=True)
         return key
@@ -101,7 +116,7 @@ def main() -> None:
     """Require R2 credentials and keep credential-bearing errors out of logs."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--directory", type=Path, default=Path("/data"))
-    parser.add_argument("--city", choices=DATASETS, default="amsterdam")
+    parser.add_argument("--city", choices=(*DATASETS, "ndw"), default="amsterdam")
     args = parser.parse_args()
     try:
         endpoint = os.environ["R2_ENDPOINT"]
