@@ -14,8 +14,10 @@ from typing import TYPE_CHECKING
 from uuid import UUID
 
 import boto3
+from aiohttp import ClientResponseError
 from botocore.config import Config
 from botocore.exceptions import BotoCoreError, ClientError
+from requests.exceptions import HTTPError
 
 from app.datasets import DATASETS
 from app.export import MAX_BYTES, export_dataset
@@ -117,6 +119,21 @@ def sync_directory(directory: Path) -> None:
         os.close(descriptor)
 
 
+def source_error_details(error: SourceError) -> str:
+    """Report explicit causes without logging raw messages or response content."""
+    details = []
+    cause: BaseException | None = error
+    while cause is not None:
+        detail = type(cause).__name__
+        if isinstance(cause, ClientResponseError) and cause.status:
+            detail += f" (HTTP {cause.status:d})"
+        elif isinstance(cause, HTTPError) and cause.response is not None:
+            detail += f" (HTTP {cause.response.status_code:d})"
+        details.append(detail)
+        cause = cause.__cause__
+    return " -> ".join(details)
+
+
 def main() -> None:
     """Require R2 credentials and keep credential-bearing errors out of logs."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -145,10 +162,15 @@ def main() -> None:
             ),
         )
         run_once(client, bucket, args.directory, args.city)
+    except SourceError as error:
+        parser.exit(
+            1,
+            f"Collector failed for {args.city} ({source_error_details(error)}); "
+            "pending file retained\n",
+        )
     except (
         BotoCoreError,
         ClientError,
-        SourceError,
         OSError,
         ValueError,
         TypeError,
