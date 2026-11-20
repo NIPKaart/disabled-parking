@@ -36,6 +36,49 @@ def source_record(identity: int = 1, number: int | None = 2) -> ParkingRecord:
 class KoelnTests(unittest.IsolatedAsyncioTestCase):
     """Leave HTTP, parser and completeness tests in the reusable package."""
 
+    async def test_nrw_export_keeps_existing_ids_and_original_claims(self) -> None:
+        """Mirror provenance must not replace IDs or imply observed freshness."""
+        original = {
+            "id": "parking-disabled-koeln-137",
+            "numberOfSpaces": 2,
+            "name": "Sülzgürtel 42",
+            "locationAndDimension": {
+                "coordinatesForDisplay": {"longitude": 6.91971, "latitude": 50.915243}
+            },
+        }
+        item = ParkingRecord(
+            137, {"type": "Point", "coordinates": [6.91971, 50.915243]}, original
+        )
+        source_url = "https://www.mobilitaetsdaten.nrw/api/systemadapter-mobilithek-exporter/behindertenparkplaetze-koeln.json"
+        result = ParkingCollection(
+            [item], 1, 1, "2026-11-04T09:00:51Z", source_url=source_url
+        )
+        with (
+            tempfile.TemporaryDirectory() as directory,
+            patch("app.cities.germany.koeln.StadtKoeln") as factory,
+        ):
+            factory.return_value.__aenter__.return_value.parking_collection = AsyncMock(
+                return_value=result
+            )
+            output = Path(directory) / "koeln.json"
+            await export_dataset("koeln", output)
+            payload = json.loads(output.read_bytes())
+        record = payload["records"][0]
+        self.assertEqual(record["external_id"], "137")
+        self.assertEqual(record["number"], 2)
+        self.assertEqual(
+            record["source_attributes"],
+            {
+                "distribution_url": source_url,
+                "publication_time": result.source_version,
+                "record": original,
+            },
+        )
+        self.assertIsNone(record["source_updated_at"])
+        self.assertEqual(original["id"], "parking-disabled-koeln-137")
+        self.assertEqual(payload["dataset"], "de-koeln")
+        self.assertEqual(payload["selection"], "general-disabled-all")
+
     async def test_export_preserves_original_claims_and_unknowns(self) -> None:
         """General access follows the publisher statement; unknown stays null."""
         items = [source_record(), source_record(2, None), source_record(3, 0)]
